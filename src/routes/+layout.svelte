@@ -1,6 +1,9 @@
 <script>
 </script>
 
-<main class="container">
+<main>
   <slot />
 </main>
+
+<style uno:preflights uno:safelist global>
+</style>

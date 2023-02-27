@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<h1>Welcome to Joueur!</h1>
+<div class="text-[100px]">Welcome to Joueur!</div>
 
 <style>
 </style>
