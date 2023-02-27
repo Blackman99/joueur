@@ -1,0 +1,9 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+**/dist
+**/.sveltekit
+**/.svelte-kit
+**/.sveltepress
+packages/theme-default/src/components/icons

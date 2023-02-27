@@ -9,15 +9,21 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "lint": "eslint -c .eslintrc.cjs --ext .js,.ts,.svelte",
+    "format": "prettier \"./**/*.svelte\" --check"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.2.0"
   },
   "devDependencies": {
+    "@casual-ui/eslint-config-svelte": "^0.1.0",
     "@sveltejs/adapter-static": "^1.0.6",
     "@sveltejs/kit": "^1.3.10",
     "@tauri-apps/cli": "^1.2.3",
+    "eslint": "^8.35.0",
+    "prettier": "^2.8.4",
+    "prettier-plugin-svelte": "^2.9.0",
     "svelte": "^3.55.1",
     "svelte-check": "^3.0.3",
     "tslib": "^2.5.0",

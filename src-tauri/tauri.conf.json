@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "site.joueur",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
