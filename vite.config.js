@@ -1,14 +1,19 @@
 import { defineConfig } from 'vite'
 import { sveltekit } from '@sveltejs/kit/vite'
 import Unocss from 'unocss/vite'
-import { presetAttributify, presetIcons, presetUno, transformerDirectives } from 'unocss'
+import { presetIcons, presetUno, transformerDirectives } from 'unocss'
 
 export default defineConfig({
   plugins: [
     Unocss({
       mode: 'svelte-scoped',
       transformers: [transformerDirectives()],
-      presets: [presetUno(), presetIcons(), presetAttributify()],
+      presets: [presetUno(), presetIcons()],
+      theme: {
+        colors: {
+          primary: '#37A6CA',
+        },
+      },
     }),
     sveltekit(),
   ],

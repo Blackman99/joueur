@@ -1,0 +1,30 @@
+<script lang="ts">
+  import { page } from '$app/stores'
+
+  export let label: string
+  export let to: string
+
+  $: active = $page.route.id?.replace(/\([\s\S]*\)\/?/g, '') === to
+</script>
+
+<a class="menu-item" class:active="{active}" href="{to}">
+  <div class="menu-icon">
+    <slot name="icon" />
+  </div>
+
+  <div>
+    {label}
+  </div>
+</a>
+
+<style>
+  .menu-item {
+    --uno: 'flex items-center gap-2 hover:bg-light-7 px-4 py-3 rounded-lg';
+  }
+  .menu-icon {
+    --uno: 'text-5';
+  }
+  .active {
+    --uno: 'text-primary hover:bg-primary hover:bg-opacity-5';
+  }
+</style>
