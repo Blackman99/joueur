@@ -25,7 +25,7 @@
 
 <style uno:preflights uno:safelist global>
   :global(body) {
-    --uno: 'bg-light-5 m-0 p-0 overflow-hidden';
+    --uno: 'bg-white m-0 p-0 overflow-hidden';
   }
   :global(a) {
     --uno: 'decoration-none text-inherit';
@@ -37,9 +37,9 @@
     --uno: 'flex h-[100vh]';
   }
   .j-side {
-    --uno: 'flex flex-col justify-between p-4 w-[15vw]';
+    --uno: 'flex flex-col justify-between p-4 w-[18vw] box-border';
   }
   .j-content {
-    --uno: 'flex-grow';
+    --uno: 'flex-grow bg-light-3';
   }
 </style>
