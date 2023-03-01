@@ -25,13 +25,13 @@
 
 <style uno:preflights uno:safelist global>
   :global(body) {
-    --uno: 'bg-white m-0 p-0 overflow-hidden';
+    --uno: 'bg-white m-0 p-0 overflow-hidden text-secondary';
   }
   :global(a) {
     --uno: 'decoration-none text-inherit';
   }
   .logo {
-    --uno: 'w-[80px] block mx-a';
+    --uno: 'w-[10vw] block mx-a';
   }
   .j-main {
     --uno: 'flex h-[100vh]';

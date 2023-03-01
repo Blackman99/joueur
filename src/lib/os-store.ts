@@ -5,6 +5,7 @@ import {
   readTextFile,
   writeTextFile,
 } from '@tauri-apps/api/fs'
+import type { JoueurConf } from './types'
 
 export const BASE_STORE_PATH = 'store'
 export const MAIN_CONF_PATH = `${BASE_STORE_PATH}/joueur.conf`
@@ -16,5 +17,5 @@ export const ensureStore = async () => {
 export const getMainConfWithEnsure = async () => {
   await ensureStore()
   if (!await exists(MAIN_CONF_PATH, { dir: BaseDirectory.AppData })) await writeTextFile(MAIN_CONF_PATH, '{}', { dir: BaseDirectory.AppData })
-  return await readTextFile(MAIN_CONF_PATH, { dir: BaseDirectory.AppData })
+  return JSON.parse(await readTextFile(MAIN_CONF_PATH, { dir: BaseDirectory.AppData })) as JoueurConf
 }
