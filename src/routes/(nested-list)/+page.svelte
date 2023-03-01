@@ -1,9 +1,14 @@
 <script lang="ts">
+  import { getMainConfWithEnsure } from '$lib/os-store'
   import pageTransition from '$lib/page-transition'
+
+  const handleAdd = async () => {
+    console.log(await getMainConfWithEnsure())
+  }
 </script>
 
 <div class="start" transition:pageTransition>
-  <div class="action">
+  <div class="action" on:click="{handleAdd}" on:keyup="{handleAdd}">
     <div class="i-ph-plus-bold mr-2"></div>
     <div>Add Musics</div>
   </div>
