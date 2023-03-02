@@ -22,10 +22,17 @@
       },
       "fs": {
         "scope": [
+          "/**/*",
           "$APPDATA/store/*",
           "$APPDATA/*"
         ],
         "all": true
+      },
+      "dialog": {
+        "all": true
+      },
+      "protocol": {
+        "asset": true
       }
     },
     "bundle": {
@@ -62,7 +69,8 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; media-src 'self' asset://*;"
+
     },
     "updater": {
       "active": false

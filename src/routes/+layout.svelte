@@ -1,5 +1,7 @@
 <script>
+  import { Buffer } from 'buffer'
   import Menu from '$lib/Menu.svelte'
+  globalThis.Buffer = Buffer
 </script>
 
 <main class="j-main">
