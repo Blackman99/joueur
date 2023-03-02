@@ -11,6 +11,9 @@
       <Menu label="Musics" to="/">
         <div slot="icon" class="i-bi:music-note-list"></div>
       </Menu>
+      <Menu label="Artists" to="/artists">
+        <div slot="icon" class="i-icon-park-outline:peoples-two"></div>
+      </Menu>
       <Menu label="Album" to="/albums">
         <div slot="icon" class="i-iconoir:album-open"></div>
       </Menu>
