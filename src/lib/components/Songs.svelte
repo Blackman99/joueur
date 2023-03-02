@@ -22,7 +22,7 @@
 
 <style>
   .songs {
-    --uno: 'flex-grow h-full text-3';
+    --uno: 'flex-grow h-full text-[14px]';
   }
   .song-row {
     --uno: 'flex items-start px-4 py-2 cursor-pointer hover:bg-primary hover:bg-opacity-8 transition-bg transition-200';
@@ -31,6 +31,6 @@
     --uno: 'w-8 h-8 rounded mr-2';
   }
   .meta {
-    --uno: 'text-warm-gray-5';
+    --uno: 'text-warm-gray-5 text-[12px]';
   }
 </style>

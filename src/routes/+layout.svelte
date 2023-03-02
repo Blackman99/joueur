@@ -18,14 +18,13 @@
       switch (evt.payload.type) {
         case 'hover':
           showDropZone = true
-          console.log(evt)
-
           break
         case 'cancel':
           showDropZone = false
           break
         case 'drop':
           showDropZone = false
+
           evt.payload.paths.forEach(async path => {
             try {
               if (isAudio(path)) {
@@ -75,6 +74,8 @@
 <style uno:preflights uno:safelist global>
   :global(body) {
     --uno: 'bg-white m-0 p-0 overflow-hidden text-secondary';
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+      'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
   :global(a) {
     --uno: 'decoration-none text-inherit';

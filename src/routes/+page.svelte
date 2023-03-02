@@ -7,9 +7,9 @@
   import ActionButton from '$lib/components/ActionButton.svelte'
   import pageTransition from '$lib/page-transition'
   import { AUDIO_EXTENSIONS } from '$lib/constants'
-  import { getSongInfoFromFile } from '$lib/utils/audio'
   import type { Song } from '$lib/types'
   import Songs from '$lib/components/Songs.svelte'
+  import { getSongInfoFromFile } from '$lib/utils/audio'
 
   const songs = liveQuery(() => db.songs.toArray()) as unknown as Readable<
     Song[]
@@ -36,16 +36,24 @@
     }
   }
 
+  let loading = false
+
   const handleAddFileEntry = async () => {
-    const selected = await open({
-      multiple: true,
-      filters: [audioFilter],
-    })
-    if (Array.isArray(selected)) {
-      for (const path of selected) {
-        const song = await getSongInfoFromFile(path)
-        db.songs.put(song)
+    try {
+      const selected = await open({
+        multiple: true,
+        filters: [audioFilter],
+      })
+      if (Array.isArray(selected)) {
+        loading = true
+        for (const path of selected) {
+          const song = await getSongInfoFromFile(path)
+          db.songs.put(song)
+        }
       }
+    } catch (error) {
+    } finally {
+      loading = false
     }
   }
 </script>
@@ -55,10 +63,18 @@
     <Songs songs="{$songs}" />
   {:else}
     <div class="actions">
-      <ActionButton label="Add directory" on:click="{handleAddDirectoryEntry}">
+      <ActionButton
+        label="Add directory"
+        on:click="{handleAddDirectoryEntry}"
+        loading="{loading}"
+      >
         <div class="i-icon-park-outline:folder-music" slot="icon"></div>
       </ActionButton>
-      <ActionButton label="Add file" on:click="{handleAddFileEntry}">
+      <ActionButton
+        label="Add file"
+        on:click="{handleAddFileEntry}"
+        loading="{loading}"
+      >
         <div class="i-icon-park-outline:file-music" slot="icon"></div>
       </ActionButton>
     </div>
