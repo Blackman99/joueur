@@ -8,13 +8,14 @@ export const isAudio = (path: string) => AUDIO_EXTENSIONS.some(ext => path.endsW
 export const getSongInfoFromFile = async (filePath: string) => {
   const fileContents = await readBinaryFile(filePath)
   const { common } = await musicMetadata.parseBuffer(fileContents)
+  const albumCover = common.picture?.[0]
   const song: Song = {
     path: filePath,
     title: common.title,
     album: common.album,
     artist: common.artist,
     year: common.year,
-    cover: common.picture?.[0].data.toString(),
+    cover: albumCover ? `data:${albumCover.format};base64, ${albumCover.data.toString('base64')}` : undefined,
   }
   return song
 }

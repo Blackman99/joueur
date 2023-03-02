@@ -9,6 +9,7 @@
   import { AUDIO_EXTENSIONS } from '$lib/constants'
   import { getSongInfoFromFile } from '$lib/utils/audio'
   import type { Song } from '$lib/types'
+  import Songs from '$lib/components/Songs.svelte'
 
   const songs = liveQuery(() => db.songs.toArray()) as unknown as Readable<
     Song[]
@@ -27,7 +28,10 @@
       try {
         const entries = await readDir(selected)
       } catch (error) {
-        await message('Something wrong', { title: 'Joueur', type: 'error' })
+        await message('Something went wrong', {
+          title: 'Joueur',
+          type: 'error',
+        })
       }
     }
   }
@@ -48,11 +52,7 @@
 
 <div class="start" transition:pageTransition>
   {#if $songs && $songs.length}
-    {#each $songs as song (song.id)}
-      <div>
-        {song.title}
-      </div>
-    {/each}
+    <Songs songs="{$songs}" />
   {:else}
     <div class="actions">
       <ActionButton label="Add directory" on:click="{handleAddDirectoryEntry}">

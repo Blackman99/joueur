@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
   import { Buffer } from 'buffer'
   import { appWindow } from '@tauri-apps/api/window'
   import { readDir } from '@tauri-apps/api/fs'
+  import { onDestroy, onMount } from 'svelte'
   import Menu from '$lib/components/Menu.svelte'
   import DropZone from '$lib/components/DropZone.svelte'
   import { getSongInfoFromFile, isAudio } from '$lib/utils/audio'
@@ -10,26 +11,36 @@
 
   let showDropZone = false
 
-  appWindow.onFileDropEvent(async evt => {
-    switch (evt.payload.type) {
-      case 'hover':
-        showDropZone = true
-        break
-      case 'cancel':
-        showDropZone = false
-        break
-      case 'drop':
-        showDropZone = false
-        evt.payload.paths.forEach(async path => {
-          try {
-            const res = await readDir(path, { recursive: true })
-          } catch (error) {
-            if (isAudio(path)) {
-              const song = await getSongInfoFromFile(path)
-            }
-          }
-        })
-    }
+  let cleanupDropListener: () => void
+
+  onMount(async () => {
+    cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
+      switch (evt.payload.type) {
+        case 'hover':
+          showDropZone = true
+          console.log(evt)
+
+          break
+        case 'cancel':
+          showDropZone = false
+          break
+        case 'drop':
+          showDropZone = false
+          evt.payload.paths.forEach(async path => {
+            try {
+              if (isAudio(path)) {
+                const song = await getSongInfoFromFile(path)
+              } else {
+                const res = await readDir(path, { recursive: true })
+              }
+            } catch (error) {}
+          })
+      }
+    })
+  })
+
+  onDestroy(() => {
+    cleanupDropListener?.()
   })
 </script>
 
@@ -78,6 +89,6 @@
     --uno: 'flex flex-col justify-between p-4 w-[18vw] box-border';
   }
   .j-content {
-    --uno: 'flex-grow bg-light-3';
+    --uno: 'flex-grow bg-light-2';
   }
 </style>
