@@ -10,14 +10,10 @@ export interface JoueurConf {
 }
 
 export interface Song {
-  id: string
-  title: string
-  artist: string
-  album: string
-  year: number
-}
-
-export interface Album {
-  name: string
-  cover: string
+  id: string // file path also used as id
+  title?: string
+  artist?: string
+  album?: string
+  year?: number
+  cover?: string
 }
