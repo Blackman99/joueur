@@ -6,10 +6,14 @@
   import Menu from '$lib/components/Menu.svelte'
   import DropZone from '$lib/components/DropZone.svelte'
   import { getSongInfoFromFile, isAudio } from '$lib/utils/audio'
+  import DropLoading from '$lib/components/DropLoading.svelte'
+  import { db } from '$lib/db'
 
   globalThis.Buffer = Buffer
 
   let showDropZone = false
+
+  let showDropLoading = false
 
   let cleanupDropListener: () => void
 
@@ -24,16 +28,20 @@
           break
         case 'drop':
           showDropZone = false
-
-          evt.payload.paths.forEach(async path => {
-            try {
+          showDropLoading = true
+          try {
+            for (const path of evt.payload.paths) {
               if (isAudio(path)) {
                 const song = await getSongInfoFromFile(path)
+                db.songs.put(song)
               } else {
                 const res = await readDir(path, { recursive: true })
               }
-            } catch (error) {}
-          })
+            }
+          } catch (error) {
+          } finally {
+            showDropLoading = false
+          }
       }
     })
   })
@@ -69,6 +77,10 @@
 
 {#if showDropZone}
   <DropZone />
+{/if}
+
+{#if showDropLoading}
+  <DropLoading />
 {/if}
 
 <style uno:preflights uno:safelist global>
