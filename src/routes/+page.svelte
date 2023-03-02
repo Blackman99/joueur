@@ -1,33 +1,23 @@
 <script lang="ts">
   import { message, open } from '@tauri-apps/api/dialog'
-  import { readBinaryFile, readDir } from '@tauri-apps/api/fs'
-  import * as musicMetadata from 'music-metadata-browser'
-  import { browser } from '$app/environment'
-  import ActionButton from '$lib/ActionButton.svelte'
-  import { getMainConfWithEnsure } from '$lib/os-store'
+  import { liveQuery } from 'dexie'
+  import { readDir } from '@tauri-apps/api/fs'
+  import type { Readable } from 'svelte/store'
+  import { db } from '$lib/db'
+  import ActionButton from '$lib/components/ActionButton.svelte'
   import pageTransition from '$lib/page-transition'
-  import type { JoueurConf } from '$lib/types'
+  import { AUDIO_EXTENSIONS } from '$lib/constants'
+  import { getSongInfoFromFile } from '$lib/utils/audio'
+  import type { Song } from '$lib/types'
 
-  export const getMetadata = async (filePath: string) => {
-    const fileContents = await readBinaryFile(filePath)
-    console.log('fileContents: ', fileContents)
-
-    const metadata = await musicMetadata.parseBuffer(fileContents)
-    console.log(metadata)
-    return metadata
-  }
+  const songs = liveQuery(() => db.songs.toArray()) as unknown as Readable<
+    Song[]
+  >
 
   const audioFilter = {
     name: 'audio',
-    extensions: ['mp3', 'wav'],
+    extensions: AUDIO_EXTENSIONS,
   }
-
-  let mainConf: JoueurConf
-
-  const initMainConf = async () => {
-    mainConf = await getMainConfWithEnsure()
-  }
-  if (browser) initMainConf()
 
   const handleAddDirectoryEntry = async () => {
     const selected = await open({
@@ -48,27 +38,31 @@
       filters: [audioFilter],
     })
     if (Array.isArray(selected)) {
-      selected.forEach(async selected => {
-        await getMetadata(selected)
-      })
-    } else if (selected) {
+      for (const path of selected) {
+        const song = await getSongInfoFromFile(path)
+        db.songs.put(song)
+      }
     }
   }
 </script>
 
 <div class="start" transition:pageTransition>
-  <div class="actions">
-    {#if !mainConf?.directoryEntries?.length}
+  {#if $songs && $songs.length}
+    {#each $songs as song (song.id)}
+      <div>
+        {song.title}
+      </div>
+    {/each}
+  {:else}
+    <div class="actions">
       <ActionButton label="Add directory" on:click="{handleAddDirectoryEntry}">
         <div class="i-icon-park-outline:folder-music" slot="icon"></div>
       </ActionButton>
-    {/if}
-    {#if !mainConf?.fileEntries?.length}
       <ActionButton label="Add file" on:click="{handleAddFileEntry}">
         <div class="i-icon-park-outline:file-music" slot="icon"></div>
       </ActionButton>
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style>

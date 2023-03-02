@@ -8,6 +8,7 @@ specifiers:
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.3
   buffer: ^6.0.3
+  dexie: ^3.2.3
   eslint: ^8.35.0
   music-metadata-browser: ^2.5.9
   prettier: ^2.8.4
@@ -29,6 +30,7 @@ devDependencies:
   '@sveltejs/kit': 1.9.1_svelte@3.55.1+vite@4.1.4
   '@tauri-apps/cli': 1.2.3
   buffer: 6.0.3
+  dexie: 3.2.3
   eslint: 8.35.0
   music-metadata-browser: 2.5.9
   prettier: 2.8.4
@@ -1355,6 +1357,11 @@ packages:
 
   /devalue/4.3.0:
     resolution: {integrity: sha512-n94yQo4LI3w7erwf84mhRUkUJfhLoCZiLyoOZ/QFsDbcWNZePrLwbQpvZBUG2TNxwV3VjCKPxkiiQA6pe3TrTA==}
+    dev: true
+
+  /dexie/3.2.3:
+    resolution: {integrity: sha512-iHayBd4UYryDCVUNa3PMsJMEnd8yjyh5p7a+RFeC8i8n476BC9wMhVvqiImq5zJZJf5Tuer+s4SSj+AA3x+ZbQ==}
+    engines: {node: '>=6.0'}
     dev: true
 
   /dir-glob/3.0.1:

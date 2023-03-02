@@ -23,6 +23,7 @@
     "@sveltejs/kit": "^1.9.1",
     "@tauri-apps/cli": "^1.2.3",
     "buffer": "^6.0.3",
+    "dexie": "^3.2.3",
     "eslint": "^8.35.0",
     "music-metadata-browser": "^2.5.9",
     "prettier": "^2.8.4",

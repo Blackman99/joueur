@@ -1,7 +1,36 @@
 <script>
   import { Buffer } from 'buffer'
-  import Menu from '$lib/Menu.svelte'
+  import { appWindow } from '@tauri-apps/api/window'
+  import { readDir } from '@tauri-apps/api/fs'
+  import Menu from '$lib/components/Menu.svelte'
+  import DropZone from '$lib/components/DropZone.svelte'
+  import { getSongInfoFromFile, isAudio } from '$lib/utils/audio'
+
   globalThis.Buffer = Buffer
+
+  let showDropZone = false
+
+  appWindow.onFileDropEvent(async evt => {
+    switch (evt.payload.type) {
+      case 'hover':
+        showDropZone = true
+        break
+      case 'cancel':
+        showDropZone = false
+        break
+      case 'drop':
+        showDropZone = false
+        evt.payload.paths.forEach(async path => {
+          try {
+            const res = await readDir(path, { recursive: true })
+          } catch (error) {
+            if (isAudio(path)) {
+              const song = await getSongInfoFromFile(path)
+            }
+          }
+        })
+    }
+  })
 </script>
 
 <main class="j-main">
@@ -27,6 +56,10 @@
     <slot />
   </div>
 </main>
+
+{#if showDropZone}
+  <DropZone />
+{/if}
 
 <style uno:preflights uno:safelist global>
   :global(body) {

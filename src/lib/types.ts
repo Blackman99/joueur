@@ -1,19 +1,18 @@
 export interface JoueurConf {
-  /**
-   * Directories added by user
-   */
-  directoryEntries?: string[]
-  /**
-   * Single files added by user
-   */
-  fileEntries?: string[]
+  themeColor?: string
 }
 
 export interface Song {
-  id: string // file path also used as id
+  id?: number
+  path: string
   title?: string
   artist?: string
   album?: string
   year?: number
+  cover?: string
+}
+
+export interface Album {
+  title: string
   cover?: string
 }
