@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { playingSongId } from '$lib/store'
   import type { Song } from '$lib/types'
 
   export let songs: Song[]
@@ -6,7 +7,7 @@
 
 <div class="songs">
   {#each songs as song (song.id)}
-    <div class="song-row">
+    <div class="song-row" on:dblclick="{() => ($playingSongId = song.id)}">
       <img class="cover" src="{song.cover}" alt="{song.title}" />
       <div class="info">
         <div>
@@ -32,6 +33,8 @@
   }
   .song-row {
     --uno: 'flex items-start px-4 py-2 cursor-pointer hover:bg-primary hover:bg-opacity-8 transition-bg transition-200';
+    user-select: none;
+    -webkit-user-select: none;
   }
   .cover {
     --uno: 'w-8 h-8 rounded mr-2';

@@ -8,6 +8,7 @@
   import { AUDIO_EXTENSIONS } from '$lib/constants'
   import type { Song } from '$lib/types'
   import Songs from '$lib/components/Songs.svelte'
+
   import {
     getSongInfoFromFile,
     parseSongsFromFileEntries,
@@ -21,6 +22,7 @@
 
   const unsubscribe = songs.subscribe(() => {
     queryEnd = true
+    // The unsubscribe returned by dexie is not identical with svelte store
     if (!unsubscribe.closed) unsubscribe.unsubscribe()
   }) as any
 

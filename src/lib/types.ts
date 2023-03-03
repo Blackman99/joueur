@@ -3,7 +3,7 @@ export interface JoueurConf {
 }
 
 export interface Song {
-  id?: number
+  id: number
   path: string
   title?: string
   artist?: string
