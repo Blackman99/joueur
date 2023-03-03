@@ -36,6 +36,7 @@
                 db.songs.put(song)
               } else {
                 const res = await readDir(path, { recursive: true })
+                console.log(res)
               }
             }
           } catch (error) {

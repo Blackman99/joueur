@@ -9,7 +9,10 @@
   import { AUDIO_EXTENSIONS } from '$lib/constants'
   import type { Song } from '$lib/types'
   import Songs from '$lib/components/Songs.svelte'
-  import { getSongInfoFromFile } from '$lib/utils/audio'
+  import {
+    getSongInfoFromFile,
+    parseSongsFromFileEntries,
+  } from '$lib/utils/audio'
 
   const songs = liveQuery(() => db.songs.toArray()) as unknown as Readable<
     Song[]
@@ -26,12 +29,20 @@
     })
     if (typeof selected === 'string') {
       try {
-        const entries = await readDir(selected)
+        loading = true
+        const entries = await readDir(selected, {
+          recursive: true,
+        })
+        const songs: Song[] = await parseSongsFromFileEntries(entries)
+        console.log(songs)
+        // await db.songs.bulkAdd(songs)
       } catch (error) {
         await message('Something went wrong', {
           title: 'Joueur',
           type: 'error',
         })
+      } finally {
+        loading = false
       }
     }
   }
@@ -48,7 +59,9 @@
         loading = true
         for (const path of selected) {
           const song = await getSongInfoFromFile(path)
-          db.songs.put(song)
+          console.log(song)
+
+          // db.songs.put(song)
         }
       }
     } catch (error) {
@@ -63,6 +76,9 @@
     <Songs songs="{$songs}" />
   {:else}
     <div class="actions">
+      <div>
+        You can drag any files into this window or clicked the add button below
+      </div>
       <ActionButton
         label="Add directory"
         on:click="{handleAddDirectoryEntry}"
@@ -86,6 +102,6 @@
     --uno: 'flex justify-center items-center h-full';
   }
   .actions {
-    --uno: 'flex flex-col gap-8';
+    --uno: 'flex flex-col gap-8 items-center';
   }
 </style>

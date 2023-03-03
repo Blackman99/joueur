@@ -9,6 +9,7 @@
   const dispatcher = createEventDispatcher()
 
   const handleAction = () => {
+    if (loading) return
     dispatcher('click')
   }
 

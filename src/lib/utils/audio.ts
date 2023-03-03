@@ -1,21 +1,24 @@
-import { readBinaryFile } from '@tauri-apps/api/fs'
-import * as musicMetadata from 'music-metadata-browser'
+import type { FileEntry } from '@tauri-apps/api/fs'
+import { invoke } from '@tauri-apps/api'
 import type { Song } from '../types'
 import { AUDIO_EXTENSIONS } from '$lib/constants'
 
 export const isAudio = (path: string) => AUDIO_EXTENSIONS.some(ext => path.endsWith(`.${ext}`))
 
 export const getSongInfoFromFile = async (filePath: string) => {
-  const fileContents = await readBinaryFile(filePath)
-  const { common } = await musicMetadata.parseBuffer(fileContents)
-  const albumCover = common.picture?.[0]
-  const song: Song = {
-    path: filePath,
-    title: common.title,
-    album: common.album,
-    artist: common.artist,
-    year: common.year,
-    cover: albumCover ? `data:${albumCover.format};base64, ${albumCover.data.toString('base64')}` : undefined,
+  const song = await invoke('get_metadata', { path: filePath })
+
+  return song as Song
+}
+
+export const parseSongsFromFileEntries = async (fileEntries: FileEntry[], songs: Song[] = []) => {
+  const parseEntry = async (entry: FileEntry) => {
+    if (isAudio(entry.path))
+      songs.push(await getSongInfoFromFile(entry.path))
+    else if (entry.children?.length)
+      await parseSongsFromFileEntries(entry.children, songs)
   }
-  return song
+  for (const entry of fileEntries)
+    await parseEntry(entry)
+  return songs
 }
