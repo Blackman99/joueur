@@ -2,7 +2,7 @@
   import { message, open } from '@tauri-apps/api/dialog'
   import { liveQuery } from 'dexie'
   import { readDir } from '@tauri-apps/api/fs'
-  import { type Readable } from 'svelte/store'
+  import type { Readable } from 'svelte/store'
   import { db } from '$lib/db'
   import ActionButton from '$lib/components/ActionButton.svelte'
   import { AUDIO_EXTENSIONS } from '$lib/constants'
@@ -21,8 +21,8 @@
 
   const unsubscribe = songs.subscribe(() => {
     queryEnd = true
-    unsubscribe()
-  })
+    if (!unsubscribe.closed) unsubscribe.unsubscribe()
+  }) as any
 
   const audioFilter = {
     name: 'audio',
