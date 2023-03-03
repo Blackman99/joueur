@@ -1,8 +1,10 @@
-<script>
-  import pageTransition from '$lib/page-transition'
-</script>
-
-<div transition:pageTransition>
+<div class="settings">
   <div>Setting Items</div>
   <slot />
 </div>
+
+<style>
+  .settings {
+    --uno: 'flex-grow';
+  }
+</style>

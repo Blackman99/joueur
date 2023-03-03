@@ -5,7 +5,6 @@
   import type { Readable } from 'svelte/store'
   import { db } from '$lib/db'
   import ActionButton from '$lib/components/ActionButton.svelte'
-  import pageTransition from '$lib/page-transition'
   import { AUDIO_EXTENSIONS } from '$lib/constants'
   import type { Song } from '$lib/types'
   import Songs from '$lib/components/Songs.svelte'
@@ -68,7 +67,7 @@
   }
 </script>
 
-<div class="start" transition:pageTransition>
+<div class="start">
   {#if $songs && $songs.length}
     <Songs songs="{$songs}" />
   {:else}
@@ -96,7 +95,7 @@
 
 <style>
   .start {
-    --uno: 'flex justify-center items-center flex-grow';
+    --uno: 'flex-grow overflow-y-auto';
   }
   .actions {
     --uno: 'flex flex-col gap-8 items-center';

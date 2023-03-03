@@ -1,5 +1,10 @@
 <script>
-  import pageTransition from '$lib/page-transition'
 </script>
 
-<div transition:pageTransition>Artists</div>
+<div class="artists">Artists</div>
+
+<style>
+  .artists {
+    --uno: 'flex-grow';
+  }
+</style>

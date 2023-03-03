@@ -7,8 +7,14 @@ A beautiful music player you've always wanted.
 * [x] Drag & Drop files
 * [x] Rust audio parser
 * [ ] Player
+  * [ ] Play & Pause
+  * [ ] Modes: list cycle, single, shuffle
+  * [ ] Progress bar click & drag
+  * [ ] Spectrum
 * [ ] Lyrics display
 * [ ] Virtual scroll
-* [ ] Views
-  * [ ] Table view
-  * [ ] Grid view
+* [ ] Table view
+* [ ] Grid view
+* [ ] Dark mode
+* [ ] I18n
+* [ ] Toggle with different theming color

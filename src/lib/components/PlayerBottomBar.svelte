@@ -9,6 +9,6 @@
 
 <style>
   .player-bottom-bar {
-    --uno: 'h-[80px] flex shrink-0';
+    --uno: 'h-[60px] flex shrink-0 bg-white';
   }
 </style>

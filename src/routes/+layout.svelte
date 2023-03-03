@@ -32,7 +32,7 @@
     ) {
       await db.playlists.put({
         title: DEFAULT_PLAYLIST_TITLE,
-        songIds: '',
+        songIds: [],
       })
     }
   }
