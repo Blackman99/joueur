@@ -34,8 +34,7 @@
           recursive: true,
         })
         const songs: Song[] = await parseSongsFromFileEntries(entries)
-        console.log(songs)
-        // await db.songs.bulkAdd(songs)
+        await db.songs.bulkAdd(songs)
       } catch (error) {
         await message('Something went wrong', {
           title: 'Joueur',
@@ -59,9 +58,7 @@
         loading = true
         for (const path of selected) {
           const song = await getSongInfoFromFile(path)
-          console.log(song)
-
-          // db.songs.put(song)
+          db.songs.put(song)
         }
       }
     } catch (error) {
