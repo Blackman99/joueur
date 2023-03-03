@@ -5,7 +5,11 @@
   import { onDestroy, onMount } from 'svelte'
   import Menu from '$lib/components/Menu.svelte'
   import DropZone from '$lib/components/DropZone.svelte'
-  import { getSongInfoFromFile, isAudio } from '$lib/utils/audio'
+  import {
+    getSongInfoFromFile,
+    isAudio,
+    parseSongsFromFileEntries,
+  } from '$lib/utils/audio'
   import DropLoading from '$lib/components/DropLoading.svelte'
   import { db } from '$lib/db'
 
@@ -36,7 +40,8 @@
                 db.songs.put(song)
               } else {
                 const res = await readDir(path, { recursive: true })
-                console.log(res)
+                const songs = await parseSongsFromFileEntries(res)
+                db.songs.bulkAdd(songs)
               }
             }
           } catch (error) {

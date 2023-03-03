@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import { circInOut } from 'svelte/easing'
   import Loading from './Loading.svelte'
 
   export let label: string
@@ -12,22 +11,6 @@
     if (loading) return
     dispatcher('click')
   }
-
-  const loadingTransition = (node: any) => {
-    const existingTransform = getComputedStyle(node).transform.replace(
-      'none',
-      ''
-    )
-    return {
-      delay: 0,
-      duration: 300,
-      easing: circInOut,
-      css: (t: number) =>
-        `opacity: ${t}; position: absolute; top: 50%; left: 50%; z-index: ${Math.floor(
-          10 * t
-        )}; transform: ${existingTransform} translate(-50%, -50%) scale(${t});`,
-    }
-  }
 </script>
 
 <div
@@ -37,14 +20,14 @@
   on:keypress="{handleAction}"
 >
   {#if loading}
-    <div transition:loadingTransition>
+    <di>
       <div class="icon">
         <Loading />
       </div>
       <div class="with-space">Just a sec...</div>
-    </div>
+    </di>
   {:else}
-    <div transition:loadingTransition>
+    <div>
       <div class="icon">
         <slot name="icon" />
       </div>
