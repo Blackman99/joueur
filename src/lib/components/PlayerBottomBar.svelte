@@ -13,17 +13,28 @@
 
 {#if $playingSong}
   <div class="player-bottom-bar" transition:slide>
-    <div>Album cover</div>
-    <div>
-      <div>title - artist</div>
-      <div>bar</div>
+    <div class="info">
+      <div>{$playingSong.title}</div>
+      <div class="meta">{$playingSong.artist} - {$playingSong.album}</div>
     </div>
-    <div>seconds</div>
+    <div class="progress">
+      <div>progress bar</div>
+      <div>seconds</div>
+    </div>
   </div>
 {/if}
 
 <style>
   .player-bottom-bar {
-    --uno: 'h-[60px] flex shrink-0 bg-white';
+    --uno: 'shrink-0 bg-white shadow-t-lg py-3 px-4 text-[14px]';
+  }
+  .info {
+    --uno: 'flex items-end';
+  }
+  .meta {
+    --uno: 'text-gray-4 text-3 ml-4';
+  }
+  .progress {
+    --uno: 'flex items-center';
   }
 </style>

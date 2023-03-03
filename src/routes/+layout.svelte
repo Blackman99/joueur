@@ -3,7 +3,6 @@
   import { appWindow } from '@tauri-apps/api/window'
   import { readDir } from '@tauri-apps/api/fs'
   import { onDestroy, onMount } from 'svelte'
-  import Menu from '$lib/components/Menu.svelte'
   import DropZone from '$lib/components/DropZone.svelte'
   import {
     getSongInfoFromFile,
@@ -14,6 +13,7 @@
   import { db } from '$lib/db'
   import { DEFAULT_PLAYLIST_TITLE } from '$lib/constants'
   import PlayerBottomBar from '$lib/components/PlayerBottomBar.svelte'
+  import Sidebar from '$lib/components/Sidebar.svelte'
 
   globalThis.Buffer = Buffer
 
@@ -75,24 +75,7 @@
 </script>
 
 <main class="j-main">
-  <aside class="j-side">
-    <img src="/logo.svg" alt="Joueur" class="logo" />
-    <div>
-      <Menu label="Musics" to="/">
-        <div slot="icon" class="i-bi:music-note-list"></div>
-      </Menu>
-      <Menu label="Artists" to="/artists">
-        <div slot="icon" class="i-icon-park-outline:peoples-two"></div>
-      </Menu>
-      <Menu label="Album" to="/albums">
-        <div slot="icon" class="i-iconoir:album-open"></div>
-      </Menu>
-      <Menu label="Settings" to="/settings">
-        <div slot="icon" class="i-bytesize:settings"></div>
-      </Menu>
-    </div>
-    <div></div>
-  </aside>
+  <Sidebar />
   <div class="j-content">
     <slot />
     <PlayerBottomBar />
@@ -116,16 +99,10 @@
   :global(a) {
     --uno: 'decoration-none text-inherit';
   }
-  .logo {
-    --uno: 'w-[10vw] block mx-a';
-  }
   .j-main {
     --uno: 'flex h-[100vh] items-stretch';
   }
-  .j-side {
-    --uno: 'flex flex-col justify-between p-4 w-[18vw] box-border';
-  }
   .j-content {
-    --uno: 'flex-grow bg-light-2 flex flex-col';
+    --uno: 'flex-grow bg-light-3 flex flex-col';
   }
 </style>

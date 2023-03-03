@@ -8,7 +8,12 @@
 <div class="songs">
   {#each songs as song (song.id)}
     <div class="song-row" on:dblclick="{() => ($playingSongId = song.id)}">
-      <img class="cover" src="{song.cover}" alt="{song.title}" />
+      <img
+        class="cover"
+        src="{song.cover}"
+        alt="{song.title}"
+        draggable="false"
+      />
       <div class="info">
         <div>
           {song.title}
