@@ -2,7 +2,7 @@
   import { message, open } from '@tauri-apps/api/dialog'
   import { liveQuery } from 'dexie'
   import { readDir } from '@tauri-apps/api/fs'
-  import type { Readable } from 'svelte/store'
+  import { type Readable } from 'svelte/store'
   import { db } from '$lib/db'
   import ActionButton from '$lib/components/ActionButton.svelte'
   import { AUDIO_EXTENSIONS } from '$lib/constants'
@@ -13,9 +13,16 @@
     parseSongsFromFileEntries,
   } from '$lib/utils/audio'
 
+  let queryEnd = false
+
   const songs = liveQuery(() => db.songs.toArray()) as unknown as Readable<
     Song[]
   >
+
+  const unsubscribe = songs.subscribe(() => {
+    queryEnd = true
+    unsubscribe()
+  })
 
   const audioFilter = {
     name: 'audio',
@@ -68,28 +75,31 @@
 </script>
 
 <div class="start">
-  {#if $songs && $songs.length}
-    <Songs songs="{$songs}" />
-  {:else}
-    <div class="actions">
-      <div>
-        You can drag any files into this window or clicked the add button below
+  {#if queryEnd}
+    {#if $songs && $songs.length}
+      <Songs songs="{$songs}" />
+    {:else}
+      <div class="actions">
+        <div>
+          You can drag any files into this window or clicked the add button
+          below
+        </div>
+        <ActionButton
+          label="Add directory"
+          on:click="{handleAddDirectoryEntry}"
+          loading="{loading}"
+        >
+          <div class="i-icon-park-outline:folder-music" slot="icon"></div>
+        </ActionButton>
+        <ActionButton
+          label="Add file"
+          on:click="{handleAddFileEntry}"
+          loading="{loading}"
+        >
+          <div class="i-icon-park-outline:file-music" slot="icon"></div>
+        </ActionButton>
       </div>
-      <ActionButton
-        label="Add directory"
-        on:click="{handleAddDirectoryEntry}"
-        loading="{loading}"
-      >
-        <div class="i-icon-park-outline:folder-music" slot="icon"></div>
-      </ActionButton>
-      <ActionButton
-        label="Add file"
-        on:click="{handleAddFileEntry}"
-        loading="{loading}"
-      >
-        <div class="i-icon-park-outline:file-music" slot="icon"></div>
-      </ActionButton>
-    </div>
+    {/if}
   {/if}
 </div>
 

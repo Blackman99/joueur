@@ -18,3 +18,4 @@ A beautiful music player you've always wanted.
 * [ ] Dark mode
 * [ ] I18n
 * [ ] Toggle with different theming color
+* [ ] Smooth transitions
