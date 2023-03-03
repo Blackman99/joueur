@@ -14,7 +14,7 @@
         </div>
         <div class="meta">
           <div>
-            {song.artist} - {song.album}
+            {song.artist} - {song.album || 'Unknown'}
           </div>
           <div>
             {song.display_duration} <span class="text-light-8">|</span>

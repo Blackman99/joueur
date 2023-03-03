@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api'
 import type { Song } from '../types'
 import { AUDIO_EXTENSIONS } from '$lib/constants'
 
-export const isAudio = (path: string) => AUDIO_EXTENSIONS.some(ext => path.endsWith(`.${ext}`))
+export const isAudio = (path: string) => AUDIO_EXTENSIONS.includes(path.split('.').pop()?.toLowerCase() || '')
 
 export const getSongInfoFromFile = async (filePath: string) => {
   const song = await invoke('get_metadata', { path: filePath })

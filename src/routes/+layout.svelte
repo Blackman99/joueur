@@ -12,6 +12,8 @@
   } from '$lib/utils/audio'
   import DropLoading from '$lib/components/DropLoading.svelte'
   import { db } from '$lib/db'
+  import { DEFAULT_PLAYLIST_TITLE } from '$lib/constants'
+  import PlayerBottomBar from '$lib/components/PlayerBottomBar.svelte'
 
   globalThis.Buffer = Buffer
 
@@ -21,7 +23,22 @@
 
   let cleanupDropListener: () => void
 
+  const createDefaultPlaylist = async () => {
+    if (
+      (await db.playlists
+        .where('title')
+        .equals(DEFAULT_PLAYLIST_TITLE)
+        .count()) < 1
+    ) {
+      await db.playlists.put({
+        title: DEFAULT_PLAYLIST_TITLE,
+        songIds: '',
+      })
+    }
+  }
+
   onMount(async () => {
+    await createDefaultPlaylist()
     cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
       switch (evt.payload.type) {
         case 'hover':
@@ -78,6 +95,7 @@
   </aside>
   <div class="j-content">
     <slot />
+    <PlayerBottomBar />
   </div>
 </main>
 
@@ -102,12 +120,12 @@
     --uno: 'w-[10vw] block mx-a';
   }
   .j-main {
-    --uno: 'flex h-[100vh]';
+    --uno: 'flex h-[100vh] items-stretch';
   }
   .j-side {
     --uno: 'flex flex-col justify-between p-4 w-[18vw] box-border';
   }
   .j-content {
-    --uno: 'flex-grow bg-light-2';
+    --uno: 'flex-grow bg-light-2 flex flex-col';
   }
 </style>

@@ -54,7 +54,10 @@ fn get_metadata(path: &str) -> Option<Song> {
 }
 
 fn unwrap_str(var: Option<&str>) -> Option<String> {
-    Some(String::from(var.unwrap()))
+    match var {
+        None => None,
+        Some(str) => Some(String::from(str))
+    }
 }
 
 fn main() {

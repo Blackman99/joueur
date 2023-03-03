@@ -18,3 +18,18 @@ export interface Album {
   title: string
   cover?: string
 }
+
+export interface Playlist {
+  title: string
+  songIds?: number[]
+}
+
+export interface Artist {
+  title?: string
+  songIds: number[]
+}
+
+export interface Setting {
+  title: string
+  description: string
+}

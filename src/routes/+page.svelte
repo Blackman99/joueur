@@ -96,7 +96,7 @@
 
 <style>
   .start {
-    --uno: 'flex justify-center items-center h-full';
+    --uno: 'flex justify-center items-center flex-grow';
   }
   .actions {
     --uno: 'flex flex-col gap-8 items-center';
