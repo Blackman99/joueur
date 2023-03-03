@@ -8,4 +8,6 @@ pub struct Song {
     pub album: Option<String>,
     pub year: Option<i32>,
     pub cover: Option<String>,
+    pub duration: Option<u128>,
+    pub display_duration: Option<String>
 }

@@ -10,6 +10,8 @@ export interface Song {
   album?: string
   year?: number
   cover?: string
+  duration?: number
+  display_duration?: string
 }
 
 export interface Album {

@@ -1,8 +1,9 @@
+use base64::{Engine as _, engine::general_purpose};
 use song::Song;
 use tauri::Manager;
 use id3::{Tag, TagLike};
+use mp3_duration;
 mod song;
-use base64::{Engine as _, engine::general_purpose};
 
 #[cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
@@ -11,15 +12,30 @@ use base64::{Engine as _, engine::general_purpose};
 
 
 #[tauri::command]
-fn get_metadata(path: &str) -> Song {
-    let song = match Tag::read_from_path(path) {
+fn get_metadata(path: &str) -> Option<Song> {
+    match Tag::read_from_path(path) {
         Ok(tag) => {
-            Song {
+            let d = match mp3_duration::from_path(path){
+                Ok(d) => Some(d),
+                Err(_e) => None
+            };
+            Some(Song {
                 path: String::from(path),
                 title: unwrap_str(tag.title()),
                 artist: unwrap_str(tag.artist()),
                 album: unwrap_str(tag.album()),
                 year: tag.year(),
+                duration: match d {
+                    Some(d) => Some(d.as_millis()),
+                    None => None
+                },
+                display_duration: match d {
+                    None => None,
+                    Some(d) => {
+                        let seconds = d.as_secs() % 60;
+                        Some(format!("{:02}:{:02}", (d.as_secs() - seconds) / 60, seconds))
+                    }
+                },
                 cover: match tag.pictures().next() {
                     None => None,
                     Some(p) => {
@@ -31,27 +47,14 @@ fn get_metadata(path: &str) -> Song {
                         Some(str)
                     }
                 }
-            }
+            })
         },
-        Err(_e) => {
-            Song {
-                path: String::from(path),
-                title: None,
-                artist: None,
-                album: None,
-                year: None,
-                cover: None
-            }
-        }
-    };
-    song
+        Err(_e) => None
+    }
 }
 
 fn unwrap_str(var: Option<&str>) -> Option<String> {
-    match var {
-        None => None,
-        Some(s) => Some(String::from(s))
-    }
+    Some(String::from(var.unwrap()))
 }
 
 fn main() {

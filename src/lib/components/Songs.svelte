@@ -8,12 +8,18 @@
   {#each songs as song (song.id)}
     <div class="song-row">
       <img class="cover" src="{song.cover}" alt="{song.title}" />
-      <div>
+      <div class="info">
         <div>
           {song.title}
         </div>
         <div class="meta">
-          {song.artist} - {song.album}
+          <div>
+            {song.artist} - {song.album}
+          </div>
+          <div>
+            {song.display_duration} <span class="text-light-8">|</span>
+            {song.path.split('.').pop()}
+          </div>
         </div>
       </div>
     </div>
@@ -31,6 +37,9 @@
     --uno: 'w-8 h-8 rounded mr-2';
   }
   .meta {
-    --uno: 'text-warm-gray-5 text-[12px]';
+    --uno: 'text-warm-gray-5 text-[12px] flex justify-between';
+  }
+  .info {
+    --uno: 'flex-grow';
   }
 </style>
