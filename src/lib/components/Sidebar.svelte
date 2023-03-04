@@ -43,6 +43,6 @@
     --uno: 'w-[10vw] block mx-a';
   }
   .cover {
-    --uno: 'w-full';
+    --uno: 'w-full aspect-1 object-cover';
   }
 </style>
