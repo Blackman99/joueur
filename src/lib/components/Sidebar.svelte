@@ -27,9 +27,11 @@
       <div slot="icon" class="i-bytesize:settings"></div>
     </Menu>
   </div>
-  {#if $playingSong}
-    <img class="cover" src="{$playingSong.cover}" alt="{$playingSong.title}" />
-  {/if}
+  <div>
+    {#if $playingSong}
+      <img class="cover" src="{$playingSong.cover}" alt="{$playingSong.title}" />
+    {/if}
+  </div>
 </aside>
 
 <style>

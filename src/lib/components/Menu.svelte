@@ -19,7 +19,7 @@
 
 <style>
   .menu-item {
-    --uno: 'flex items-center gap-2 hover:bg-light-7 px-4 py-3 rounded-lg';
+    --uno: 'flex items-center gap-2 hover:bg-light-7 px-4 py-3 rounded-lg decoration-none text-inherit';
   }
   .menu-icon {
     --uno: 'text-5';

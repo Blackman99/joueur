@@ -13,10 +13,12 @@ export const getSongInfoFromFile = async (filePath: string) => {
 
 export const parseSongsFromFileEntries = async (fileEntries: FileEntry[], songs: Song[] = []) => {
   const parseEntry = async (entry: FileEntry) => {
-    if (isAudio(entry.path))
-      songs.push(await getSongInfoFromFile(entry.path))
+    if (isAudio(entry.path)) {
+      const song = await getSongInfoFromFile(entry.path)
+      if (song) songs.push(song)
+    }
     else if (entry.children?.length)
-      await parseSongsFromFileEntries(entry.children, songs)
+    { await parseSongsFromFileEntries(entry.children, songs) }
   }
   for (const entry of fileEntries)
     await parseEntry(entry)

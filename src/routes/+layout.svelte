@@ -54,6 +54,7 @@
             for (const path of evt.payload.paths) {
               if (isAudio(path)) {
                 const song = await getSongInfoFromFile(path)
+                console.log(song)
                 db.songs.put(song)
               } else {
                 const res = await readDir(path, { recursive: true })
@@ -95,9 +96,6 @@
     --uno: 'bg-white m-0 p-0 overflow-hidden text-secondary';
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
       'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  }
-  :global(a) {
-    --uno: 'decoration-none text-inherit';
   }
   .j-main {
     --uno: 'flex h-[100vh] items-stretch';

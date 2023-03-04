@@ -110,6 +110,6 @@
     --uno: 'flex-grow overflow-y-auto';
   }
   .actions {
-    --uno: 'flex flex-col gap-8 items-center';
+    --uno: 'flex flex-col gap-8 h-full flex items-center justify-center';
   }
 </style>
