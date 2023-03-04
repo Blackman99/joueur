@@ -5,7 +5,7 @@
   import IconButton from './IconButton.svelte'
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
-  import { playingSongId } from '$lib/store'
+  import { playingSongId, displayPlayedSeconds } from '$lib/store'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -22,10 +22,10 @@
         </div>
       </div>
       <div class="append">
+        <div class="seconds">{$displayPlayedSeconds} / {$playingSong.display_duration}</div>
         <IconButton>
           <div class="i-iconoir:sound-low"></div>
         </IconButton>
-        <div class="seconds">/{$playingSong.display_duration}</div>
       </div>
     </div>
     <div class="controls">
@@ -51,7 +51,7 @@
     --uno: 'text-gray-4 text-3 ml-2';
   }
   .controls {
-    --uno: 'flex items-center mt-1';
+    --uno: 'flex items-center';
   }
   .title {
     --uno: 'flex items-end';
@@ -61,7 +61,7 @@
     --uno: 'flex-grow mx-2';
   }
   .seconds {
-    --uno: 'text-gray-4 text-3 ml-2';
+    --uno: 'text-gray-4 text-3 mx-2';
   }
   .append {
     --uno: 'flex items-center';

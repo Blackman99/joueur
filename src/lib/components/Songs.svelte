@@ -1,12 +1,14 @@
 <script lang="ts">
   import { playingSongId } from '$lib/store'
   import type { Song } from '$lib/types'
+  import PlayingIcon from './PlayingIcon.svelte';
 
   export let songs: Song[]
 </script>
 
 <div class="songs">
   {#each songs as song (song.id)}
+    {@const isPlaying = song.id === $playingSongId}
     <div class="song-row" on:dblclick="{() => ($playingSongId = song.id)}">
       <img
         class="cover"
@@ -15,8 +17,13 @@
         draggable="false"
       />
       <div class="info">
-        <div>
+        <div class="title">
           {song.title}
+          {#if isPlaying}
+          <div class="playing-icon-wrapper">
+            <PlayingIcon />
+          </div>
+          {/if}
         </div>
         <div class="meta">
           <div>
@@ -49,5 +56,11 @@
   }
   .info {
     --uno: 'flex-grow';
+  }
+  .title {
+    --uno: 'flex items-center';
+  }
+  .playing-icon-wrapper {
+    --uno: 'text-primary ml-1'
   }
 </style>
