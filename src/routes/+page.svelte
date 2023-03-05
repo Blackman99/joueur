@@ -13,6 +13,7 @@
     getSongInfoFromFile,
     parseSongsFromFileEntries,
   } from '$lib/utils/audio'
+    import Playlists from '$lib/components/Playlists.svelte'
 
   let queryEnd = false
 
@@ -79,7 +80,10 @@
 <div class="start">
   {#if queryEnd}
     {#if $songs && $songs.length}
+    <div class="lists">
+      <Playlists />
       <Songs songs="{$songs}" />
+    </div>
     {:else}
       <div class="actions">
         <div>
@@ -111,5 +115,8 @@
   }
   .actions {
     --uno: 'flex flex-col gap-8 h-full flex items-center justify-center';
+  }
+  .lists {
+    --uno: 'flex items-stretch h-full';
   }
 </style>
