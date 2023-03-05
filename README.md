@@ -6,6 +6,9 @@ A beautiful music player you've always wanted.
 
 * [x] Drag & Drop files
 * [x] Rust audio parser
+* [x] Basic DB 
+* [ ] Playlist
+* [ ] Artist & Album grouping
 * [ ] Player
   * [ ] Play & Pause
   * [ ] Modes: list cycle, single, shuffle
