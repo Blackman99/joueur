@@ -11,7 +11,6 @@
   } from '$lib/utils/audio'
   import DropLoading from '$lib/components/DropLoading.svelte'
   import { db } from '$lib/db'
-  import { DEFAULT_PLAYLIST_TITLE } from '$lib/constants'
   import PlayerBottomBar from '$lib/components/PlayerBottomBar.svelte'
   import Sidebar from '$lib/components/Sidebar.svelte'
 
@@ -23,22 +22,7 @@
 
   let cleanupDropListener: () => void
 
-  const createDefaultPlaylist = async () => {
-    if (
-      (await db.playlists
-        .where('title')
-        .equals(DEFAULT_PLAYLIST_TITLE)
-        .count()) < 1
-    ) {
-      await db.playlists.put({
-        title: DEFAULT_PLAYLIST_TITLE,
-        songIds: [],
-      })
-    }
-  }
-
   onMount(async () => {
-    await createDefaultPlaylist()
     cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
       switch (evt.payload.type) {
         case 'hover':
@@ -54,12 +38,11 @@
             for (const path of evt.payload.paths) {
               if (isAudio(path)) {
                 const song = await getSongInfoFromFile(path)
-                console.log(song)
-                db.songs.put(song)
+                await db.addSong(song)
               } else {
                 const res = await readDir(path, { recursive: true })
                 const songs = await parseSongsFromFileEntries(res)
-                db.songs.bulkAdd(songs)
+                await db.addSongs(songs)
               }
             }
           } catch (error) {

@@ -1,11 +1,13 @@
-export interface JoueurConf {
-  themeColor?: string
+interface WithAutoGenerateId {
+  id: number
 }
 
-export interface Song {
-  id: number
+interface WithTitle extends WithAutoGenerateId {
+  title: string
+}
+
+export interface Song extends WithTitle {
   path: string
-  title?: string
   artist?: string
   album?: string
   year?: number
@@ -14,22 +16,18 @@ export interface Song {
   display_duration?: string
 }
 
-export interface Album {
-  title: string
+export interface Album extends WithTitle {
   cover?: string
 }
 
-export interface Playlist {
-  title: string
-  songIds?: number[]
-}
-
-export interface Artist {
-  title?: string
+export interface Playlist extends WithTitle {
   songIds: number[]
 }
 
-export interface Setting {
-  title: string
+export interface Artist extends WithTitle {
+  songIds: number[]
+}
+
+export interface Setting extends WithTitle {
   description: string
 }
