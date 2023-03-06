@@ -73,7 +73,12 @@ class JoueurDB extends Dexie {
     const existingAlbum = await this.albums.where('title').equals(song.album).and(al => al.artist === song.artist).first()
 
     if (!existingAlbum) {
-      await this.albums.put({ title: song.album, songIds: [song.id], artist: song.artist } as unknown as Album)
+      await this.albums.put({
+        title: song.album,
+        songIds: [song.id],
+        artist: song.artist,
+        cover: song.cover,
+      } as unknown as Album)
     } else {
       existingAlbum.songIds.push(song.id)
       await this.albums.update(existingAlbum.id, existingAlbum)
