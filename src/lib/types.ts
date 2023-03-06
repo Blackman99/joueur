@@ -8,11 +8,11 @@ interface WithTitle extends WithAutoGenerateId {
 
 export interface Song extends WithTitle {
   path: string
-  artist?: string
-  album?: string
+  artist: string
+  album: string
   year?: number
   cover?: string
-  duration?: number
+  duration: number
   display_duration?: string
 }
 

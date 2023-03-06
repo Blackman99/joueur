@@ -12,11 +12,11 @@ class JoueurDB extends Dexie {
   constructor() {
     super('JoueurDB')
 
-    this.version(12).stores({
+    this.version(13).stores({
       songs: '++id,title,album,artist,path',
       albums: '++id,title,artist',
       playlists: '++id,title',
-      artists: '++id',
+      artists: '++id,title',
       settings: '++id',
     })
   }
@@ -48,6 +48,20 @@ class JoueurDB extends Dexie {
   }
 
   /**
+   * Add or update artist based on the new added song info.
+   * @param song the new added song
+   */
+  async addOrUpdateArtistBySong(song: Song) {
+    const isExist = await this.artists.where('title').equals(song.artist).first()
+    if (!isExist) {
+      await this.artists.put({ title: song.artist, songIds: [] } as unknown as Artist)
+    } else {
+      isExist.songIds.push(song.id)
+      await this.artists.update(isExist.id, isExist)
+    }
+  }
+
+  /**
    * Always use this instead of `db.songs.add`
    * @param song The song to add
    */
@@ -55,9 +69,13 @@ class JoueurDB extends Dexie {
     const isExist = await this.songExists(song)
     if (!isExist) {
       const newSongId = await this.songs.put(song)
+
+      // Add new song to default `'all'` list
       const allList = await this.getAllList()
       allList.songIds.push(newSongId)
       await this.playlists.update(allList.id, allList)
+
+      await this.addOrUpdateArtistBySong(song)
     }
   }
 
