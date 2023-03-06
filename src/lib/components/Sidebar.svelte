@@ -20,7 +20,7 @@
     <Menu label="Artists" to="/artists">
       <div slot="icon" class="i-icon-park-outline:peoples-two"></div>
     </Menu>
-    <Menu label="Album" to="/albums">
+    <Menu label="Albums" to="/albums">
       <div slot="icon" class="i-iconoir:album-open"></div>
     </Menu>
     <Menu label="Settings" to="/settings">
@@ -36,15 +36,15 @@
 
 <style>
   .j-side {
-    --uno: 'flex flex-col justify-between w-[18vw] box-border';
+    --uno: 'flex flex-col justify-between w-[18vw] min-w-180px max-w-[240px] box-border';
   }
   .menus {
     --uno: 'p-4';
   }
   .logo {
-    --uno: 'w-[10vw] max-w-[120px] block mx-a';
+    --uno: 'w-[10vw] max-w-[120px] min-w-[80px] block mx-a';
   }
   .cover {
-    --uno: 'w-full aspect-1 object-cover';
+    --uno: 'w-full aspect-1 object-cover block';
   }
 </style>

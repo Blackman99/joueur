@@ -26,6 +26,9 @@
         <IconButton>
           <div class="i-iconoir:sound-low"></div>
         </IconButton>
+        <IconButton>
+          <div class="i-lucide:list-music"></div>
+        </IconButton>
       </div>
     </div>
     <div class="controls">

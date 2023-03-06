@@ -30,6 +30,7 @@ export interface Playlist extends WithSongs {
 
 export interface Artist extends WithSongs {
   songIds: number[]
+  albumIds: number[]
 }
 
 export interface Setting extends WithTitle {

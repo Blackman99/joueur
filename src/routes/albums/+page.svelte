@@ -34,13 +34,13 @@
     --uno: 'flex-grow';
   }
   .cover {
-    --uno: 'w-[40px] h-[40px] ';
+    --uno: 'w-[40px] h-[40px] fit-cover rounded';
   }
   .album-row {
     --uno: 'flex item-start py-2 px-4';
   }
   .info {
-    --uno: 'ml-2';
+    --uno: 'ml-2 text-[14px]';
   }
   .meta {
     --uno: 'text-warm-gray-5 text-[12px]';
