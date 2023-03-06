@@ -13,11 +13,16 @@
   <div>
     {#if hasAlbum}
       {#each $albums as album}
-        <div>
+        <div class="album-row">
           {#if album.cover}
             <img class="cover" src="{album.cover}" alt="{album.title}" />
           {/if}
-          {album.title} - {album.artist}
+          <div class="info">
+            {album.title} <br>
+            <span class="meta">
+             By {album.artist} - {album.songIds.length} songs 
+            </span>
+          </div>
         </div>
       {/each}
     {/if}
@@ -30,5 +35,14 @@
   }
   .cover {
     --uno: 'w-[40px] h-[40px] ';
+  }
+  .album-row {
+    --uno: 'flex item-start py-2 px-4';
+  }
+  .info {
+    --uno: 'ml-2';
+  }
+  .meta {
+    --uno: 'text-warm-gray-5 text-[12px]';
   }
 </style>

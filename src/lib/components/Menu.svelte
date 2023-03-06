@@ -7,7 +7,7 @@
   $: active = $page.route.id?.replace(/\([\s\S]*\)\/?/g, '') === to
 </script>
 
-<a class="menu-item" class:active="{active}" href="{to}">
+<a class="menu-item" class:active="{active}" href="{to}" draggable="false">
   <div class="menu-icon">
     <slot name="icon" />
   </div>
