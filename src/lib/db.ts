@@ -21,11 +21,17 @@ class JoueurDB extends Dexie {
     })
   }
 
+  /**
+   * Make sure the song is unique by combine path, title, artist.
+   */
   async songExists(song: Song) {
     return !!await this.songs.where('path').equals(song.path).and(s => s.title === song.title).and(s => s.artist === song.artist).count()
   }
 
-  // get the default 'All' playlist
+  /**
+   * Get the default 'All' playlist. Would auto create the default list when there's none.
+   * @returns The `'All'` list
+   */
   async getAllList() {
     let allList = await this.playlists.where('title').equals(DEFAULT_PLAYLIST_TITLE).first()
     if (!allList) {
@@ -41,7 +47,10 @@ class JoueurDB extends Dexie {
     return allList
   }
 
-  // use this instead of `this.songs.add`
+  /**
+   * Always use this instead of `db.songs.add`
+   * @param song The song to add
+   */
   async addSong(song: Song) {
     const isExist = await this.songExists(song)
     if (!isExist) {
@@ -52,7 +61,10 @@ class JoueurDB extends Dexie {
     }
   }
 
-  // use this instead of `this.songs.bulkAdd`
+  /**
+   * Always use this instead of `db.songs.bulkAdd`
+   * @param songs songs to add
+   */
   async addSongs(songs: Song[]) {
     const newSongs = []
     for (const song of songs) {
