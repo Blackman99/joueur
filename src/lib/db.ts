@@ -22,10 +22,14 @@ class JoueurDB extends Dexie {
   }
 
   /**
-   * Make sure the song is unique by combine path, title, artist.
+   * Make sure the song is unique by compare the combination of path, title, artist.
    */
   async songExists(song: Song) {
-    return !!await this.songs.where('path').equals(song.path).and(s => s.title === song.title).and(s => s.artist === song.artist).count()
+    return !!await this.songs
+      .where('path').equals(song.path)
+      .and(s => s.title === song.title)
+      .and(s => s.artist === song.artist)
+      .count()
   }
 
   /**
@@ -52,12 +56,27 @@ class JoueurDB extends Dexie {
    * @param song the new added song
    */
   async addOrUpdateArtistBySong(song: Song) {
-    const isExist = await this.artists.where('title').equals(song.artist).first()
-    if (!isExist) {
-      await this.artists.put({ title: song.artist, songIds: [] } as unknown as Artist)
+    const existingArtist = await this.artists.where('title').equals(song.artist).first()
+    if (!existingArtist) {
+      await this.artists.put({ title: song.artist, songIds: [song.id] } as unknown as Artist)
     } else {
-      isExist.songIds.push(song.id)
-      await this.artists.update(isExist.id, isExist)
+      existingArtist.songIds.push(song.id)
+      await this.artists.update(existingArtist.id, existingArtist)
+    }
+  }
+
+  /**
+   * Add or update album based on the new added song info.
+   * @param song the new added song
+   */
+  async addOrUpdateAlbumBySong(song: Song) {
+    const existingAlbum = await this.albums.where('title').equals(song.album).and(al => al.artist === song.artist).first()
+
+    if (!existingAlbum) {
+      await this.albums.put({ title: song.album, songIds: [song.id], artist: song.artist } as unknown as Album)
+    } else {
+      existingAlbum.songIds.push(song.id)
+      await this.albums.update(existingAlbum.id, existingAlbum)
     }
   }
 
@@ -67,16 +86,20 @@ class JoueurDB extends Dexie {
    */
   async addSong(song: Song) {
     const isExist = await this.songExists(song)
-    if (!isExist) {
-      const newSongId = await this.songs.put(song)
+    if (isExist) return
+    const newSongId = await this.songs.put(song)
+    song.id = newSongId
 
-      // Add new song to default `'all'` list
-      const allList = await this.getAllList()
-      allList.songIds.push(newSongId)
-      await this.playlists.update(allList.id, allList)
+    // Add new song to default `'all'` list
+    const allList = await this.getAllList()
+    allList.songIds.push(newSongId)
+    await this.playlists.update(allList.id, allList)
 
-      await this.addOrUpdateArtistBySong(song)
-    }
+    // grouping the artist
+    await this.addOrUpdateArtistBySong(song)
+
+    // grouping the album
+    await this.addOrUpdateAlbumBySong(song)
   }
 
   /**
@@ -87,11 +110,21 @@ class JoueurDB extends Dexie {
     const newSongs = []
     for (const song of songs) {
       const isExist = await this.songExists(song)
-      if (!isExist) newSongs.push(song)
+      if (!isExist)
+        newSongs.push(song)
     }
     const newSongIds = await this.songs.bulkAdd(newSongs, {
       allKeys: true,
     })
+
+    for (let i = 0; i < newSongs.length; i++) {
+      const newSong = newSongs[i]
+      newSong.id = newSongIds[i]
+      await this.addOrUpdateArtistBySong(newSong)
+      await this.addOrUpdateAlbumBySong(newSong)
+    }
+
+    // Add new song to default `'all'` list
     const allList = await this.getAllList()
     allList.songIds.push(...newSongIds)
     await this.playlists.update(allList.id, allList)

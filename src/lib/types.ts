@@ -6,6 +6,10 @@ interface WithTitle extends WithAutoGenerateId {
   title: string
 }
 
+interface WithSongs extends WithTitle {
+  songIds: number[]
+}
+
 export interface Song extends WithTitle {
   path: string
   artist: string
@@ -16,15 +20,15 @@ export interface Song extends WithTitle {
   display_duration?: string
 }
 
-export interface Album extends WithTitle {
+export interface Album extends WithSongs {
+  artist: string
   cover?: string
 }
 
-export interface Playlist extends WithTitle {
-  songIds: number[]
+export interface Playlist extends WithSongs {
 }
 
-export interface Artist extends WithTitle {
+export interface Artist extends WithSongs {
   songIds: number[]
 }
 
