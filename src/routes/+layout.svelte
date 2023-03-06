@@ -37,7 +37,9 @@
           try {
             for (const path of evt.payload.paths) {
               if (isAudio(path)) {
+                console.log(path)
                 const song = await getSongInfoFromFile(path)
+                
                 await db.addSong(song)
               } else {
                 const res = await readDir(path, { recursive: true })

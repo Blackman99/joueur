@@ -1,6 +1,5 @@
 <script lang="ts">
   import { message, open } from '@tauri-apps/api/dialog'
-  import { liveQuery } from 'dexie'
   import { readDir } from '@tauri-apps/api/fs'
   import type { Readable } from 'svelte/store'
   import { db } from '$lib/db'
@@ -8,24 +7,17 @@
   import { AUDIO_EXTENSIONS } from '$lib/constants'
   import type { Song } from '$lib/types'
   import Songs from '$lib/components/Songs.svelte'
+  import { currentSongsInList } from '$lib/store'
 
   import {
     getSongInfoFromFile,
     parseSongsFromFileEntries,
   } from '$lib/utils/audio'
     import Playlists from '$lib/components/Playlists.svelte'
+    import ActionFolderMusic from '$lib/icons/ActionFolderMusic.svelte'
+    import ActionFileMusic from '$lib/icons/ActionFileMusic.svelte'
 
   let queryEnd = false
-
-  const songs = liveQuery(() => db.songs.toArray()) as unknown as Readable<
-    Song[]
-  >
-
-  const unsubscribe = songs.subscribe(() => {
-    queryEnd = true
-    // The unsubscribe returned by dexie is not identical with svelte store
-    if (!unsubscribe.closed) unsubscribe.unsubscribe()
-  }) as any
 
   const audioFilter = {
     name: 'audio',
@@ -75,14 +67,15 @@
       loading = false
     }
   }
-  $: hasSongs = $songs && $songs.length
 </script>
 
-<div class="start" class:has-songs="{hasSongs}">
-  {#if queryEnd}
-    {#if hasSongs}
+<div class="start">
+  {#await $currentSongsInList}
+    <div class="loading">Just a sec...</div>
+  {:then songs} 
+    {#if songs.length}
       <Playlists />
-      <Songs songs="{$songs}" />
+      <Songs {songs} />
     {:else}
       <div class="actions">
         <div>
@@ -94,28 +87,28 @@
           on:click="{handleAddDirectoryEntry}"
           loading="{loading}"
         >
-          <div class="i-icon-park-outline:folder-music" slot="icon"></div>
+          <ActionFolderMusic slot="icon" />
         </ActionButton>
         <ActionButton
           label="Add file"
           on:click="{handleAddFileEntry}"
           loading="{loading}"
         >
-          <div class="i-icon-park-outline:file-music" slot="icon"></div>
+          <ActionFileMusic slot="icon" />
         </ActionButton>
       </div>
     {/if}
-  {/if}
+  {/await}
 </div>
 
 <style>
   .start {
-    --uno: 'flex-grow';
-  }
-  .has-songs {
-    --uno: 'flex items-stretch overflow-y-auto';
+    --uno: 'flex-grow flex items-stretch overflow-y-auto';
   }
   .actions {
     --uno: 'flex flex-col gap-8 h-full flex items-center justify-center';
+  }
+  .loading {
+    --uno: 'text-gray-6 py-3 px-2';
   }
 </style>

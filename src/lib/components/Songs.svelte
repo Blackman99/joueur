@@ -29,7 +29,7 @@
           <div>
             {song.artist} - {song.album || 'Unknown'}
           </div>
-          <div>
+          <div class="duration">
             {song.display_duration} <span class="text-light-8">|</span>
             {song.path.split('.').pop()}
           </div>
@@ -62,5 +62,8 @@
   }
   .playing-icon-wrapper {
     --uno: 'text-primary ml-1'
+  }
+  .duration {
+    --uno: 'flex-shrink-0';
   }
 </style>

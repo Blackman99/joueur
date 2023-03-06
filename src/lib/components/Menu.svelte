@@ -22,7 +22,7 @@
     --uno: 'flex items-center gap-2 hover:bg-light-7 px-4 py-3 rounded-lg decoration-none text-inherit';
   }
   .menu-icon {
-    --uno: 'text-5';
+    --uno: 'text-5 flex items-center';
   }
   .active {
     --uno: 'text-primary hover:bg-primary hover:bg-opacity-5';

@@ -31,7 +31,7 @@
 
 <style>
   .albums {
-    --uno: 'flex-grow';
+    --uno: 'flex-grow overflow-y-auto';
   }
   .cover {
     --uno: 'w-[40px] h-[40px] fit-cover rounded';

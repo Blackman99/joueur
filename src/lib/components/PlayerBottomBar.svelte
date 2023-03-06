@@ -6,6 +6,10 @@
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
   import { playingSongId, displayPlayedSeconds } from '$lib/store'
+    import SoundLow from '$lib/icons/SoundLow.svelte'
+    import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
+    import ControlPrev from '$lib/icons/ControlPrev.svelte'
+    import ControlNext from '$lib/icons/ControlNext.svelte'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -24,20 +28,20 @@
       <div class="append">
         <div class="seconds">{$displayPlayedSeconds} / {$playingSong.display_duration}</div>
         <IconButton>
-          <div class="i-iconoir:sound-low"></div>
+          <SoundLow />
         </IconButton>
         <IconButton>
-          <div class="i-lucide:list-music"></div>
+          <ControlCurrentList />
         </IconButton>
       </div>
     </div>
     <div class="controls">
       <IconButton>
-        <div class="i-fluent:previous-48-regular"></div>
+        <ControlPrev />
       </IconButton>
       <div class="bar">progress bar</div>
       <IconButton>
-        <div class="i-fluent:next-48-regular"></div>
+        <ControlNext />
       </IconButton>
     </div>
   </div>
@@ -67,6 +71,6 @@
     --uno: 'text-gray-4 text-3 mx-2';
   }
   .append {
-    --uno: 'flex items-center';
+    --uno: 'flex items-center flex-shrink-0';
   }
 </style>

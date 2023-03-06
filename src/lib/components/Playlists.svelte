@@ -1,39 +1,64 @@
 <script lang="ts">
   import { db } from "$lib/db"
-    import type { Playlist } from "$lib/types"
+    import CreatePlaylist from "$lib/icons/CreatePlaylist.svelte"
+    import PlaylistActive from "$lib/icons/PlaylistActive.svelte"
+  import { selectedPlaylistId } from "$lib/store"
+  import type { Playlist } from "$lib/types"
   import { liveQuery } from "dexie"
   import type { Readable } from 'svelte/store'
-
 
   const playlists = liveQuery(() => db.playlists.toArray()) as unknown as Readable<Playlist[]>
 </script>
 
 <div class="playlist">
+  <div class="create-list">
+    <span>
+      Create 
+    </span>
+    <div class="create-icon">
+      <CreatePlaylist />
+    </div>
+  </div>
   <div class="lists">
     {#if $playlists}
       {#each $playlists as playlist (playlist.id)}
-        <div class="playlist-item">
-          {playlist.title}
+        <div class="playlist-item" class:active="{playlist.id === $selectedPlaylistId}">
+          <div>
+            {playlist.title}
+          </div>
+          <div class="active-icon">
+            <PlaylistActive />
+          </div>
         </div>
       {/each}
     {/if}
-  </div>
-  <div class="create-list playlist-item">
-    <div class="i-ic:round-playlist-add"></div>
   </div>
 </div>
 
 <style>
   .playlist {
-    --uno: 'w-[15vw] bg-light-3 flex flex-col';
+    --uno: 'w-[18vw] min-w-[160px] max-w-[240px] bg-light-3 flex flex-col text-[14px] pt-2';
+    user-select: none;
+    -webkit-user-select: none;
   }
   .playlist-item {
-    --uno: 'py-2 px-4';
+    --uno: 'py-2 px-4 flex items-center justify-between';
   }
   .lists {
     --uno: 'flex-grow';
   }
+  .active {
+    --uno: 'text-primary';
+  }
+  .active-icon {
+    --uno: 'text-5 flex items-center';
+  }
+  .create-icon {
+    --uno: 'text-5 ml-2 flex items-center';
+  }
   .create-list {
-    --uno: 'text-6 cursor-pointer hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 items-center flex justify-center';
+    --uno: 'cursor-pointer hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 items-center flex justify-between mx-2 rounded-[40px] text-[12px] b-1 b-gray-4 text-gray-4 px-3 py-2 b-solid hover:text-primary hover:b-primary';
+    user-select: none;
+    -webkit-user-select: none;
   }
 </style>

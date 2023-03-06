@@ -5,6 +5,10 @@
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
   import { playingSongId } from '$lib/store'
+    import MenuMusics from '$lib/icons/MenuMusics.svelte'
+    import MenuArtists from '$lib/icons/MenuArtists.svelte'
+    import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
+    import MenuSettings from '$lib/icons/MenuSettings.svelte'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -15,16 +19,16 @@
   <img src="/logo.svg" alt="Joueur" class="logo" />
   <div class="menus">
     <Menu label="Musics" to="/">
-      <div slot="icon" class="i-bi:music-note-list"></div>
+      <MenuMusics slot="icon" />
     </Menu>
     <Menu label="Artists" to="/artists">
-      <div slot="icon" class="i-icon-park-outline:peoples-two"></div>
+      <MenuArtists slot="icon" />
     </Menu>
     <Menu label="Albums" to="/albums">
-      <div slot="icon" class="i-iconoir:album-open"></div>
+      <MenuAlbums slot="icon" />
     </Menu>
     <Menu label="Settings" to="/settings">
-      <div slot="icon" class="i-bytesize:settings"></div>
+      <MenuSettings slot="icon" />
     </Menu>
   </div>
   <div>
