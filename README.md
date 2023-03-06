@@ -7,8 +7,8 @@ A beautiful music player you've always wanted.
 * [x] Drag & Drop files
 * [x] Rust audio parser
 * [x] Basic DB 
-* [ ] Playlist
-* [ ] Artist & Album grouping
+* [x] Playlist & Artist & Album grouping
+* [ ] Playlist CRUD
 * [ ] Player
   * [ ] Play & Pause
   * [ ] Modes: list cycle, single, shuffle
