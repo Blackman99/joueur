@@ -75,15 +75,14 @@
       loading = false
     }
   }
+  $: hasSongs = $songs && $songs.length
 </script>
 
-<div class="start">
+<div class="start" class:has-songs="{hasSongs}">
   {#if queryEnd}
-    {#if $songs && $songs.length}
-    <div class="lists">
+    {#if hasSongs}
       <Playlists />
       <Songs songs="{$songs}" />
-    </div>
     {:else}
       <div class="actions">
         <div>
@@ -111,12 +110,12 @@
 
 <style>
   .start {
-    --uno: 'flex-grow overflow-y-auto';
+    --uno: 'flex-grow';
+  }
+  .has-songs {
+    --uno: 'flex items-stretch overflow-y-auto';
   }
   .actions {
     --uno: 'flex flex-col gap-8 h-full flex items-center justify-center';
-  }
-  .lists {
-    --uno: 'flex items-stretch h-full';
   }
 </style>

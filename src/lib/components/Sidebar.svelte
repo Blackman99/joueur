@@ -42,7 +42,7 @@
     --uno: 'p-4';
   }
   .logo {
-    --uno: 'w-[10vw] block mx-a';
+    --uno: 'w-[10vw] max-w-[120px] block mx-a';
   }
   .cover {
     --uno: 'w-full aspect-1 object-cover';

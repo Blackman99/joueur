@@ -41,7 +41,7 @@
 
 <style>
   .songs {
-    --uno: 'flex-grow text-[14px]';
+    --uno: 'flex-grow text-[14px] overflow-y-auto h-full';
   }
   .song-row {
     --uno: 'flex items-start px-4 py-2 cursor-pointer hover:bg-primary hover:bg-opacity-8 transition-bg transition-200';
