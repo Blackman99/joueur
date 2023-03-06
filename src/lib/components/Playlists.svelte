@@ -20,7 +20,7 @@
 
 <style>
   .playlist {
-    --uno: 'w-[15vw] bg-light-4';
+    --uno: 'w-[15vw] bg-light-3';
   }
   .playlist-item {
     --uno: 'py-2 px-4';

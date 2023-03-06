@@ -84,6 +84,6 @@
     --uno: 'flex h-[100vh] items-stretch';
   }
   .j-content {
-    --uno: 'flex-grow bg-light-3 flex flex-col';
+    --uno: 'flex-grow bg-light- flex flex-col';
   }
 </style>

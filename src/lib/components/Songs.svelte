@@ -41,7 +41,7 @@
 
 <style>
   .songs {
-    --uno: 'flex-grow text-[14px] overflow-y-auto h-full';
+    --uno: 'flex-grow text-[14px] overflow-y-auto h-full bg-light-5';
   }
   .song-row {
     --uno: 'flex items-start px-4 py-2 cursor-pointer hover:bg-primary hover:bg-opacity-8 transition-bg transition-200';
@@ -49,7 +49,7 @@
     -webkit-user-select: none;
   }
   .cover {
-    --uno: 'w-8 h-8 rounded mr-2';
+    --uno: 'w-8 rounded mr-2';
   }
   .meta {
     --uno: 'text-warm-gray-5 text-[12px] flex justify-between';
@@ -58,7 +58,7 @@
     --uno: 'flex-grow';
   }
   .title {
-    --uno: 'flex items-center';
+    --uno: 'flex items-center h-6';
   }
   .playing-icon-wrapper {
     --uno: 'text-primary ml-1'
