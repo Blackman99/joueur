@@ -2,14 +2,8 @@
   import { db } from '$lib/db'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import { selectedPlaylistId } from '$lib/store'
-  import type { Playlist } from '$lib/types'
-  import { liveQuery } from 'dexie'
-  import type { Readable } from 'svelte/store'
   import { scale } from 'svelte/transition'
-
-  const playlists = liveQuery(() =>
-    db.playlists.toArray()
-  ) as unknown as Readable<Playlist[]>
+  import { playlists } from '$lib/store'
 
   const handlePlaylistClick = (id: number) => {
     $selectedPlaylistId = id
@@ -29,6 +23,9 @@
         >
           <div>
             {playlist.title}
+            <span class="num">
+              ({playlist.songIds.length})
+            </span>
           </div>
           {#if active}
             <div class="active-icon" transition:scale>
@@ -43,7 +40,7 @@
 
 <style>
   .playlist {
-    --uno: 'w-[18vw] min-w-[160px] max-w-[240px] bg-light-2 flex flex-col text-[14px] pt-2';
+    --uno: 'w-[18vw] min-w-[160px] max-w-[240px] bg-light-2 flex flex-col text-[14px]';
     user-select: none;
     -webkit-user-select: none;
   }
@@ -58,5 +55,8 @@
   }
   .active-icon {
     --uno: 'text-5 flex items-center';
+  }
+  .num {
+    --uno: 'text-gray-6 text-[12px]';
   }
 </style>

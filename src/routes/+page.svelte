@@ -1,9 +1,7 @@
 <script lang="ts">
   import Songs from '$lib/components/Songs.svelte'
   import { currentSongsInList } from '$lib/store'
-
   import Playlists from '$lib/components/Playlists.svelte'
-
   import CreatePlaylistFloatButton from '$lib/components/CreatePlaylistFloatButton.svelte'
 </script>
 

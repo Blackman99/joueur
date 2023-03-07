@@ -1,6 +1,8 @@
 import Dexie from 'dexie'
+import { get } from 'svelte/store'
 import { DEFAULT_PLAYLIST_TITLE } from './constants'
 import type { Album, Artist, Playlist, Setting, Song } from './types'
+import { selectedPlaylistId } from './store'
 
 class JoueurDB extends Dexie {
   songs!: Dexie.Table<Song, number>
@@ -25,11 +27,11 @@ class JoueurDB extends Dexie {
    * Make sure the song is unique by compare the combination of path, title, artist.
    */
   async songExists(song: Song) {
-    return !!await this.songs
+    return await this.songs
       .where('path').equals(song.path)
       .and(s => s.title === song.title)
       .and(s => s.artist === song.artist)
-      .count()
+      .first()
   }
 
   /**
@@ -91,14 +93,29 @@ class JoueurDB extends Dexie {
    */
   async addSong(song: Song) {
     const isExist = await this.songExists(song)
-    if (isExist) return
-    const newSongId = await this.songs.put(song)
-    song.id = newSongId
+    if (isExist) {
+      song = isExist
+    } else {
+      const newSongId = await this.songs.put(song)
+      song.id = newSongId
+    }
 
     // Add new song to default `'all'` list
     const allList = await this.getAllList()
-    allList.songIds.push(newSongId)
-    await this.playlists.update(allList.id, allList)
+    if (!allList.songIds.includes(song.id)) {
+      allList.songIds.push(song.id)
+      await this.playlists.update(allList.id, allList)
+    }
+
+    // Add new song to current playlist
+    const currentPlayListId = get(selectedPlaylistId)
+    if (currentPlayListId !== allList.id) {
+      const playList = await this.playlists.where('id').equals(currentPlayListId).first()
+      if (playList && !playList.songIds.includes(song.id)) {
+        playList.songIds.push(song.id)
+        await this.playlists.update(playList.id, playList)
+      }
+    }
 
     // grouping the artist
     await this.addOrUpdateArtistBySong(song)
@@ -113,14 +130,19 @@ class JoueurDB extends Dexie {
    */
   async addSongs(songs: Song[]) {
     const newSongs = []
+    let songIdsWillAddToPlaylist = []
     for (const song of songs) {
       const isExist = await this.songExists(song)
       if (!isExist)
         newSongs.push(song)
+      else
+        songIdsWillAddToPlaylist.push(isExist.id)
     }
     const newSongIds = await this.songs.bulkAdd(newSongs, {
       allKeys: true,
     })
+
+    songIdsWillAddToPlaylist = songIdsWillAddToPlaylist.concat(newSongIds)
 
     for (let i = 0; i < newSongs.length; i++) {
       const newSong = newSongs[i]
@@ -131,8 +153,18 @@ class JoueurDB extends Dexie {
 
     // Add new song to default `'all'` list
     const allList = await this.getAllList()
-    allList.songIds.push(...newSongIds)
+    allList.songIds = allList.songIds.concat(songIdsWillAddToPlaylist.filter(id => !allList.songIds.includes(id)))
     await this.playlists.update(allList.id, allList)
+
+    // Add new song to current selected playlist
+    const currentPlayListId = get(selectedPlaylistId)
+    if (currentPlayListId !== allList.id) {
+      const playList = await this.playlists.where('id').equals(currentPlayListId).first()
+      if (playList) {
+        playList.songIds = playList.songIds.concat(songIdsWillAddToPlaylist.filter(id => !playList.songIds.includes(id)))
+        await this.playlists.update(allList.id, allList)
+      }
+    }
   }
 
   /**

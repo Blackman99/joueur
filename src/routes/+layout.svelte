@@ -13,6 +13,13 @@
   import { db } from '$lib/db'
   import PlayerBottomBar from '$lib/components/PlayerBottomBar.svelte'
   import Sidebar from '$lib/components/Sidebar.svelte'
+  import {
+    selectedPlaylistId,
+    SELECTED_PLAYLIST_ID_KEY,
+    refreshCurrentSongs,
+    playlists,
+  } from '$lib/store'
+  import { get } from 'svelte/store'
 
   globalThis.Buffer = Buffer
 
@@ -56,7 +63,16 @@
           }
       }
     })
-    ready = true
+
+    // The subscriptions below can only put here cause would cause unexpected errors like:
+    // can not reach variable before initialized
+    playlists.subscribe(() => refreshCurrentSongs(get(selectedPlaylistId)))
+
+    selectedPlaylistId.subscribe(async $id => {
+      localStorage.setItem(SELECTED_PLAYLIST_ID_KEY, $id.toString())
+      await refreshCurrentSongs($id)
+      ready = true
+    })
   })
 
   onDestroy(() => {
