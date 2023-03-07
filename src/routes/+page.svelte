@@ -6,10 +6,10 @@
 </script>
 
 <div class="start">
+  <Playlists />
   {#await $currentSongsInList}
     <div class="loading">Just a sec...</div>
   {:then songs}
-    <Playlists />
     <Songs songs="{songs}" />
   {/await}
   <CreatePlaylistFloatButton />

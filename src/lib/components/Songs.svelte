@@ -1,16 +1,21 @@
 <script lang="ts">
-  import { playingSongId } from '$lib/store'
+  import { playingSongId, playing } from '$lib/store'
   import type { Song } from '$lib/types'
   import Actions from './Actions.svelte'
   import PlayingIcon from './PlayingIcon.svelte'
 
   export let songs: Song[]
+
+  const handlePlay = (song: Song) => {
+    $playing = true
+    $playingSongId = song.id
+  }
 </script>
 
 <div class="songs">
   {#each songs as song (song.id)}
     {@const isPlaying = song.id === $playingSongId}
-    <div class="song-row" on:dblclick="{() => ($playingSongId = song.id)}">
+    <div class="song-row" on:dblclick="{() => handlePlay(song)}">
       <img
         class="cover"
         src="{song.cover}"
@@ -22,7 +27,9 @@
           {song.title}
           {#if isPlaying}
             <div class="playing-icon-wrapper">
-              <PlayingIcon />
+              <PlayingIcon
+                animationPlayState="{$playing ? 'running' : 'paused'}"
+              />
             </div>
           {/if}
         </div>

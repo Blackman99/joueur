@@ -13,23 +13,38 @@
   import { db } from '$lib/db'
   import PlayerBottomBar from '$lib/components/PlayerBottomBar.svelte'
   import Sidebar from '$lib/components/Sidebar.svelte'
+  import { convertFileSrc } from '@tauri-apps/api/tauri'
   import {
     selectedPlaylistId,
     SELECTED_PLAYLIST_ID_KEY,
     refreshCurrentSongs,
     playlists,
+    playing,
+    currentTime,
+    CURRENT_TIME_KEY,
+    playingSong,
+    playingSongId,
+    PLAYING_KEY,
   } from '$lib/store'
   import { get } from 'svelte/store'
+  import type { Subscription } from 'dexie'
 
+  // Mount global Buffer
   globalThis.Buffer = Buffer
 
   let showDropZone = false
-
   let showDropLoading = false
-
-  let cleanupDropListener: () => void
-
   let ready = false
+
+  // effects
+  let cleanupDropListener: () => void
+  let unsubscribePlaying: () => void
+  let unsubscribePlayingSong: () => void
+  let unsubscribePlaylistId: () => void
+  let currentTimerInterval: ReturnType<typeof setInterval>
+  let playlistSubscriber: Subscription
+
+  let audio: HTMLAudioElement
 
   onMount(async () => {
     await db.getAllList()
@@ -63,21 +78,65 @@
       }
     })
 
+    unsubscribePlaying = playing.subscribe(v => {
+      if (!v) {
+        audio?.pause()
+      } else {
+        audio?.play()
+      }
+      localStorage.setItem(PLAYING_KEY, v ? 'on' : 'off')
+    })
+
     // The subscriptions below can only put here cause would cause unexpected errors like:
     // can not reach variable before initialized
-    playlists.subscribe(() => refreshCurrentSongs(get(selectedPlaylistId)))
+    playlistSubscriber = playlists.subscribe(() =>
+      refreshCurrentSongs(get(selectedPlaylistId))
+    ) as any
 
-    selectedPlaylistId.subscribe(async $id => {
-      localStorage.setItem(SELECTED_PLAYLIST_ID_KEY, $id.toString())
-      await refreshCurrentSongs($id)
+    unsubscribePlaylistId = selectedPlaylistId.subscribe(async id => {
+      localStorage.setItem(SELECTED_PLAYLIST_ID_KEY, id.toString())
+      await refreshCurrentSongs(id)
+      // mark page ready
       ready = true
+    })
+
+    audio.onloadedmetadata = () => {
+      if (audio.paused && get(playing)) {
+        audio.play()
+      }
+    }
+
+    unsubscribePlayingSong = playingSong.subscribe(async promiseSong => {
+      const song = await promiseSong
+      if (song && audio) {
+        audio.src = convertFileSrc(song.path)
+      }
+    })
+
+    currentTimerInterval = setInterval(() => {
+      currentTime.set(audio?.currentTime)
+    }, 500)
+
+    window.addEventListener('beforeunload', () => {
+      console.log('beforeunload')
+
+      localStorage.setItem(CURRENT_TIME_KEY, get(currentTime).toString())
     })
   })
 
   onDestroy(() => {
     cleanupDropListener?.()
+    unsubscribePlaying?.()
+    unsubscribePlaylistId?.()
+    unsubscribePlayingSong?.()
+    playlistSubscriber?.unsubscribe()
+    if (currentTimerInterval) {
+      clearInterval(currentTimerInterval)
+    }
   })
 </script>
+
+<audio bind:this="{audio}" style="display: none;"></audio>
 
 <main class="j-main">
   <Sidebar />

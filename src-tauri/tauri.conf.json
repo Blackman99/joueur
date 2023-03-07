@@ -22,9 +22,7 @@
       },
       "fs": {
         "scope": [
-          "/**/*",
-          "$APPDATA/store/*",
-          "$APPDATA/*"
+          "/**/*"
         ],
         "all": true
       },
@@ -32,7 +30,10 @@
         "all": true
       },
       "protocol": {
-        "asset": true
+        "asset": true,
+        "assetScope": [
+          "/**/*"
+        ]
       }
     },
     "bundle": {

@@ -10,6 +10,11 @@
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
   import MenuSettings from '$lib/icons/MenuSettings.svelte'
   import { cubicInOut } from 'svelte/easing'
+  import IconButton from './IconButton.svelte'
+  import ControlPlay from '$lib/icons/ControlPlay.svelte'
+  import { playing } from '../store'
+  import ControlPause from '$lib/icons/ControlPause.svelte'
+  import { fade } from 'svelte/transition'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -50,6 +55,12 @@
         )};`,
     }
   }
+
+  let showControl = false
+
+  const togglePlayPause = () => {
+    $playing = !$playing
+  }
 </script>
 
 <aside class="j-side">
@@ -68,7 +79,13 @@
       <MenuSettings slot="icon" />
     </Menu>
   </div>
-  <div class="cover-wrapper">
+  <div
+    class="cover-wrapper"
+    on:mouseenter="{() => (showControl = true)}"
+    on:mouseleave="{() => (showControl = false)}"
+    on:click="{togglePlayPause}"
+    on:keyup="{togglePlayPause}"
+  >
     {#if $playingSong}
       {#key $playingSongId}
         <img
@@ -79,6 +96,20 @@
           alt="{$playingSong.title}"
         />
       {/key}
+      {#if showControl}
+        <div
+          class="play-control"
+          transition:fade="{{ duration: 100, delay: 0 }}"
+        >
+          <IconButton size="48px">
+            {#if $playing}
+              <ControlPause />
+            {:else}
+              <ControlPlay />
+            {/if}
+          </IconButton>
+        </div>
+      {/if}
     {/if}
   </div>
 </aside>
@@ -98,5 +129,8 @@
   }
   .cover-wrapper {
     --uno: 'relative';
+  }
+  .play-control {
+    --uno: 'absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-70 text-white flex items-center justify-center cursor-pointer active:bg-opacity-50';
   }
 </style>

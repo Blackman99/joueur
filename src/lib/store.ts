@@ -3,17 +3,26 @@ import { derived, get, writable } from 'svelte/store'
 import type { Readable } from 'svelte/store'
 import { db } from './db'
 import type { Playlist, Song } from './types'
+import { twoDigits } from './utils/format'
 
 export const PLAYING_SONG_ID_KEY = 'JOUEUR_PLAYING_SONG_ID_KEY'
 export const SELECTED_PLAYLIST_ID_KEY = 'JOUEUR_SELECTED_PLAYLIST_ID_KEY'
+export const CURRENT_TIME_KEY = 'JOUEUR_CURRENT_TIME_ID_KEY'
+export const PLAYING_KEY = 'JOUEUR_PLAYING_KEY_ID'
 
 export const playingSongId = writable(Number(localStorage.getItem(PLAYING_SONG_ID_KEY)))
+
+export const playingSong = derived(playingSongId, async $id => await db.songs.where('id').equals($id).first())
 
 export const playedMilliseconds = writable(0)
 
 export const selectedPlaylistId = writable(Number(localStorage.getItem(SELECTED_PLAYLIST_ID_KEY)))
 
 export const currentSongsInList = writable<Song[]>([])
+
+export const playing = writable(localStorage.getItem(PLAYING_KEY) === 'on')
+
+export const currentTime = writable(Number(localStorage.getItem(CURRENT_TIME_KEY) || 0))
 
 export const displayPlayedSeconds = derived(playedMilliseconds, $playedMilliseconds => {
   const totalSeconds = Math.ceil($playedMilliseconds / 60)
@@ -27,13 +36,6 @@ const totalSongsNumber = liveQuery(async () => await db.songs.count())
 export const playlists = liveQuery(() =>
   db.playlists.toArray(),
 ) as unknown as Readable<Playlist[]>
-
-function twoDigits(n: number) {
-  return n.toLocaleString('en-US', {
-    minimumIntegerDigits: 2,
-    useGrouping: false,
-  })
-}
 
 export async function refreshCurrentSongs($id: number) {
   const selectedPlayList = await db.playlists.where('id').equals($id).first()
