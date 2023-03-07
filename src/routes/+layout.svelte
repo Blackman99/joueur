@@ -78,7 +78,7 @@
 
 <style uno:preflights uno:safelist global>
   :global(body) {
-    --uno: 'bg-white m-0 p-0 overflow-hidden text-secondary';
+    --uno: 'bg-light-3 m-0 p-0 overflow-hidden text-secondary';
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
       'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }

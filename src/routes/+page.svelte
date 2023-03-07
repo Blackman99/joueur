@@ -103,10 +103,10 @@
 
 <style>
   .start {
-    --uno: 'flex-grow flex items-stretch overflow-y-auto';
+    --uno: 'flex-grow flex items-stretch overflow-y-auto justify-center';
   }
   .actions {
-    --uno: 'flex flex-col gap-8 h-full flex items-center justify-center';
+    --uno: 'flex flex-col gap-8 h-full items-center justify-center';
   }
   .loading {
     --uno: 'text-gray-6 py-3 px-2';

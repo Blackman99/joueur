@@ -40,7 +40,7 @@
 
 <style>
   .j-side {
-    --uno: 'flex flex-col justify-between w-[18vw] min-w-180px max-w-[240px] box-border';
+    --uno: 'flex flex-col justify-between bg-white w-[18vw] min-w-180px max-w-[240px] box-border';
   }
   .menus {
     --uno: 'p-4';
