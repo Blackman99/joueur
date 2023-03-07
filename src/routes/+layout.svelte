@@ -22,7 +22,10 @@
 
   let cleanupDropListener: () => void
 
+  let ready = false
+
   onMount(async () => {
+    await db.getAllList()
     cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
       switch (evt.payload.type) {
         case 'hover':
@@ -39,7 +42,7 @@
               if (isAudio(path)) {
                 console.log(path)
                 const song = await getSongInfoFromFile(path)
-                
+
                 await db.addSong(song)
               } else {
                 const res = await readDir(path, { recursive: true })
@@ -53,6 +56,7 @@
           }
       }
     })
+    ready = true
   })
 
   onDestroy(() => {
@@ -63,7 +67,9 @@
 <main class="j-main">
   <Sidebar />
   <div class="j-content">
-    <slot />
+    {#if ready}
+      <slot />
+    {/if}
     <PlayerBottomBar />
   </div>
 </main>
@@ -86,6 +92,6 @@
     --uno: 'flex h-[100vh] items-stretch';
   }
   .j-content {
-    --uno: 'flex-grow bg-light- flex flex-col';
+    --uno: 'flex-grow bg-light- flex flex-col relative';
   }
 </style>

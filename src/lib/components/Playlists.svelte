@@ -6,30 +6,15 @@
   import type { Playlist } from '$lib/types'
   import { liveQuery } from 'dexie'
   import type { Readable } from 'svelte/store'
-  import Dialog from './Dialog.svelte'
+  import FloatAction from './FloatAction.svelte'
+  import IconButton from './IconButton.svelte'
 
   const playlists = liveQuery(() =>
     db.playlists.toArray()
   ) as unknown as Readable<Playlist[]>
-
-  let open = false
-
-  const handleOpenCreatePlaylistDialog = () => {
-    open = true
-  }
 </script>
 
 <div class="playlist">
-  <div
-    class="create-list"
-    on:click="{handleOpenCreatePlaylistDialog}"
-    on:keyup="{handleOpenCreatePlaylistDialog}"
-  >
-    <span> Create </span>
-    <div class="create-icon">
-      <CreatePlaylist />
-    </div>
-  </div>
   <div class="lists">
     {#if $playlists}
       {#each $playlists as playlist (playlist.id)}
@@ -49,19 +34,9 @@
   </div>
 </div>
 
-<Dialog bind:open="{open}" title="Create playlist">
-  <div slot="title" class="flex items-center">
-    <div class="flex items-center text-6">
-      <CreatePlaylist />
-    </div>
-    <div class="ml-2">Create playlist</div>
-  </div>
-  <div>Some content</div>
-</Dialog>
-
 <style>
   .playlist {
-    --uno: 'w-[18vw] min-w-[160px] max-w-[240px] bg-light-3 flex flex-col text-[14px] pt-2';
+    --uno: 'w-[18vw] min-w-[160px] max-w-[240px] bg-light-2 flex flex-col text-[14px] pt-2';
     user-select: none;
     -webkit-user-select: none;
   }
@@ -76,13 +51,5 @@
   }
   .active-icon {
     --uno: 'text-5 flex items-center';
-  }
-  .create-icon {
-    --uno: 'text-5 ml-2 flex items-center';
-  }
-  .create-list {
-    --uno: 'cursor-pointer hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 items-center flex justify-between mx-2 rounded-[40px] text-[12px] b-1 b-gray-4 text-gray-4 px-3 leading-8 b-solid hover:text-primary hover:b-primary';
-    user-select: none;
-    -webkit-user-select: none;
   }
 </style>

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { message, open } from '@tauri-apps/api/dialog'
   import { readDir } from '@tauri-apps/api/fs'
-  import type { Readable } from 'svelte/store'
   import { db } from '$lib/db'
   import ActionButton from '$lib/components/ActionButton.svelte'
   import { AUDIO_EXTENSIONS } from '$lib/constants'
@@ -13,11 +12,10 @@
     getSongInfoFromFile,
     parseSongsFromFileEntries,
   } from '$lib/utils/audio'
-    import Playlists from '$lib/components/Playlists.svelte'
-    import ActionFolderMusic from '$lib/icons/ActionFolderMusic.svelte'
-    import ActionFileMusic from '$lib/icons/ActionFileMusic.svelte'
-
-  let queryEnd = false
+  import Playlists from '$lib/components/Playlists.svelte'
+  import ActionFolderMusic from '$lib/icons/ActionFolderMusic.svelte'
+  import ActionFileMusic from '$lib/icons/ActionFileMusic.svelte'
+  import CreatePlaylistFloatButton from '$lib/components/CreatePlaylistFloatButton.svelte'
 
   const audioFilter = {
     name: 'audio',
@@ -72,10 +70,10 @@
 <div class="start">
   {#await $currentSongsInList}
     <div class="loading">Just a sec...</div>
-  {:then songs} 
+  {:then songs}
     {#if songs.length}
       <Playlists />
-      <Songs {songs} />
+      <Songs songs="{songs}" />
     {:else}
       <div class="actions">
         <div>
@@ -99,11 +97,12 @@
       </div>
     {/if}
   {/await}
+  <CreatePlaylistFloatButton />
 </div>
 
 <style>
   .start {
-    --uno: 'flex-grow flex items-stretch overflow-y-auto justify-center';
+    --uno: 'flex-grow flex items-stretch overflow-y-auto justify-center relative';
   }
   .actions {
     --uno: 'flex flex-col gap-8 h-full items-center justify-center';

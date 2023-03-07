@@ -1,0 +1,60 @@
+<script lang="ts">
+  import CreatePlaylist from '../icons/CreatePlaylist.svelte'
+  import FloatAction from './FloatAction.svelte'
+  import { cubicInOut } from 'svelte/easing'
+  import { db } from '$lib/db'
+
+  let showInput = false
+  const handleMouseEnter = () => {
+    showInput = true
+  }
+  const handleMouseLeave = () => {
+    showInput = false
+  }
+
+  const inputTransition = (_node: any) => {
+    return {
+      duration: 300,
+      easing: cubicInOut,
+      css: (t: number, u: number) => `width: ${t * 20}vw; opacity: ${t};`,
+    }
+  }
+
+  let newPlaylistTitle = ''
+
+  const handleCreate = async (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      db.addPlaylist(newPlaylistTitle)
+    }
+  }
+</script>
+
+<div
+  class="create-playlist"
+  on:mouseenter="{handleMouseEnter}"
+  on:mouseleave="{handleMouseLeave}"
+>
+  <FloatAction>
+    <CreatePlaylist />
+  </FloatAction>
+  {#if showInput}
+    <input
+      class="input"
+      bind:value="{newPlaylistTitle}"
+      transition:inputTransition
+      on:keyup="{handleCreate}"
+    />
+  {/if}
+</div>
+
+<style>
+  .create-playlist {
+    --uno: 'absolute bottom-4 right-4 shadow-lg z-3';
+  }
+  .input {
+    --uno: 'absolute top-0 right-0 bottom-0 h-full block b-none outline-none pl-4 pr-[48px] rounded-[20px] bg-primary text-white text-[14px] origin-r';
+  }
+  .input:focus {
+    --uno: '';
+  }
+</style>

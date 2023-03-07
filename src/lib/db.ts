@@ -42,7 +42,7 @@ class JoueurDB extends Dexie {
       allList = {
         id: -1,
         title: DEFAULT_PLAYLIST_TITLE,
-        songIds: [],
+        songIds: (await this.songs.toArray()).map(song => song.id),
       } as Playlist
       const id = await this.playlists.put(allList)
       allList.id = id
@@ -133,6 +133,20 @@ class JoueurDB extends Dexie {
     const allList = await this.getAllList()
     allList.songIds.push(...newSongIds)
     await this.playlists.update(allList.id, allList)
+  }
+
+  /**
+   * Add new playlist. Always use this instead of `db.playlists.put`
+   * @param newPlayListTitle The new playlist title
+   */
+  async addPlaylist(newPlayListTitle: string) {
+    const existingPlayList = await this.playlists.where('title').equals(newPlayListTitle).first()
+    if (existingPlayList) return
+    const newPlayList = {
+      title: newPlayListTitle,
+      songIds: [],
+    } as unknown as Playlist
+    await this.playlists.put(newPlayList)
   }
 }
 

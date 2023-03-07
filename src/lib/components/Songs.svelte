@@ -1,7 +1,7 @@
 <script lang="ts">
   import { playingSongId } from '$lib/store'
   import type { Song } from '$lib/types'
-  import PlayingIcon from './PlayingIcon.svelte';
+  import PlayingIcon from './PlayingIcon.svelte'
 
   export let songs: Song[]
 </script>
@@ -20,9 +20,9 @@
         <div class="title">
           {song.title}
           {#if isPlaying}
-          <div class="playing-icon-wrapper">
-            <PlayingIcon />
-          </div>
+            <div class="playing-icon-wrapper">
+              <PlayingIcon />
+            </div>
           {/if}
         </div>
         <div class="meta">
@@ -41,7 +41,7 @@
 
 <style>
   .songs {
-    --uno: 'flex-grow text-[14px] overflow-y-auto h-full bg-light-5';
+    --uno: 'flex-grow text-[14px] overflow-y-auto h-full bg-light-4';
   }
   .song-row {
     --uno: 'flex items-start px-4 py-2 cursor-pointer hover:bg-primary hover:bg-opacity-8 transition-bg transition-200';
@@ -61,7 +61,7 @@
     --uno: 'flex items-center h-6';
   }
   .playing-icon-wrapper {
-    --uno: 'text-primary ml-1'
+    --uno: 'text-primary ml-1';
   }
   .duration {
     --uno: 'flex-shrink-0';
