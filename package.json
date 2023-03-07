@@ -1,7 +1,7 @@
 {
   "name": "joueur",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -14,16 +14,16 @@
     "format": "prettier \"./**/*.svelte\" --check"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.2.0"
+    "@tauri-apps/api": "^1.2.0",
+    "buffer": "^6.0.3",
+    "dexie": "^3.2.3"
   },
   "devDependencies": {
     "@casual-ui/eslint-config-svelte": "^0.1.0",
     "@iconify/json": "^2.2.28",
-    "@sveltejs/adapter-static": "^1.0.6",
+    "@sveltejs/adapter-static": "^2.0.1",
     "@sveltejs/kit": "^1.9.1",
     "@tauri-apps/cli": "^1.2.3",
-    "buffer": "^6.0.3",
-    "dexie": "^3.2.3",
     "eslint": "^8.35.0",
     "prettier": "^2.8.4",
     "prettier-plugin-svelte": "^2.9.0",
