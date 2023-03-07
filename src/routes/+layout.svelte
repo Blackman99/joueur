@@ -20,7 +20,7 @@
     refreshCurrentSongs,
     playlists,
     playing,
-    currentTime,
+    playedSeconds,
     CURRENT_TIME_KEY,
     playingSong,
     playingSongId,
@@ -114,14 +114,8 @@
     })
 
     currentTimerInterval = setInterval(() => {
-      currentTime.set(audio?.currentTime)
+      playedSeconds.set(audio?.currentTime)
     }, 500)
-
-    window.addEventListener('beforeunload', () => {
-      console.log('beforeunload')
-
-      localStorage.setItem(CURRENT_TIME_KEY, get(currentTime).toString())
-    })
   })
 
   onDestroy(() => {
@@ -133,6 +127,8 @@
     if (currentTimerInterval) {
       clearInterval(currentTimerInterval)
     }
+
+    localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
   })
 </script>
 

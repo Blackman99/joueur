@@ -10,7 +10,7 @@ A beautiful music player you've always wanted.
 * [x] Playlist & Artist & Album grouping
 * [ ] Playlist CRUD
 * [ ] Player
-  * [ ] Play & Pause
+  * [x] Play & Pause
   * [ ] Modes: list cycle, single, shuffle
   * [ ] Progress bar click & drag
   * [ ] Spectrum

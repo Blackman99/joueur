@@ -14,7 +14,7 @@ export const playingSongId = writable(Number(localStorage.getItem(PLAYING_SONG_I
 
 export const playingSong = derived(playingSongId, async $id => await db.songs.where('id').equals($id).first())
 
-export const playedMilliseconds = writable(0)
+export const playedSeconds = writable(0)
 
 export const selectedPlaylistId = writable(Number(localStorage.getItem(SELECTED_PLAYLIST_ID_KEY)))
 
@@ -22,13 +22,10 @@ export const currentSongsInList = writable<Song[]>([])
 
 export const playing = writable(localStorage.getItem(PLAYING_KEY) === 'on')
 
-export const currentTime = writable(Number(localStorage.getItem(CURRENT_TIME_KEY) || 0))
-
-export const displayPlayedSeconds = derived(playedMilliseconds, $playedMilliseconds => {
-  const totalSeconds = Math.ceil($playedMilliseconds / 60)
-  const minutes = Math.floor(totalSeconds / 60)
-  const secondsRemain = totalSeconds % 60
-  return `${twoDigits(minutes)}:${twoDigits(secondsRemain)}`
+export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
+  const minutes = Math.floor($playedSeconds / 60)
+  const secondsRemain = $playedSeconds % 60
+  return `${twoDigits(minutes)}:${twoDigits(Math.ceil(secondsRemain))}`
 })
 
 const totalSongsNumber = liveQuery(async () => await db.songs.count())
