@@ -1,20 +1,31 @@
 <script lang="ts">
-  import { db } from "$lib/db"
-    import CreatePlaylist from "$lib/icons/CreatePlaylist.svelte"
-    import PlaylistActive from "$lib/icons/PlaylistActive.svelte"
-  import { selectedPlaylistId } from "$lib/store"
-  import type { Playlist } from "$lib/types"
-  import { liveQuery } from "dexie"
+  import { db } from '$lib/db'
+  import CreatePlaylist from '$lib/icons/CreatePlaylist.svelte'
+  import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
+  import { selectedPlaylistId } from '$lib/store'
+  import type { Playlist } from '$lib/types'
+  import { liveQuery } from 'dexie'
   import type { Readable } from 'svelte/store'
+  import Dialog from './Dialog.svelte'
 
-  const playlists = liveQuery(() => db.playlists.toArray()) as unknown as Readable<Playlist[]>
+  const playlists = liveQuery(() =>
+    db.playlists.toArray()
+  ) as unknown as Readable<Playlist[]>
+
+  let open = false
+
+  const handleOpenCreatePlaylistDialog = () => {
+    open = true
+  }
 </script>
 
 <div class="playlist">
-  <div class="create-list">
-    <span>
-      Create 
-    </span>
+  <div
+    class="create-list"
+    on:click="{handleOpenCreatePlaylistDialog}"
+    on:keyup="{handleOpenCreatePlaylistDialog}"
+  >
+    <span> Create </span>
     <div class="create-icon">
       <CreatePlaylist />
     </div>
@@ -22,7 +33,10 @@
   <div class="lists">
     {#if $playlists}
       {#each $playlists as playlist (playlist.id)}
-        <div class="playlist-item" class:active="{playlist.id === $selectedPlaylistId}">
+        <div
+          class="playlist-item"
+          class:active="{playlist.id === $selectedPlaylistId}"
+        >
           <div>
             {playlist.title}
           </div>
@@ -34,6 +48,16 @@
     {/if}
   </div>
 </div>
+
+<Dialog bind:open="{open}" title="Create playlist">
+  <div slot="title" class="flex items-center">
+    <div class="flex items-center text-6">
+      <CreatePlaylist />
+    </div>
+    <div class="ml-2">Create playlist</div>
+  </div>
+  <div>Some content</div>
+</Dialog>
 
 <style>
   .playlist {
