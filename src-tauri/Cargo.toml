@@ -1,10 +1,10 @@
 [package]
 name = "joueur"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+version = "0.0.1"
+description = "A beautiful music player you've always wanted"
+authors = ["Dongsheng Zhao"]
+license = "MIT"
+repository = "https://github.com/Blackman99/joueur"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
