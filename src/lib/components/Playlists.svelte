@@ -1,33 +1,40 @@
 <script lang="ts">
   import { db } from '$lib/db'
-  import CreatePlaylist from '$lib/icons/CreatePlaylist.svelte'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import { selectedPlaylistId } from '$lib/store'
   import type { Playlist } from '$lib/types'
   import { liveQuery } from 'dexie'
   import type { Readable } from 'svelte/store'
-  import FloatAction from './FloatAction.svelte'
-  import IconButton from './IconButton.svelte'
+  import { scale } from 'svelte/transition'
 
   const playlists = liveQuery(() =>
     db.playlists.toArray()
   ) as unknown as Readable<Playlist[]>
+
+  const handlePlaylistClick = (id: number) => {
+    $selectedPlaylistId = id
+  }
 </script>
 
 <div class="playlist">
   <div class="lists">
     {#if $playlists}
       {#each $playlists as playlist (playlist.id)}
+        {@const active = playlist.id === $selectedPlaylistId}
         <div
           class="playlist-item"
-          class:active="{playlist.id === $selectedPlaylistId}"
+          class:active="{active}"
+          on:click="{() => handlePlaylistClick(playlist.id)}"
+          on:keyup="{() => handlePlaylistClick(playlist.id)}"
         >
           <div>
             {playlist.title}
           </div>
-          <div class="active-icon">
-            <PlaylistActive />
-          </div>
+          {#if active}
+            <div class="active-icon" transition:scale>
+              <PlaylistActive />
+            </div>
+          {/if}
         </div>
       {/each}
     {/if}
@@ -41,7 +48,7 @@
     -webkit-user-select: none;
   }
   .playlist-item {
-    --uno: 'py-2 px-4 flex items-center justify-between';
+    --uno: 'leading-10 px-4 flex items-center justify-between hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 cursor-pointer';
   }
   .lists {
     --uno: 'flex-grow';

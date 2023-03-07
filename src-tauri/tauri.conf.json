@@ -81,7 +81,8 @@
         "height": 600,
         "resizable": true,
         "title": "Joueur",
-        "width": 800
+        "width": 800,
+        "minWidth": 600
       }
     ]
   }

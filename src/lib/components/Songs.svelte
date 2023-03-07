@@ -1,6 +1,7 @@
 <script lang="ts">
   import { playingSongId } from '$lib/store'
   import type { Song } from '$lib/types'
+  import Actions from './Actions.svelte'
   import PlayingIcon from './PlayingIcon.svelte'
 
   export let songs: Song[]
@@ -37,6 +38,9 @@
       </div>
     </div>
   {/each}
+  {#if !songs.length}
+    <Actions />
+  {/if}
 </div>
 
 <style>

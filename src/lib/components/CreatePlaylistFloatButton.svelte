@@ -3,10 +3,15 @@
   import FloatAction from './FloatAction.svelte'
   import { cubicInOut } from 'svelte/easing'
   import { db } from '$lib/db'
+  import { tick } from 'svelte'
 
   let showInput = false
-  const handleMouseEnter = () => {
+  let inputDom: HTMLInputElement
+
+  const handleMouseEnter = async () => {
     showInput = true
+    await tick()
+    inputDom?.focus()
   }
   const handleMouseLeave = () => {
     showInput = false
@@ -25,6 +30,7 @@
   const handleCreate = async (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       db.addPlaylist(newPlaylistTitle)
+      newPlaylistTitle = ''
     }
   }
 </script>
@@ -40,6 +46,7 @@
   {#if showInput}
     <input
       class="input"
+      bind:this="{inputDom}"
       bind:value="{newPlaylistTitle}"
       transition:inputTransition
       on:keyup="{handleCreate}"
