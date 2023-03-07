@@ -81,7 +81,7 @@
     --uno: 'text-5 ml-2 flex items-center';
   }
   .create-list {
-    --uno: 'cursor-pointer hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 items-center flex justify-between mx-2 rounded-[40px] text-[12px] b-1 b-gray-4 text-gray-4 px-3 py-2 b-solid hover:text-primary hover:b-primary';
+    --uno: 'cursor-pointer hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 items-center flex justify-between mx-2 rounded-[40px] text-[12px] b-1 b-gray-4 text-gray-4 px-3 leading-8 b-solid hover:text-primary hover:b-primary';
     user-select: none;
     -webkit-user-select: none;
   }

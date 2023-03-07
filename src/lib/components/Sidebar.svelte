@@ -5,14 +5,51 @@
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
   import { playingSongId } from '$lib/store'
-    import MenuMusics from '$lib/icons/MenuMusics.svelte'
-    import MenuArtists from '$lib/icons/MenuArtists.svelte'
-    import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
-    import MenuSettings from '$lib/icons/MenuSettings.svelte'
+  import MenuMusics from '$lib/icons/MenuMusics.svelte'
+  import MenuArtists from '$lib/icons/MenuArtists.svelte'
+  import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
+  import MenuSettings from '$lib/icons/MenuSettings.svelte'
+  import { cubicInOut } from 'svelte/easing'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
   ) as unknown as Readable<Song | undefined>
+
+  const coverIn = (node: any) => {
+    const existingTransform = getComputedStyle(node).transform.replace(
+      'none',
+      ''
+    )
+    return {
+      duration: 800,
+      easing: cubicInOut,
+      css: (t: number, u: number) =>
+        `transform: ${existingTransform} translateX(${
+          t < 0.5 ? 100 * t : 100 * (1 - t)
+        }%) scale(${
+          1 - u * 0.5
+        }); opacity: ${t};position: relative;z-index: ${Math.floor(10 * t)}`,
+    }
+  }
+
+  const coverOut = (node: any) => {
+    const existingTransform = getComputedStyle(node).transform.replace(
+      'none',
+      ''
+    )
+    return {
+      duration: 800,
+      easing: cubicInOut,
+      css: (t: number, u: number) =>
+        `transform: ${existingTransform} translateX(${
+          t < 0.5 ? -100 * t : -100 * (1 - t)
+        }%) rotate(${
+          u < 0.5 ? -60 * u : -60 * (1 - u)
+        }deg); transform-origin: bottom left; position: absolute; z-index: ${Math.floor(
+          10 * t
+        )};`,
+    }
+  }
 </script>
 
 <aside class="j-side">
@@ -31,9 +68,17 @@
       <MenuSettings slot="icon" />
     </Menu>
   </div>
-  <div>
+  <div class="cover-wrapper">
     {#if $playingSong}
-      <img class="cover" src="{$playingSong.cover}" alt="{$playingSong.title}" />
+      {#key $playingSongId}
+        <img
+          in:coverIn
+          out:coverOut
+          class="cover"
+          src="{$playingSong.cover}"
+          alt="{$playingSong.title}"
+        />
+      {/key}
     {/if}
   </div>
 </aside>
@@ -50,5 +95,8 @@
   }
   .cover {
     --uno: 'w-full aspect-1 object-cover block';
+  }
+  .cover-wrapper {
+    --uno: 'relative';
   }
 </style>
