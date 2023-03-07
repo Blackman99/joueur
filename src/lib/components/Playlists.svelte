@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { db } from '$lib/db'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import { selectedPlaylistId } from '$lib/store'
-  import { scale } from 'svelte/transition'
   import { playlists } from '$lib/store'
 
   const handlePlaylistClick = (id: number) => {
@@ -28,7 +26,7 @@
             </span>
           </div>
           {#if active}
-            <div class="active-icon" transition:scale>
+            <div class="active-icon">
               <PlaylistActive />
             </div>
           {/if}
@@ -40,7 +38,7 @@
 
 <style>
   .playlist {
-    --uno: 'w-[18vw] min-w-[160px] max-w-[240px] bg-light-2 flex flex-col text-[14px]';
+    --uno: 'w-[18vw] min-w-[200px] max-w-[240px] bg-light-2 flex flex-col text-[14px]';
     user-select: none;
     -webkit-user-select: none;
   }

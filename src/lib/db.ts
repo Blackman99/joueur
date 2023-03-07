@@ -61,7 +61,7 @@ class JoueurDB extends Dexie {
     const existingArtist = await this.artists.where('title').equals(song.artist).first()
     if (!existingArtist) {
       await this.artists.put({ title: song.artist, songIds: [song.id] } as unknown as Artist)
-    } else {
+    } else if (!existingArtist.songIds.includes(song.id)) {
       existingArtist.songIds.push(song.id)
       await this.artists.update(existingArtist.id, existingArtist)
     }
@@ -81,7 +81,7 @@ class JoueurDB extends Dexie {
         artist: song.artist,
         cover: song.cover,
       } as unknown as Album)
-    } else {
+    } else if (!existingAlbum.songIds.includes(song.id)) {
       existingAlbum.songIds.push(song.id)
       await this.albums.update(existingAlbum.id, existingAlbum)
     }
@@ -98,6 +98,11 @@ class JoueurDB extends Dexie {
     } else {
       const newSongId = await this.songs.put(song)
       song.id = newSongId
+      // grouping the artist
+      await this.addOrUpdateArtistBySong(song)
+
+      // grouping the album
+      await this.addOrUpdateAlbumBySong(song)
     }
 
     // Add new song to default `'all'` list
@@ -116,12 +121,6 @@ class JoueurDB extends Dexie {
         await this.playlists.update(playList.id, playList)
       }
     }
-
-    // grouping the artist
-    await this.addOrUpdateArtistBySong(song)
-
-    // grouping the album
-    await this.addOrUpdateAlbumBySong(song)
   }
 
   /**
@@ -162,7 +161,7 @@ class JoueurDB extends Dexie {
       const playList = await this.playlists.where('id').equals(currentPlayListId).first()
       if (playList) {
         playList.songIds = playList.songIds.concat(songIdsWillAddToPlaylist.filter(id => !playList.songIds.includes(id)))
-        await this.playlists.update(allList.id, allList)
+        await this.playlists.update(playList.id, playList)
       }
     }
   }

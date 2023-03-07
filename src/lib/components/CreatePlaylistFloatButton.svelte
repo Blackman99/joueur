@@ -50,6 +50,7 @@
       bind:value="{newPlaylistTitle}"
       transition:inputTransition
       on:keyup="{handleCreate}"
+      placeholder="Enter new list title"
     />
   {/if}
 </div>
@@ -61,7 +62,7 @@
   .input {
     --uno: 'absolute top-0 right-0 bottom-0 h-full block b-none outline-none pl-4 pr-[48px] rounded-[20px] bg-primary text-white text-[14px] origin-r';
   }
-  .input:focus {
-    --uno: '';
+  .input::placeholder {
+    --uno: 'text-gray-2';
   }
 </style>
