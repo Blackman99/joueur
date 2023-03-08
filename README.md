@@ -29,7 +29,9 @@ A music player you've always wanted
     * [ ] Add songs
       * [x] By drag
       * [ ] By context menu
+      * [ ] By multi-selection
   * [ ] Delete Songs 
+    * [ ] By context menu
   * [ ] Delete 
 * [ ] Player
   * [x] Play & Pause
