@@ -22,6 +22,7 @@
 
   let barDom: HTMLDivElement
   let showPointer = false
+  let mouseTabbing = false
   let isHolding = false
 
   const dispatch = createEventDispatcher()
@@ -41,6 +42,9 @@
 
   const handlePointerMove = (e: any) => {
     if (e.target !== barDom.querySelector('.inner')) return
+    if (mouseTabbing) {
+      isHolding = true
+    }
     pointerX.set(e.offsetX)
     if (isHolding) {
       handleBarClick(e)
@@ -48,6 +52,7 @@
   }
 
   const handleMouseup = (e: any) => {
+    mouseTabbing = false
     if (isHolding) {
       isHolding = false
     } else {
@@ -62,8 +67,7 @@
     class="player-bottom-bar"
     transition:slide
     on:mouseup="{handleMouseup}"
-    on:click="{handleBarClick}"
-    on:mousedown="{() => (isHolding = true)}"
+    on:mousedown="{() => (mouseTabbing = true)}"
     on:mousemove="{handlePointerMove}"
     on:mouseenter="{() => (showPointer = true)}"
     on:mouseleave="{() => (showPointer = false)}"
@@ -131,6 +135,8 @@
   }
   .middle {
     --uno: 'flex-grow mx-2 pointer-events-none';
+    user-select: none;
+    -webkit-user-select: none;
   }
   .title {
     --uno: 'flex items-center justify-between';
