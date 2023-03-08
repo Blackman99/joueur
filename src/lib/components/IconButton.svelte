@@ -6,11 +6,12 @@
   class="icon-button"
   style="--joueur-icon-button-size: {size};"
   on:click|stopPropagation
-  on:keypress
+  on:keypress|stopPropagation
   on:mouseup|stopPropagation
-  on:mouseenter
-  on:mouseleave
-  on:wheel
+  on:mouseenter|stopPropagation
+  on:mouseleave|stopPropagation
+  on:mousedown|stopPropagation
+  on:wheel|stopPropagation
 >
   <slot />
 </div>
