@@ -1,6 +1,21 @@
-# Joueur (Heavily developing)
+<h1 align="center">
+  <br>
+ <img align="center" alt="Joueur" src="./static/logo@2x.png" />
+  <br>
+  Joueur
+  <br>
+  <br>
+</h1>
 
-A beautiful music player you've always wanted.
+<p align="center">
+A music player you've always wanted
+</p>
+
+<p align="center">
+  <a href="" target="_blank" rel="noopener noreferrer" >
+    <img src="./assets/screenshot.png" alt="Joueur screenshots" width="600" height="auto">
+  </a>
+</p>
 
 ## TODO
 
@@ -8,7 +23,14 @@ A beautiful music player you've always wanted.
 * [x] Rust audio parser
 * [x] Basic DB 
 * [x] Playlist & Artist & Album grouping
-* [ ] Playlist CRUD
+* [ ] Playlist
+  * [x] Create
+  * [ ] Update 
+    * [ ] Add songs
+      * [x] By drag
+      * [ ] By context menu
+  * [ ] Delete Songs 
+  * [ ] Delete 
 * [ ] Player
   * [x] Play & Pause
   * [x] Next & Prev
