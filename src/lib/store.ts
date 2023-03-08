@@ -12,7 +12,7 @@ export const PLAYING_KEY = 'JOUEUR_PLAYING_KEY_ID'
 
 export const playingSongId = writable(Number(localStorage.getItem(PLAYING_SONG_ID_KEY)))
 
-export const playingSong = derived(playingSongId, async $id => await db.songs.where('id').equals($id).first())
+export const playingSong = writable<Song | undefined>()
 
 export const playedSeconds = writable(0)
 
@@ -43,7 +43,3 @@ export async function refreshCurrentSongs($id: number) {
 }
 
 totalSongsNumber.subscribe(() => refreshCurrentSongs(get(selectedPlaylistId)))
-
-playingSongId.subscribe(newSongId => {
-  localStorage.setItem(PLAYING_SONG_ID_KEY, newSongId.toString())
-})

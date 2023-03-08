@@ -17,13 +17,14 @@
   import {
     selectedPlaylistId,
     SELECTED_PLAYLIST_ID_KEY,
+    PLAYING_SONG_ID_KEY,
     refreshCurrentSongs,
     playlists,
     playing,
+    playingSongId,
     playedSeconds,
     CURRENT_TIME_KEY,
     playingSong,
-    playingSongId,
     PLAYING_KEY,
   } from '$lib/store'
   import { get } from 'svelte/store'
@@ -41,6 +42,7 @@
   let unsubscribePlaying: () => void
   let unsubscribePlayingSong: () => void
   let unsubscribePlaylistId: () => void
+  let unsubscribePlayingSongId: () => void
   let currentTimerInterval: ReturnType<typeof setInterval>
   let playlistSubscriber: Subscription
 
@@ -48,6 +50,7 @@
 
   onMount(async () => {
     await db.getAllList()
+
     cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
       switch (evt.payload.type) {
         case 'hover':
@@ -78,6 +81,11 @@
       }
     })
 
+    unsubscribePlayingSongId = playingSongId.subscribe(async newSongId => {
+      localStorage.setItem(PLAYING_SONG_ID_KEY, newSongId.toString())
+      playingSong.set(await db.songs.where('id').equals(newSongId).first())
+    })
+
     unsubscribePlaying = playing.subscribe(v => {
       if (!v) {
         audio?.pause()
@@ -89,8 +97,8 @@
 
     // The subscriptions below can only put here cause would cause unexpected errors like:
     // can not reach variable before initialized
-    playlistSubscriber = playlists.subscribe(() =>
-      refreshCurrentSongs(get(selectedPlaylistId))
+    playlistSubscriber = playlists.subscribe(
+      async () => await refreshCurrentSongs(get(selectedPlaylistId))
     ) as any
 
     unsubscribePlaylistId = selectedPlaylistId.subscribe(async id => {
@@ -98,19 +106,6 @@
       await refreshCurrentSongs(id)
       // mark page ready
       ready = true
-    })
-
-    audio.onloadedmetadata = () => {
-      if (audio.paused && get(playing)) {
-        audio.play()
-      }
-    }
-
-    unsubscribePlayingSong = playingSong.subscribe(async promiseSong => {
-      const song = await promiseSong
-      if (song && audio) {
-        audio.src = convertFileSrc(song.path)
-      }
     })
 
     currentTimerInterval = setInterval(() => {
@@ -123,6 +118,7 @@
     unsubscribePlaying?.()
     unsubscribePlaylistId?.()
     unsubscribePlayingSong?.()
+    unsubscribePlayingSongId?.()
     playlistSubscriber?.unsubscribe()
     if (currentTimerInterval) {
       clearInterval(currentTimerInterval)
@@ -130,9 +126,21 @@
 
     localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
   })
+
+  const handleLoadedMetadata = () => {
+    if (audio.paused && get(playing)) {
+      audio.play()
+    }
+  }
 </script>
 
-<audio bind:this="{audio}" style="display: none;"></audio>
+{#if $playingSong}
+  <audio
+    bind:this="{audio}"
+    src="{convertFileSrc($playingSong.path)}"
+    on:loadedmetadata="{handleLoadedMetadata}"
+    style="display: none;"></audio>
+{/if}
 
 <main class="j-main">
   <Sidebar />

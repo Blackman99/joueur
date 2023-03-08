@@ -50,7 +50,7 @@
       bind:value="{newPlaylistTitle}"
       transition:inputTransition
       on:keyup="{handleCreate}"
-      placeholder="Enter new list title"
+      placeholder="Enter new playlist title"
     />
   {/if}
 </div>
