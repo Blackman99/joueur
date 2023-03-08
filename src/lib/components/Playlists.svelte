@@ -38,12 +38,12 @@
 
 <style>
   .playlist {
-    --uno: 'w-[18vw] min-w-[200px] max-w-[240px] bg-light-2 flex flex-col text-[14px]';
+    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] bg-light-2 flex flex-col text-[14px] overflow-y-auto';
     user-select: none;
     -webkit-user-select: none;
   }
   .playlist-item {
-    --uno: 'leading-10 px-4 flex items-center justify-between hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 cursor-pointer';
+    --uno: 'leading-10 px-4 flex items-center justify-between j-clickable-item';
   }
   .lists {
     --uno: 'flex-grow';
@@ -52,7 +52,7 @@
     --uno: 'text-primary';
   }
   .active-icon {
-    --uno: 'text-5 flex items-center';
+    --uno: 'text-4 flex items-center';
   }
   .num {
     --uno: 'text-gray-6 text-[12px]';

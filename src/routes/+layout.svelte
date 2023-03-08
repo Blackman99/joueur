@@ -39,6 +39,7 @@
 
   // effects
   let cleanupDropListener: () => void
+  let cleanupWindowClose: () => void
   let unsubscribePlaying: () => void
   let unsubscribePlayingSong: () => void
   let unsubscribePlaylistId: () => void
@@ -86,15 +87,6 @@
       playingSong.set(await db.songs.where('id').equals(newSongId).first())
     })
 
-    unsubscribePlaying = playing.subscribe(v => {
-      if (!v) {
-        audio?.pause()
-      } else {
-        audio?.play()
-      }
-      localStorage.setItem(PLAYING_KEY, v ? 'on' : 'off')
-    })
-
     // The subscriptions below can only put here cause would cause unexpected errors like:
     // can not reach variable before initialized
     playlistSubscriber = playlists.subscribe(
@@ -104,17 +96,18 @@
     unsubscribePlaylistId = selectedPlaylistId.subscribe(async id => {
       localStorage.setItem(SELECTED_PLAYLIST_ID_KEY, id.toString())
       await refreshCurrentSongs(id)
-      // mark page ready
+      // Mark page ready when live query is done.
       ready = true
     })
 
-    currentTimerInterval = setInterval(() => {
-      playedSeconds.set(audio?.currentTime)
-    }, 500)
+    cleanupWindowClose = await appWindow.onCloseRequested(async evt => {
+      localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
+    })
   })
 
   onDestroy(() => {
     cleanupDropListener?.()
+    cleanupWindowClose?.()
     unsubscribePlaying?.()
     unsubscribePlaylistId?.()
     unsubscribePlayingSong?.()
@@ -127,9 +120,39 @@
     localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
   })
 
+  let first = true
+
+  // This happens as the last
   const handleLoadedMetadata = () => {
-    if (audio.paused && get(playing)) {
+    if (first) {
+      audio.currentTime = get(playedSeconds)
+      first = false
+    } else if (get(playing)) {
       audio.play()
+    }
+
+    // Subscriptions below should add here to avoid happen before audio is ready
+    if (!unsubscribePlaying) {
+      unsubscribePlaying = playing.subscribe(v => {
+        if (!v) {
+          audio?.pause()
+        } else {
+          audio?.play()
+        }
+        localStorage.setItem(PLAYING_KEY, v ? 'on' : 'off')
+      })
+    }
+
+    if (!currentTimerInterval) {
+      currentTimerInterval = setInterval(() => {
+        playedSeconds.set(audio?.currentTime)
+      }, 500)
+    }
+  }
+
+  const handleContextMenu = (e: any) => {
+    if (!import.meta.env.DEV) {
+      e.preventDefault()
     }
   }
 </script>
@@ -142,7 +165,7 @@
     style="display: none;"></audio>
 {/if}
 
-<main class="j-main">
+<main class="j-main" on:contextmenu="{handleContextMenu}">
   <Sidebar />
   <div class="j-content">
     {#if ready}

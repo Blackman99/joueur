@@ -5,6 +5,7 @@
   import PlayingIcon from './PlayingIcon.svelte'
 
   export let songs: Song[]
+  export let showActionsOnEmpty = true
 
   const handlePlay = (song: Song) => {
     $playing = true
@@ -45,7 +46,7 @@
       </div>
     </div>
   {/each}
-  {#if !songs.length}
+  {#if !songs.length && showActionsOnEmpty}
     <Actions />
   {/if}
 </div>

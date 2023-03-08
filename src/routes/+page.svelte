@@ -17,7 +17,7 @@
 
 <style>
   .start {
-    --uno: 'flex-grow flex items-stretch overflow-y-auto justify-center relative';
+    --uno: 'flex-grow flex items-stretch overflow-y-hidden justify-center relative';
   }
   .loading {
     --uno: 'text-gray-6 py-3 px-2';

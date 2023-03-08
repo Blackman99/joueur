@@ -15,6 +15,9 @@ export default defineConfig({
           secondary: '#0F2C4D',
         },
       },
+      shortcuts: {
+        'j-clickable-item': 'hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 cursor-pointer',
+      },
     }),
     sveltekit(),
   ],

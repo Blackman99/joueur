@@ -1,16 +1,18 @@
 <script lang="ts">
-  import { db } from "$lib/db"
-  import type { Album } from "$lib/types"
-  import { liveQuery } from "dexie"
-  import type { Readable } from "svelte/store"
+  import { db } from '$lib/db'
+  import type { Album } from '$lib/types'
+  import { liveQuery } from 'dexie'
+  import type { Readable } from 'svelte/store'
 
-  const albums = liveQuery(() => db.albums.toArray()) as unknown as Readable<Album[]>
+  const albums = liveQuery(() => db.albums.toArray()) as unknown as Readable<
+    Album[]
+  >
 
   $: hasAlbum = $albums && $albums.length
 </script>
 
 <div class="albums">
-  <div>
+  <div class="album-list">
     {#if hasAlbum}
       {#each $albums as album}
         <div class="album-row">
@@ -18,9 +20,9 @@
             <img class="cover" src="{album.cover}" alt="{album.title}" />
           {/if}
           <div class="info">
-            {album.title} <br>
+            {album.title} <br />
             <span class="meta">
-             By {album.artist} - {album.songIds.length} songs 
+              By {album.artist} - ({album.songIds.length})
             </span>
           </div>
         </div>
@@ -31,13 +33,16 @@
 
 <style>
   .albums {
-    --uno: 'flex-grow overflow-y-auto';
+    --uno: 'flex-grow overflow-y-hidden flex items-stretch';
+  }
+  .album-list {
+    --uno: 'overflow-y-auto';
   }
   .cover {
     --uno: 'w-[40px] h-[40px] fit-cover rounded';
   }
   .album-row {
-    --uno: 'flex item-start py-2 px-4';
+    --uno: 'flex item-start py-2 px-4 j-clickable-item';
   }
   .info {
     --uno: 'ml-2 text-[14px]';

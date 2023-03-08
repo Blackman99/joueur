@@ -5,22 +5,19 @@ import { db } from './db'
 import type { Playlist, Song } from './types'
 import { twoDigits } from './utils/format'
 
+// local storage keys
 export const PLAYING_SONG_ID_KEY = 'JOUEUR_PLAYING_SONG_ID_KEY'
 export const SELECTED_PLAYLIST_ID_KEY = 'JOUEUR_SELECTED_PLAYLIST_ID_KEY'
 export const CURRENT_TIME_KEY = 'JOUEUR_CURRENT_TIME_ID_KEY'
 export const PLAYING_KEY = 'JOUEUR_PLAYING_KEY_ID'
 
-export const playingSongId = writable(Number(localStorage.getItem(PLAYING_SONG_ID_KEY)))
-
-export const playingSong = writable<Song | undefined>()
-
-export const playedSeconds = writable(0)
-
-export const selectedPlaylistId = writable(Number(localStorage.getItem(SELECTED_PLAYLIST_ID_KEY)))
-
-export const currentSongsInList = writable<Song[]>([])
-
+// global states
 export const playing = writable(localStorage.getItem(PLAYING_KEY) === 'on')
+export const playingSongId = writable(Number(localStorage.getItem(PLAYING_SONG_ID_KEY)))
+export const playingSong = writable<Song | undefined>()
+export const playedSeconds = writable(Number(localStorage.getItem(CURRENT_TIME_KEY)))
+export const selectedPlaylistId = writable(Number(localStorage.getItem(SELECTED_PLAYLIST_ID_KEY)))
+export const currentSongsInList = writable<Song[]>([])
 
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
   const minutes = Math.floor($playedSeconds / 60)
