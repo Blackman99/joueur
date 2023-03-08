@@ -2,7 +2,12 @@
   export let size = '16px'
 </script>
 
-<div class="icon-button" style="--joueur-icon-button-size: {size};">
+<div
+  class="icon-button"
+  style="--joueur-icon-button-size: {size};"
+  on:click|stopPropagation
+  on:keypress
+>
   <slot />
 </div>
 
