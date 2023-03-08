@@ -192,6 +192,7 @@
     unsubscribePlayingSongId?.()
     unsubscribePlayedSeconds?.()
     unsubscribeCurrentSongs?.()
+    unsubscribeVolume?.()
     playlistSubscriber?.unsubscribe()
     if (currentTimerInterval) {
       clearInterval(currentTimerInterval)
