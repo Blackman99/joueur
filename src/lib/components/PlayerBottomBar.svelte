@@ -62,6 +62,7 @@
     class="player-bottom-bar"
     transition:slide
     on:mouseup="{handleMouseup}"
+    on:click="{handleBarClick}"
     on:mousedown="{() => (isHolding = true)}"
     on:mousemove="{handlePointerMove}"
     on:mouseenter="{() => (showPointer = true)}"
