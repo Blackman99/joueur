@@ -1,7 +1,7 @@
 <script lang="ts">
   import DialogClose from '$lib/icons/DialogClose.svelte'
   import { cubicInOut } from 'svelte/easing'
-  import { fade } from 'svelte/transition'
+  import Backdrop from './Backdrop.svelte'
   import IconButton from './IconButton.svelte'
 
   export let open = false
@@ -48,12 +48,7 @@
 {/if}
 
 {#if open}
-  <div
-    transition:fade="{{ duration: 300, delay: 0 }}"
-    class="backdrop"
-    on:click="{handleClose}"
-    on:keyup="{handleClose}"
-  ></div>
+  <Backdrop on:click="{handleClose}" />
 {/if}
 
 <style>
@@ -61,9 +56,6 @@
     --uno: 'bg-white rounded-lg border-0 relative z-100 fixed top-20vh p-0';
     --joueur-dialog-width: 60vw;
     width: var(--joueur-dialog-width);
-  }
-  .backdrop {
-    --uno: 'fixed top-0 left-0 right-0 bottom-0 z-99 bg-black bg-opacity-70';
   }
   .header {
     --uno: 'flex items-center justify-between px-4 py-3 b-b-1 b-b-solid b-b-light-4';

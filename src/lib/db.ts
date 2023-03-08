@@ -14,7 +14,7 @@ class JoueurDB extends Dexie {
   constructor() {
     super('JoueurDB')
 
-    this.version(13).stores({
+    this.version(14).stores({
       songs: '++id,title,album,artist,path',
       albums: '++id,title,artist',
       playlists: '++id,title',

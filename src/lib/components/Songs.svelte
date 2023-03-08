@@ -1,15 +1,19 @@
 <script lang="ts">
-  import { playingSongId, playing } from '$lib/store'
+  import { playingSongId, playing, currentSongs } from '$lib/store'
   import type { Song } from '$lib/types'
   import Actions from './Actions.svelte'
   import PlayingIcon from './PlayingIcon.svelte'
 
   export let songs: Song[]
   export let showActionsOnEmpty = true
+  export let resetCurrentSongsOnClick = true
 
   const handlePlay = (song: Song) => {
     $playing = true
     $playingSongId = song.id
+    if (resetCurrentSongsOnClick) {
+      $currentSongs = songs
+    }
   }
 </script>
 

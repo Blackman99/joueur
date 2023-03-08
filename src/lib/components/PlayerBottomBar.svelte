@@ -73,7 +73,7 @@
             <IconButton>
               <SoundLow />
             </IconButton>
-            <IconButton>
+            <IconButton on:click="{() => dispatch('show-current-songs')}">
               <ControlCurrentList />
             </IconButton>
           </div>
@@ -122,7 +122,7 @@
     transform: translateX(var(--joueur-played-percentage));
   }
   .pointer {
-    --uno: 'absolute left-0 top-0 bottom-0 w-[2px] bg-primary z-3';
+    --uno: 'absolute left-0 top-0 bottom-0 w-[1px] bg-primary z-3';
     transform: translateX(var(--joueur-progress-pointer-x));
   }
 </style>

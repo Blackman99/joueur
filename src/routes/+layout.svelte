@@ -26,9 +26,12 @@
     CURRENT_TIME_KEY,
     playingSong,
     PLAYING_KEY,
+    currentSongs,
+    CURRENT_SONGS_KEY,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
+  import CurrentSongs from '$lib/components/CurrentSongs.svelte'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -36,6 +39,7 @@
   let showDropZone = false
   let showDropLoading = false
   let ready = false
+  let showCurrentList = false
 
   // effects
   let cleanupDropListener: () => void
@@ -45,12 +49,19 @@
   let unsubscribePlaylistId: () => void
   let unsubscribePlayingSongId: () => void
   let unsubscribePlayedSeconds: () => void
+  let unsubscribeCurrentSongs: () => void
   let currentTimerInterval: ReturnType<typeof setInterval>
   let playlistSubscriber: Subscription
 
   let audio: HTMLAudioElement
 
   onMount(async () => {
+    const currentSongIds = JSON.parse(
+      localStorage.getItem(CURRENT_SONGS_KEY) || '[]'
+    ) as number[]
+
+    currentSongs.set(await db.songs.where('id').anyOf(currentSongIds).toArray())
+
     await db.getAllList()
 
     cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
@@ -81,6 +92,13 @@
             showDropLoading = false
           }
       }
+    })
+
+    unsubscribeCurrentSongs = currentSongs.subscribe(async songs => {
+      localStorage.setItem(
+        CURRENT_SONGS_KEY,
+        JSON.stringify(songs.map(song => song.id))
+      )
     })
 
     unsubscribePlayingSongId = playingSongId.subscribe(async newSongId => {
@@ -165,6 +183,7 @@
     unsubscribePlayingSong?.()
     unsubscribePlayingSongId?.()
     unsubscribePlayedSeconds?.()
+    unsubscribeCurrentSongs?.()
     playlistSubscriber?.unsubscribe()
     if (currentTimerInterval) {
       clearInterval(currentTimerInterval)
@@ -188,7 +207,11 @@
     {#if ready}
       <slot />
     {/if}
-    <PlayerBottomBar on:current-time-change="{handleCurrentTimeChange}" />
+    <PlayerBottomBar
+      on:current-time-change="{handleCurrentTimeChange}"
+      on:show-current-songs="{() => (showCurrentList = true)}"
+    />
+    <CurrentSongs bind:show="{showCurrentList}" />
   </div>
 </main>
 

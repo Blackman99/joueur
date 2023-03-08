@@ -1,13 +1,13 @@
 <script lang="ts">
   import Songs from '$lib/components/Songs.svelte'
-  import { currentSongsInList } from '$lib/store'
+  import { currentPlaylistSongs } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import CreatePlaylistFloatButton from '$lib/components/CreatePlaylistFloatButton.svelte'
 </script>
 
 <div class="start">
   <Playlists />
-  {#await $currentSongsInList}
+  {#await $currentPlaylistSongs}
     <div class="loading">Just a sec...</div>
   {:then songs}
     <Songs songs="{songs}" />
