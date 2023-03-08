@@ -11,6 +11,8 @@ A beautiful music player you've always wanted.
 * [ ] Playlist CRUD
 * [ ] Player
   * [x] Play & Pause
+  * [x] Next & Prev
+  * [x] Volume
   * [ ] Modes: list cycle, single, shuffle
   * [ ] Progress bar click & drag
   * [ ] Spectrum
@@ -21,4 +23,4 @@ A beautiful music player you've always wanted.
 * [ ] Dark mode
 * [ ] I18n
 * [ ] Toggle with different theming color
-* [ ] Smooth transitions
+* [ ] Smooth animation
