@@ -5,6 +5,8 @@
 
   let showBar = false
 
+  let mouseDown = false
+
   const handleVolumeWheel = (e: any) => {
     const step = e.deltaY / 1000
     const next = $volume - step
@@ -22,6 +24,19 @@
       (e.target.offsetHeight - e.offsetY) / e.target.offsetHeight
     $volume = newVolume
   }
+
+  const handleBarMousedown = () => {
+    mouseDown = true
+  }
+  const handleBarMousemove = (e: any) => {
+    if (mouseDown) {
+      handleBarClick(e)
+    }
+  }
+  const handleMouseup = (e: any) => {
+    mouseDown = false
+    handleBarClick(e)
+  }
 </script>
 
 <IconButton
@@ -33,13 +48,17 @@
     <SoundLow />
   </div>
   {#if showBar}
-    <div class="volume-wrapper">
+    <div
+      class="volume-wrapper"
+      on:mousedown="{handleBarMousedown}"
+      on:mousemove="{handleBarMousemove}"
+      on:mouseup="{handleMouseup}"
+      on:keypress
+    >
       <div
         class="volume-bar"
         style="--joueur-volume: {$volume * 100}%;--joueur-volume-n:{$volume *
           92}px;"
-        on:click|self="{handleBarClick}"
-        on:keypress
       >
         <div class="volume-thumb">
           <div class="volume-indicator"></div>
