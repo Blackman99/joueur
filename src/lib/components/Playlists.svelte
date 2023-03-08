@@ -49,7 +49,7 @@
     --uno: 'flex-grow';
   }
   .active {
-    --uno: 'text-primary';
+    --uno: 'j-active-item';
   }
   .active-icon {
     --uno: 'text-4 flex items-center';

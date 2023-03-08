@@ -19,12 +19,12 @@
 
 <style>
   .menu-item {
-    --uno: 'flex items-center gap-2 hover:bg-light-7 px-4 py-3 rounded-lg decoration-none text-inherit';
+    --uno: 'flex j-clickable-item items-center gap-2 px-4 py-3 rounded-lg decoration-none text-inherit';
   }
   .menu-icon {
     --uno: 'text-5 flex items-center';
   }
   .active {
-    --uno: 'text-primary hover:bg-primary hover:bg-opacity-5';
+    --uno: 'j-active-item';
   }
 </style>

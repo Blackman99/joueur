@@ -41,6 +41,9 @@ A music player you've always wanted
   * [ ] Modes: list cycle, single, shuffle
   * [x] Progress bar click & drag
   * [ ] Spectrum
+* [ ] Search
+  * [ ] Global search song/artist/album
+  * [ ] Specify category search
 * [ ] Lyrics display
 * [ ] Virtual scroll
 * [x] List View

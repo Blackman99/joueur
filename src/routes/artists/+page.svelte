@@ -73,14 +73,14 @@
   .title {
     --uno: 'flex items-center';
   }
-  .active {
-    --uno: 'text-primary';
-  }
   .meta {
     --uno: 'text-gray-4 text-[12px] ml-2';
   }
   .artist-item {
     --uno: 'flex items-center justify-between text-[14px] leading-6 py-2 px-4 j-clickable-item';
+  }
+  .active {
+    --uno: 'j-active-item';
   }
   .active-icon {
     --uno: 'text-4 ml-2';

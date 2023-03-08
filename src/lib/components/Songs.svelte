@@ -20,7 +20,11 @@
 <div class="songs">
   {#each songs as song (song.id)}
     {@const isPlaying = song.id === $playingSongId}
-    <div class="song-row" on:dblclick="{() => handlePlay(song)}">
+    <div
+      class="song-row"
+      class:active="{isPlaying}"
+      on:dblclick="{() => handlePlay(song)}"
+    >
       <img
         class="cover"
         src="{song.cover}"
@@ -60,9 +64,12 @@
     --uno: 'flex-grow text-[14px] overflow-y-auto h-full bg-light-4';
   }
   .song-row {
-    --uno: 'flex items-start px-4 py-2 cursor-pointer hover:bg-primary hover:bg-opacity-8 transition-bg transition-200';
+    --uno: 'flex items-start px-4 py-2 cursor-pointer j-clickable-item transition-bg transition-200';
     user-select: none;
     -webkit-user-select: none;
+  }
+  .active {
+    --uno: 'j-active-item';
   }
   .cover {
     --uno: 'w-8 rounded mr-2';
