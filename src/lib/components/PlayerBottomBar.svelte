@@ -17,7 +17,7 @@
 
   const pointerX = spring(0, {
     stiffness: 0.1,
-    damping: 0.25,
+    damping: 0.5,
   })
 
   let barDom: HTMLDivElement
