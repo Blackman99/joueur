@@ -27,9 +27,10 @@ A music player you've always wanted
   * [x] Create
   * [ ] Update 
     * [ ] Add songs
-      * [x] By drag
-      * [ ] By context menu
-      * [ ] By multi-selection
+      * [x] By dragging from file system
+      * [ ] By dragging from inside lists
+      * [ ] By context menu single
+      * [ ] By context menu multi-selection
   * [ ] Delete Songs 
     * [ ] By context menu
   * [ ] Delete 
@@ -38,10 +39,11 @@ A music player you've always wanted
   * [x] Next & Prev
   * [x] Volume
   * [ ] Modes: list cycle, single, shuffle
-  * [ ] Progress bar click & drag
+  * [x] Progress bar click & drag
   * [ ] Spectrum
 * [ ] Lyrics display
 * [ ] Virtual scroll
+* [x] List View
 * [ ] Table view
 * [ ] Grid view
 * [ ] Dark mode
