@@ -1,42 +1,65 @@
 <script lang="ts">
-  import { liveQuery } from 'dexie'
-  import type { Readable } from 'svelte/store'
   import { slide } from 'svelte/transition'
   import IconButton from './IconButton.svelte'
-  import type { Song } from '$lib/types'
-  import { db } from '$lib/db'
-  import {
-    playingSongId,
-    displayPlayedSeconds,
-    playedSeconds,
-  } from '$lib/store'
+  import { playingSong, displayPlayedSeconds, playedSeconds } from '$lib/store'
   import SoundLow from '$lib/icons/SoundLow.svelte'
   import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
   import ControlPrev from '$lib/icons/ControlPrev.svelte'
   import ControlNext from '$lib/icons/ControlNext.svelte'
+  import { createEventDispatcher } from 'svelte'
+  import { spring } from 'svelte/motion'
 
-  $: playingSong = liveQuery(() =>
-    db.songs.where('id').equals($playingSongId).first()
-  ) as unknown as Readable<Song | undefined>
+  const pointerX = spring(0, {
+    stiffness: 0.1,
+    damping: 0.25,
+  })
+
+  let barDom: HTMLDivElement
+  let showPointer = false
+
+  const dispatch = createEventDispatcher()
+
   $: percentage =
     ($playedSeconds / (($playingSong?.duration || 0) / 1000)) * 100
 
   const handleBarClick = (e: any) => {
-    console.log(e)
+    const newPercentage = e.offsetX / barDom.offsetWidth
+    if ($playingSong) {
+      dispatch(
+        'current-time-change',
+        ($playingSong.duration / 1000) * newPercentage
+      )
+    }
+  }
+
+  const handlePointerMove = (e: any) => {
+    if (e.target !== barDom.querySelector('.inner')) return
+    pointerX.set(e.offsetX)
   }
 </script>
 
 {#if $playingSong}
   <div
+    bind:this="{barDom}"
     class="player-bottom-bar"
     transition:slide
-    on:click="{handleBarClick}"
+    on:mouseup="{handleBarClick}"
+    on:mousemove="{handlePointerMove}"
+    on:mouseenter="{() => (showPointer = true)}"
+    on:mouseleave="{() => (showPointer = false)}"
     on:keypress
   >
     <div
       class="progress-bg"
       style="--joueur-played-percentage: -{100 - percentage}%;"
     ></div>
+
+    {#if showPointer}
+      <div
+        class="pointer"
+        style="--joueur-progress-pointer-x:{$pointerX}px;"
+      ></div>
+    {/if}
 
     <div class="inner">
       <IconButton size="20px">
@@ -74,22 +97,22 @@
 
 <style>
   .player-bottom-bar {
-    --uno: 'shrink-0 bg-white shadow-t-lg px-4 pb-2 pt-1 text-[14px] relative';
+    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative overflow-hidden';
   }
   .inner {
-    --uno: 'flex items-center relative z-3';
+    --uno: 'flex items-center relative z-3 px-4 pb-2 pt-1';
   }
   .meta {
     --uno: 'text-gray-4 text-3 flex justify-between';
   }
   .controls {
-    --uno: 'flex items-center';
+    --uno: 'flex items-center pointer-events-auto';
   }
   .seconds {
     --uno: 'text-gray-4 text-3 mx-2';
   }
   .middle {
-    --uno: 'flex-grow mx-2';
+    --uno: 'flex-grow mx-2 pointer-events-none';
   }
   .title {
     --uno: 'flex items-center justify-between';
@@ -97,5 +120,9 @@
   .progress-bg {
     --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-10 transition-transform transition-300';
     transform: translateX(var(--joueur-played-percentage));
+  }
+  .pointer {
+    --uno: 'absolute left-0 top-0 bottom-0 w-[2px] bg-primary z-3';
+    transform: translateX(var(--joueur-progress-pointer-x));
   }
 </style>

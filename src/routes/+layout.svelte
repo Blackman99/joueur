@@ -44,6 +44,7 @@
   let unsubscribePlayingSong: () => void
   let unsubscribePlaylistId: () => void
   let unsubscribePlayingSongId: () => void
+  let unsubscribePlayedSeconds: () => void
   let currentTimerInterval: ReturnType<typeof setInterval>
   let playlistSubscriber: Subscription
 
@@ -105,24 +106,9 @@
     })
   })
 
-  onDestroy(() => {
-    cleanupDropListener?.()
-    cleanupWindowClose?.()
-    unsubscribePlaying?.()
-    unsubscribePlaylistId?.()
-    unsubscribePlayingSong?.()
-    unsubscribePlayingSongId?.()
-    playlistSubscriber?.unsubscribe()
-    if (currentTimerInterval) {
-      clearInterval(currentTimerInterval)
-    }
-
-    localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
-  })
-
   let first = true
 
-  // This happens as the last
+  // This happens as the audio element is ready
   const handleLoadedMetadata = () => {
     if (first) {
       audio.currentTime = get(playedSeconds)
@@ -148,6 +134,14 @@
         playedSeconds.set(audio?.currentTime)
       }, 500)
     }
+
+    if (unsubscribePlayedSeconds) {
+      unsubscribePlayedSeconds = playedSeconds.subscribe(ps => {
+        console.log('ps: ', ps)
+
+        audio.currentTime = ps
+      })
+    }
   }
 
   const handleContextMenu = (e: any) => {
@@ -155,6 +149,29 @@
       e.preventDefault()
     }
   }
+
+  const handleCurrentTimeChange = (e: any) => {
+    if (audio) {
+      audio.currentTime = e.detail
+      playedSeconds.set(e.detail)
+    }
+  }
+
+  onDestroy(() => {
+    cleanupDropListener?.()
+    cleanupWindowClose?.()
+    unsubscribePlaying?.()
+    unsubscribePlaylistId?.()
+    unsubscribePlayingSong?.()
+    unsubscribePlayingSongId?.()
+    unsubscribePlayedSeconds?.()
+    playlistSubscriber?.unsubscribe()
+    if (currentTimerInterval) {
+      clearInterval(currentTimerInterval)
+    }
+
+    localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
+  })
 </script>
 
 {#if $playingSong}
@@ -171,7 +188,7 @@
     {#if ready}
       <slot />
     {/if}
-    <PlayerBottomBar />
+    <PlayerBottomBar on:current-time-change="{handleCurrentTimeChange}" />
   </div>
 </main>
 

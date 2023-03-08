@@ -7,6 +7,7 @@
   style="--joueur-icon-button-size: {size};"
   on:click|stopPropagation
   on:keypress
+  on:mouseup|stopPropagation
 >
   <slot />
 </div>

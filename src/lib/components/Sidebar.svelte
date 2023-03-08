@@ -101,7 +101,7 @@
           class="play-control"
           transition:fade="{{ duration: 100, delay: 0 }}"
         >
-          <IconButton size="48px">
+          <IconButton size="48px" on:click="{togglePlayPause}">
             {#if $playing}
               <ControlPause />
             {:else}
