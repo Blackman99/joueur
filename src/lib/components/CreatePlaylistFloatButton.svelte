@@ -60,7 +60,7 @@
     --uno: 'absolute bottom-4 right-4 shadow-lg z-3';
   }
   .input {
-    --uno: 'absolute top-0 right-0 bottom-0 h-full block b-none outline-none pl-4 pr-[48px] rounded-[20px] bg-primary text-white text-[14px] origin-r';
+    --uno: 'absolute top-0 right-0 bottom-0 h-full block b-none outline-none pl-4 pr-[48px] rounded-[20px] bg-primary text-white text-[14px] origin-r w-[20vw]';
   }
   .input::placeholder {
     --uno: 'text-gray-2';

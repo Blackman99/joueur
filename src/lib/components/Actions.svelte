@@ -63,7 +63,7 @@
 </script>
 
 <div class="actions">
-  <div>
+  <div class="tip">
     You can drag any files into this window or clicked the add button below
   </div>
   <ActionButton
@@ -85,5 +85,9 @@
 <style>
   .actions {
     --uno: 'flex flex-col gap-8 h-full items-center justify-center';
+  }
+  .tip {
+    --uno: 'px-4';
+    text-align-last: center;
   }
 </style>
