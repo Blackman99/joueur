@@ -128,7 +128,7 @@
     --uno: 'w-full aspect-1 object-cover block';
   }
   .cover-wrapper {
-    --uno: 'relative';
+    --uno: 'relative z-9';
   }
   .play-control {
     --uno: 'absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-70 text-white flex items-center justify-center cursor-pointer active:bg-opacity-50';

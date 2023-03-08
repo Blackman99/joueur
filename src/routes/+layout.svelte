@@ -28,6 +28,9 @@
     PLAYING_KEY,
     currentSongs,
     CURRENT_SONGS_KEY,
+    playNext,
+    volume,
+    VOLUME_KEY,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
@@ -50,6 +53,7 @@
   let unsubscribePlayingSongId: () => void
   let unsubscribePlayedSeconds: () => void
   let unsubscribeCurrentSongs: () => void
+  let unsubscribeVolume: () => void
   let currentTimerInterval: ReturnType<typeof setInterval>
   let playlistSubscriber: Subscription
 
@@ -122,12 +126,16 @@
     cleanupWindowClose = await appWindow.onCloseRequested(async evt => {
       localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
     })
+
+    unsubscribeVolume = volume.subscribe(v => {
+      localStorage.setItem(VOLUME_KEY, v.toString())
+    })
   })
 
   let first = true
 
   // This happens as the audio element is ready
-  const handleLoadedMetadata = () => {
+  const handleCanPlayThrough = () => {
     if (first) {
       audio.currentTime = get(playedSeconds)
       first = false
@@ -197,8 +205,10 @@
   <audio
     bind:this="{audio}"
     src="{convertFileSrc($playingSong.path)}"
-    on:loadedmetadata="{handleLoadedMetadata}"
-    style="display: none;"></audio>
+    on:canplaythrough="{handleCanPlayThrough}"
+    style="display: none;"
+    on:ended="{playNext}"
+    bind:volume="{$volume}"></audio>
 {/if}
 
 <main class="j-main" on:contextmenu="{handleContextMenu}">

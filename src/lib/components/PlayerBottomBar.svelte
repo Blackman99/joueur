@@ -1,13 +1,19 @@
 <script lang="ts">
   import { slide } from 'svelte/transition'
   import IconButton from './IconButton.svelte'
-  import { playingSong, displayPlayedSeconds, playedSeconds } from '$lib/store'
-  import SoundLow from '$lib/icons/SoundLow.svelte'
+  import {
+    playingSong,
+    displayPlayedSeconds,
+    playedSeconds,
+    playNext,
+    playPrev,
+  } from '$lib/store'
   import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
   import ControlPrev from '$lib/icons/ControlPrev.svelte'
   import ControlNext from '$lib/icons/ControlNext.svelte'
   import { createEventDispatcher } from 'svelte'
   import { spring } from 'svelte/motion'
+  import VolumeControl from './VolumeControl.svelte'
 
   const pointerX = spring(0, {
     stiffness: 0.1,
@@ -62,7 +68,7 @@
     {/if}
 
     <div class="inner">
-      <IconButton size="20px">
+      <IconButton size="20px" on:click="{playPrev}">
         <ControlPrev />
       </IconButton>
 
@@ -70,9 +76,7 @@
         <div class="title">
           <div>{$playingSong.title}</div>
           <div class="controls">
-            <IconButton>
-              <SoundLow />
-            </IconButton>
+            <VolumeControl />
             <IconButton on:click="{() => dispatch('show-current-songs')}">
               <ControlCurrentList />
             </IconButton>
@@ -88,7 +92,7 @@
         </div>
       </div>
 
-      <IconButton size="20px">
+      <IconButton size="20px" on:click="{playNext}">
         <ControlNext />
       </IconButton>
     </div>
@@ -97,7 +101,7 @@
 
 <style>
   .player-bottom-bar {
-    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative overflow-hidden';
+    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative';
   }
   .inner {
     --uno: 'flex items-center relative z-3 px-4 pb-2 pt-1';
@@ -118,11 +122,11 @@
     --uno: 'flex items-center justify-between';
   }
   .progress-bg {
-    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-10 transition-transform transition-300';
+    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-8 transition-transform transition-300';
     transform: translateX(var(--joueur-played-percentage));
   }
   .pointer {
-    --uno: 'absolute left-0 top-0 bottom-0 w-[1px] bg-primary z-3';
+    --uno: 'absolute left-0 top-0 bottom-0 w-[1px] bg-primary bg-opacity-70 z-3';
     transform: translateX(var(--joueur-progress-pointer-x));
   }
 </style>
