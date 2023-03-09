@@ -8,7 +8,7 @@
 </h1>
 
 <p align="center">
-A music player you've always wanted
+A logical music player you've always wanted
 </p>
 
 <p align="center">
