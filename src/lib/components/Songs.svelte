@@ -1,12 +1,18 @@
 <script lang="ts">
+  // @ts-nocheck
   import { playingSongId, playing, currentSongs } from '$lib/store'
   import type { Song } from '$lib/types'
+  import { createEventDispatcher } from 'svelte'
   import Actions from './Actions.svelte'
   import PlayingIcon from './PlayingIcon.svelte'
 
   export let songs: Song[]
   export let showActionsOnEmpty = true
   export let resetCurrentSongsOnClick = true
+  export let draggable = false
+  export let draggingSongId: number | null
+
+  const dispatch = createEventDispatcher()
 
   const handlePlay = (song: Song) => {
     $playing = true
@@ -15,15 +21,27 @@
       $currentSongs = songs
     }
   }
+  const handleDragstart = (e: any, song: Song) => {
+    draggingSongId = song.id
+  }
+
+  const onDragend = (e: any) => {
+    dispatch('maybe-drop-in-playlist')
+  }
 </script>
 
 <div class="songs">
   {#each songs as song (song.id)}
     {@const isPlaying = song.id === $playingSongId}
+    <!-- ignore the type error below -->
     <div
       class="song-row"
       class:active="{isPlaying}"
+      class:dragging="{draggingSongId === song.id}"
       on:dblclick="{() => handlePlay(song)}"
+      draggable="{draggable}"
+      on:dragstart="{e => handleDragstart(e, song)}"
+      on:dragend="{onDragend}"
     >
       <img
         class="cover"
@@ -88,5 +106,8 @@
   }
   .duration {
     --uno: 'flex-shrink-0';
+  }
+  .dragging {
+    transform: scale(0.95);
   }
 </style>

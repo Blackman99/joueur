@@ -3,14 +3,41 @@
   import { currentPlaylistSongs } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import CreatePlaylistFloatButton from '$lib/components/CreatePlaylistFloatButton.svelte'
+  import { db } from '$lib/db'
+
+  let draggingSongId: number | null
+  let waitForDroppingPlaylistId: number | null
+
+  const handleMaybeDropInPlaylist = async () => {
+    if (waitForDroppingPlaylistId && draggingSongId) {
+      const playlist = await db.playlists
+        .where('id')
+        .equals(waitForDroppingPlaylistId)
+        .first()
+      if (playlist && !playlist.songIds.includes(draggingSongId)) {
+        playlist.songIds.push(draggingSongId)
+        await db.playlists.update(playlist.id, playlist)
+      }
+    }
+    draggingSongId = null
+    waitForDroppingPlaylistId = null
+  }
 </script>
 
 <div class="start">
-  <Playlists />
+  <Playlists
+    bind:waitForDroppingPlaylistId="{waitForDroppingPlaylistId}"
+    draggingSongId="{draggingSongId}"
+  />
   {#await $currentPlaylistSongs}
     <div class="loading">Just a sec...</div>
   {:then songs}
-    <Songs songs="{songs}" />
+    <Songs
+      songs="{songs}"
+      draggable
+      bind:draggingSongId="{draggingSongId}"
+      on:maybe-drop-in-playlist="{handleMaybeDropInPlaylist}"
+    />
   {/await}
   <CreatePlaylistFloatButton />
 </div>

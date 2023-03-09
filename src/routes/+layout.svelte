@@ -71,6 +71,7 @@
     cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
       switch (evt.payload.type) {
         case 'hover':
+          if (!evt.payload?.paths.length) return
           showDropZone = true
           break
         case 'cancel':
