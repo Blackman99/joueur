@@ -14,11 +14,11 @@ class JoueurDB extends Dexie {
   constructor() {
     super('JoueurDB')
 
-    this.version(14).stores({
-      songs: '++id,title,album,artist,path',
-      albums: '++id,title,artist',
-      playlists: '++id,title',
-      artists: '++id,title',
+    this.version(15).stores({
+      songs: '++id,title,album,artist,path,addTime',
+      albums: '++id,title,artist,addTime',
+      playlists: '++id,title,addTime',
+      artists: '++id,title,addTime',
       settings: '++id',
     })
   }
@@ -60,7 +60,7 @@ class JoueurDB extends Dexie {
   async addOrUpdateArtistBySong(song: Song) {
     const existingArtist = await this.artists.where('title').equals(song.artist).first()
     if (!existingArtist) {
-      await this.artists.put({ title: song.artist, songIds: [song.id] } as unknown as Artist)
+      await this.artists.put({ title: song.artist, songIds: [song.id], addTime: new Date() } as unknown as Artist)
     } else if (!existingArtist.songIds.includes(song.id)) {
       existingArtist.songIds.push(song.id)
       await this.artists.update(existingArtist.id, existingArtist)
@@ -80,6 +80,7 @@ class JoueurDB extends Dexie {
         songIds: [song.id],
         artist: song.artist,
         cover: song.cover,
+        addTime: new Date(),
       } as unknown as Album)
     } else if (!existingAlbum.songIds.includes(song.id)) {
       existingAlbum.songIds.push(song.id)
@@ -96,6 +97,7 @@ class JoueurDB extends Dexie {
     if (isExist) {
       song = isExist
     } else {
+      song.addTime = new Date()
       const newSongId = await this.songs.put(song)
       song.id = newSongId
       // grouping the artist
@@ -132,10 +134,13 @@ class JoueurDB extends Dexie {
     let songIdsWillAddToPlaylist = []
     for (const song of songs) {
       const isExist = await this.songExists(song)
-      if (!isExist)
+      if (!isExist) {
+        song.addTime = new Date()
         newSongs.push(song)
-      else
+      }
+      else {
         songIdsWillAddToPlaylist.push(isExist.id)
+      }
     }
     const newSongIds = await this.songs.bulkAdd(newSongs, {
       allKeys: true,
@@ -175,6 +180,7 @@ class JoueurDB extends Dexie {
     if (existingPlayList) return
     const newPlayList = {
       title: newPlayListTitle,
+      addTime: new Date(),
       songIds: [],
     } as unknown as Playlist
     await this.playlists.put(newPlayList)

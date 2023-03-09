@@ -10,7 +10,7 @@
   export let showActionsOnEmpty = true
   export let resetCurrentSongsOnClick = true
   export let draggable = false
-  export let draggingSongId: number | null
+  export let draggingSongId: number | null = null
 
   const dispatch = createEventDispatcher()
 
