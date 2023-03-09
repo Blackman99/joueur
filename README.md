@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
- <img align="center" alt="Joueur" src="./static/logo@2x.png" />
+ <img align="center" alt="Joueur" src="./static/logo@2x.png" width="400" />
   <br>
   Joueur
   <br>
