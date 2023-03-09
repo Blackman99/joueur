@@ -99,6 +99,6 @@
     --uno: 'text-warm-gray-5 text-[12px]';
   }
   .icon-wrapper {
-    --uno: 'flex-shrink-0';
+    --uno: 'flex-shrink-0 text-4';
   }
 </style>
