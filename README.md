@@ -34,6 +34,7 @@ A music player you've always wanted
   * [ ] Delete Songs 
     * [ ] By context menu
   * [ ] Delete 
+  * [ ] Now playing list resort by dragging
 * [ ] Player
   * [x] Play & Pause
   * [x] Next & Prev
