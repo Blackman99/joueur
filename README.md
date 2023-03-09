@@ -28,9 +28,10 @@ A logical music player you've always wanted
   * [ ] Update 
     * [ ] Add songs
       * [x] By dragging from file system
-      * [ ] By dragging from inside lists
+      * [x] By dragging single song from inside lists
+      * [ ] By dragging multi-selected songs from inside lists
       * [ ] By context menu single
-      * [ ] By context menu multi-selection
+      * [ ] By context menu multi-selected songs
   * [ ] Delete Songs 
     * [ ] By context menu
   * [ ] Delete 
