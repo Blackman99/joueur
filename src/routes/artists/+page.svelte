@@ -4,41 +4,53 @@
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import type { Artist, Song } from '$lib/types'
   import { liveQuery } from 'dexie'
+  import { onMount } from 'svelte'
   import type { Readable } from 'svelte/store'
+  import {
+    SELECTED_ARTIST_KEY,
+    selectedArtist,
+    selectedArtistSongs,
+  } from './store'
 
   const artists = liveQuery(() => db.artists.toArray()) as unknown as Readable<
     Artist[]
   >
 
-  let selectedArtist: Artist
-
   $: hasArtist = $artists && $artists.length
 
   const handleArtistClick = (artist: Artist) => {
-    selectedArtist = artist
+    $selectedArtist = artist
   }
 
-  let selectedArtistSongs: Song[] = []
-
   const getArtistSongs = async () => {
-    selectedArtistSongs = await db.songs
+    if (!$selectedArtist) return
+    $selectedArtistSongs = await db.songs
       .where('id')
-      .anyOf(selectedArtist.songIds)
+      .anyOf($selectedArtist.songIds)
       .toArray()
   }
 
   $: {
-    if (selectedArtist) {
+    if ($selectedArtist) {
       getArtistSongs()
+      localStorage.setItem(SELECTED_ARTIST_KEY, $selectedArtist.id.toString())
     }
   }
+
+  onMount(async () => {
+    const selectedArtistId = Number(localStorage.getItem(SELECTED_ARTIST_KEY))
+    $selectedArtist = await db.artists
+      .where('id')
+      .equals(selectedArtistId)
+      .first()
+  })
 </script>
 
 <div class="artists">
   <div class="artist-list">
     {#if hasArtist}
       {#each $artists as artist (artist.id)}
-        {@const active = artist.id === selectedArtist?.id}
+        {@const active = artist.id === $selectedArtist?.id}
         <div
           class="artist-item"
           class:active="{active}"
@@ -60,7 +72,7 @@
       {/each}
     {/if}
   </div>
-  <Songs songs="{selectedArtistSongs}" showActionsOnEmpty="{false}" />
+  <Songs songs="{$selectedArtistSongs}" showActionsOnEmpty="{false}" />
 </div>
 
 <style>
