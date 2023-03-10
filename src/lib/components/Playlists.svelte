@@ -2,9 +2,9 @@
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import { selectedPlaylistId } from '$lib/store'
   import { playlists } from '$lib/store'
-
+  import CreatePlaylistInput from './CreatePlaylistInput.svelte'
   export let draggingSongId: number | null
-  export let waitForDroppingPlaylistId: number | null
+  export let waitForDroppingPlaylistId: number | null = null
 
   const handlePlaylistClick = (id: number) => {
     $selectedPlaylistId = id
@@ -33,6 +33,7 @@
 </script>
 
 <div class="playlist">
+  <CreatePlaylistInput />
   <div class="lists">
     {#if $playlists}
       {#each $playlists as playlist (playlist.id)}
