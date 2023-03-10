@@ -35,6 +35,7 @@
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
   import CurrentSongs from '$lib/components/CurrentSongs.svelte'
+  import FloatPlayOrPause from '$lib/components/FloatPlayOrPause.svelte'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -131,6 +132,16 @@
     unsubscribeVolume = volume.subscribe(v => {
       localStorage.setItem(VOLUME_KEY, v.toString())
     })
+
+    const handleSpaceKeyboard = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        playing.set(!get(playing))
+      }
+    }
+    window.addEventListener('keyup', handleSpaceKeyboard)
+    return () => {
+      window.removeEventListener('keyup', handleSpaceKeyboard)
+    }
   })
 
   let first = true
@@ -224,6 +235,8 @@
       on:show-current-songs="{() => (showCurrentList = true)}"
     />
     <CurrentSongs bind:show="{showCurrentList}" />
+
+    <FloatPlayOrPause />
   </div>
 </main>
 

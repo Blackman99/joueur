@@ -22,11 +22,11 @@ export interface Song extends WithAddTime {
   cover?: string
   duration: number
   display_duration?: string
-  lyrics: {
+  lyrics: Array<{
     text?: string
     description?: string
     lang?: string
-  }[]
+  }>
 }
 
 export interface Album extends WithSongs {

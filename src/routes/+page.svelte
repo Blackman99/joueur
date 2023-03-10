@@ -2,7 +2,6 @@
   import Songs from '$lib/components/Songs.svelte'
   import { currentPlaylistSongs } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
-  import CreatePlaylistFloatButton from '$lib/components/CreatePlaylistFloatButton.svelte'
   import { db } from '$lib/db'
 
   let draggingSongId: number | null
@@ -39,7 +38,6 @@
       on:maybe-drop-in-playlist="{handleMaybeDropInPlaylist}"
     />
   {/await}
-  <CreatePlaylistFloatButton />
 </div>
 
 <style>
