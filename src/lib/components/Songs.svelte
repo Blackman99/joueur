@@ -11,6 +11,9 @@
   import contextMenu, { type ContextMenuItem } from '../actions/contextMenu'
   import Checked from '$lib/icons/Checked.svelte'
   import Uncheck from '$lib/icons/Uncheck.svelte'
+  import FloatAction from './FloatAction.svelte'
+  import DialogClose from '$lib/icons/DialogClose.svelte'
+  import { fade } from 'svelte/transition'
 
   export let songs: Song[]
   export let showActionsOnEmpty = true
@@ -76,12 +79,23 @@
 </script>
 
 <div class="songs">
+  {#if selectedSongIds.length}
+    <div
+      class="quit-selection"
+      transition:fade="{{ duration: 100 }}"
+      on:click="{() => (selectedSongIds = [])}"
+      on:keypress
+    >
+      <FloatAction>
+        <DialogClose />
+      </FloatAction>
+    </div>
+  {/if}
   {#each songs as song (song.id)}
     {@const isPlaying = song.id === $playingSongId}
     {@const isInSelection = selectedSongIds.includes(song.id)}
     {@const isDragging =
       draggingSongId === song.id || draggingSongIds.includes(song.id)}
-    <!-- ignore the type error below -->
     <div
       draggable="{draggable}"
       class="song-row"
@@ -161,7 +175,7 @@
 
 <style>
   .songs {
-    --uno: 'flex-grow text-[14px] overflow-y-auto h-full bg-light-4';
+    --uno: 'flex-grow text-[14px] relative overflow-y-auto h-full bg-light-4';
   }
   .song-row {
     --uno: 'flex items-center px-4 py-2 cursor-pointer j-clickable-item transition-bg transition-200';
@@ -198,5 +212,8 @@
   }
   .checked-icon {
     --uno: 'text-5 mr-2';
+  }
+  .quit-selection {
+    --uno: 'absolute right-4 top-4';
   }
 </style>

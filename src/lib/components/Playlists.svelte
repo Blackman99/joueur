@@ -4,7 +4,7 @@
   import { selectedPlaylistId } from '$lib/store'
   import { playlists } from '$lib/store'
   import CreatePlaylistInput from './CreatePlaylistInput.svelte'
-  import { ask } from '@tauri-apps/api/dialog'
+  import { ask, message } from '@tauri-apps/api/dialog'
   import { db } from '$lib/db'
 
   export let draggingSongId: number | null
@@ -46,6 +46,13 @@
   const contextMenuHandler = async (name: string, id: number) => {
     switch (name) {
       case 'delete-playlist':
+        if (id === -1) {
+          await message('The All list is default list. Can not be deleted!', {
+            title: 'Not permitted',
+            type: 'error',
+          })
+          return
+        }
         const yes = await ask(
           'Deleting of playlist cannot be reverted. Are you sure?',
           { title: 'Confirm', type: 'warning' }
