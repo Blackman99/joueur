@@ -32,10 +32,12 @@ A tiny and logical music player you've always wanted
       * [ ] By dragging multi-selected songs from inside lists
       * [ ] By context menu single
       * [ ] By context menu multi-selected songs
-  * [ ] Delete Songs 
-    * [ ] By context menu
+    * [ ] Remove Song
+      * [x] Remove single by context menu
   * [ ] Delete 
-  * [ ] Now playing list resort by dragging
+* [ ] Now playing List
+  * [ ] Songs resort by dragging 
+  * [ ] Remove single song by context menu
 * [ ] Player
   * [x] Play & Pause
   * [x] Next & Prev
