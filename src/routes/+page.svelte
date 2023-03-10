@@ -3,30 +3,51 @@
   import { currentPlaylistSongs, selectedPlaylistId } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import { db } from '$lib/db'
-  import type { ContextMenuItem } from '$lib/actions/contextMenu'
 
   let draggingSongId: number | null
+  let draggingSongIds: number[] = []
   let waitForDroppingPlaylistId: number | null
 
+  let selectedSongIds: number[] = []
+
   const handleMaybeDropInPlaylist = async () => {
-    if (waitForDroppingPlaylistId && draggingSongId) {
+    if (waitForDroppingPlaylistId) {
       const playlist = await db.playlists
         .where('id')
         .equals(waitForDroppingPlaylistId)
         .first()
-      if (playlist && !playlist.songIds.includes(draggingSongId)) {
-        playlist.songIds.push(draggingSongId)
+      if (playlist) {
+        if (draggingSongIds.length) {
+          draggingSongIds.forEach(id => {
+            if (!playlist.songIds.includes(id)) {
+              playlist.songIds.push(id)
+            }
+          })
+        } else if (draggingSongId) {
+          if (!playlist.songIds.includes(draggingSongId)) {
+            playlist.songIds.push(draggingSongId)
+          }
+        }
         await db.playlists.update(playlist.id, playlist)
       }
+      selectedSongIds = []
+      waitForDroppingPlaylistId = null
     }
     draggingSongId = null
-    waitForDroppingPlaylistId = null
+    draggingSongIds = []
   }
 
-  const menus: ContextMenuItem[] = [
+  const menus = [
     {
       title: 'Delete from playlist',
       name: 'delete-from-playlist',
+    },
+  ]
+
+  const menusOnSelected = [
+    {
+      title: 'Delete all selected songs from playlist',
+      name: 'delete-all-selected-songs-from-play-list',
     },
   ]
 
@@ -49,12 +70,27 @@
       }
     }
   }
+
+  const handleRemoveAllSelectedSongsFromList = async () => {
+    const currentPlaylist = await db.playlists
+      .where('id')
+      .equals($selectedPlaylistId)
+      .first()
+    if (currentPlaylist) {
+      currentPlaylist.songIds = currentPlaylist.songIds.filter(
+        id => !selectedSongIds.includes(id)
+      )
+      await db.playlists.update(currentPlaylist.id, currentPlaylist)
+      selectedSongIds = []
+    }
+  }
 </script>
 
 <div class="start">
   <Playlists
     bind:waitForDroppingPlaylistId="{waitForDroppingPlaylistId}"
     draggingSongId="{draggingSongId}"
+    draggingSongIds="{draggingSongIds}"
   />
   {#await $currentPlaylistSongs}
     <div class="loading">Just a sec...</div>
@@ -62,10 +98,15 @@
     <Songs
       songs="{songs}"
       draggable
+      canSelectedMultiple
       contextMenus="{menus}"
+      inSelectionContextMenus="{menusOnSelected}"
       bind:draggingSongId="{draggingSongId}"
+      bind:draggingSongIds="{draggingSongIds}"
+      bind:selectedSongIds="{selectedSongIds}"
       on:maybe-drop-in-playlist="{handleMaybeDropInPlaylist}"
       on:delete-from-playlist="{handleRemoveFromList}"
+      on:delete-all-selected-songs-from-play-list="{handleRemoveAllSelectedSongsFromList}"
     />
   {/await}
 </div>

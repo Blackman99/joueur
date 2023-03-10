@@ -29,12 +29,13 @@ A tiny and logical music player you've always wanted
     * [ ] Add songs
       * [x] By dragging from file system
       * [x] By dragging single song from inside lists
-      * [ ] By dragging multi-selected songs from inside lists
+      * [x] By dragging multi-selected songs from inside lists
       * [ ] By context menu single
       * [ ] By context menu multi-selected songs
-    * [ ] Remove Song
+    * [x] Remove Song
       * [x] Remove single by context menu
-  * [ ] Delete by context menu
+      * [x] Remove multi-selected songs by context menu
+  * [x] Delete by context menu
 * [ ] Now playing List
   * [ ] Songs resort by dragging 
   * [ ] Remove single song by context menu

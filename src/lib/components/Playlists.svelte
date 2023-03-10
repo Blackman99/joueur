@@ -9,6 +9,7 @@
 
   export let draggingSongId: number | null
   export let waitForDroppingPlaylistId: number | null = null
+  export let draggingSongIds: number[] = []
 
   const handlePlaylistClick = (id: number) => {
     $selectedPlaylistId = id
@@ -30,7 +31,7 @@
     const id = parseInt(e.target.dataset.playlistId)
     if (!isNaN(id)) {
       if (waitForDroppingPlaylistId === id) {
-        waitForDroppingPlaylistId = id
+        waitForDroppingPlaylistId = null
       }
     }
   }
@@ -76,7 +77,7 @@
             actionHandler: (e, m) => contextMenuHandler(m.name),
           }}"
         >
-          {#if draggingSongId && waitForDroppingPlaylistId === playlist.id}
+          {#if (draggingSongId || draggingSongIds.length) && waitForDroppingPlaylistId === playlist.id}
             <div class="drop-hint"></div>
           {/if}
           <div>

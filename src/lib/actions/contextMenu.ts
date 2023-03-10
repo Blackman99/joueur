@@ -8,21 +8,17 @@ export interface ContextMenuItem {
 }
 
 export type ContextHandler = (e: any, menu: ContextMenuItem) => any
+export interface ContextMenuActionParams {
+  menus: ContextMenuItem[]
+  actionHandler?: ContextHandler
+}
 
 let contentMenuInstance: ContextMenu__SvelteComponent_ | undefined
 let div: HTMLDivElement | undefined
 
-const useContextMenu: Action<any, {
-  menus: ContextMenuItem[]
-  actionHandler?: ContextHandler
-}> = (node: any, {
-  menus,
-  actionHandler,
-} = {
-  menus: [],
-}) => {
+const createdOrUpdateContextMenu = (node: any, { menus, actionHandler }: ContextMenuActionParams) => {
   if (!menus.length || !actionHandler) return
-  node.addEventListener('contextmenu', (e: any) => {
+  const handler = (e: any) => {
     e.preventDefault()
     e.stopPropagation()
     const x = e.clientX
@@ -49,10 +45,24 @@ const useContextMenu: Action<any, {
         target: div,
         props,
       })
-    } else {
+    }
+    else {
       contentMenuInstance.$set(props)
     }
-  })
+  }
+  node.addEventListener('contextmenu', handler)
+  return () => {
+    node.removeEventListener('contextmenu', handler)
+  }
+}
+
+const useContextMenu: Action<any, ContextMenuActionParams> = (node: any, {
+  menus,
+  actionHandler,
+} = {
+  menus: [],
+}) => {
+  let cleaner = createdOrUpdateContextMenu(node, { menus, actionHandler })
 
   clickOutside(node, {
     cbOutside: () => {
@@ -68,6 +78,10 @@ const useContextMenu: Action<any, {
       div?.remove()
       contentMenuInstance = undefined
       div = undefined
+    },
+    update(p) {
+      cleaner?.()
+      cleaner = createdOrUpdateContextMenu(node, p)
     },
   }
 }

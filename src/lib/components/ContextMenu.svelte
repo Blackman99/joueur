@@ -38,6 +38,6 @@
     top: var(--joueur-context-menu-y);
   }
   .menu-item {
-    --uno: 'j-clickable-item px-4 py-3';
+    --uno: 'j-clickable-item px-4 py-2';
   }
 </style>
