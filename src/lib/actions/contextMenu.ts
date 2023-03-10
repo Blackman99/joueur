@@ -14,14 +14,14 @@ let div: HTMLDivElement | undefined
 
 const useContextMenu: Action<any, {
   menus: ContextMenuItem[]
-  actionHandler: ContextHandler
+  actionHandler?: ContextHandler
 }> = (node: any, {
   menus,
   actionHandler,
 } = {
   menus: [],
-  actionHandler: () => {},
 }) => {
+  if (!menus.length || !actionHandler) return
   node.addEventListener('contextmenu', (e: any) => {
     e.preventDefault()
     e.stopPropagation()

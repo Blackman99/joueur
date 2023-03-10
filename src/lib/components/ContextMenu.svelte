@@ -33,7 +33,7 @@
 
 <style>
   .context-menu {
-    --uno: 'fixed z-101 bg-white shadow-xxl w-[20vw] min-w-[180px] max-2-[320px] rounded text-[14px]';
+    --uno: 'fixed z-101 bg-white shadow-xxl w-[20vw] min-w-[180px] max-2-[320px] rounded text-[14px] b-1 b-solid b-gray-4';
     left: var(--joueur-context-menu-x);
     top: var(--joueur-context-menu-y);
   }
