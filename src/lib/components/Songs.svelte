@@ -1,3 +1,6 @@
+<!-- @component
+  This component can be used as any song list in app
+ -->
 <script lang="ts">
   // @ts-nocheck
   import { playingSongId, playing, currentSongs } from '$lib/store'
@@ -5,6 +8,8 @@
   import { createEventDispatcher } from 'svelte'
   import Actions from './Actions.svelte'
   import PlayingIcon from './PlayingIcon.svelte'
+  import contextMenu from '../actions/contextMenu'
+  import type { ContextMenu } from '../actions/contextMenu'
 
   export let songs: Song[]
   export let showActionsOnEmpty = true
@@ -28,6 +33,16 @@
   const onDragend = (e: any) => {
     dispatch('maybe-drop-in-playlist')
   }
+
+  const handleContextMenuClick = (e: any) => {
+    console.log(e)
+  }
+
+  const menus: ContextMenu[] = [
+    {
+      title: 'Menu1',
+    },
+  ]
 </script>
 
 <div class="songs">
@@ -42,6 +57,7 @@
       draggable="{draggable}"
       on:dragstart="{e => handleDragstart(e, song)}"
       on:dragend="{onDragend}"
+      use:contextMenu="{{ actionHandler: handleContextMenuClick, menus }}"
     >
       <img
         class="cover"
