@@ -8,7 +8,7 @@
 </h1>
 
 <p align="center">
-A logical music player you've always wanted
+A tiny and logical music player you've always wanted
 </p>
 
 <p align="center">
@@ -46,7 +46,7 @@ A logical music player you've always wanted
 * [ ] Search
   * [ ] Global search song/artist/album
   * [ ] Specify category search
-* [ ] Lyrics display
+* [x] Lyrics display
 * [ ] Virtual scroll
 * [x] List View
 * [ ] Table view
