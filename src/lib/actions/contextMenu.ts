@@ -2,18 +2,22 @@ import type { Action } from 'svelte/types/runtime/action'
 import ContextMenu__SvelteComponent_ from '../components/ContextMenu.svelte'
 import clickOutside from './outsideClick'
 
-export interface ContextMenu {
+export interface ContextMenuItem {
   title: string
+  name: string
 }
 
-let contentMenuInstance: ContextMenu__SvelteComponent_
+export type ContextHandler = (e: any, menu: ContextMenuItem) => any
+
+let contentMenuInstance: ContextMenu__SvelteComponent_ | undefined
+let div: HTMLDivElement | undefined
 
 const useContextMenu: Action = (node: any, {
   menus,
   actionHandler,
 }: {
-  menus: ContextMenu[]
-  actionHandler: (e: any) => any
+  menus: ContextMenuItem[]
+  actionHandler: ContextHandler
 }) => {
   node.addEventListener('contextmenu', (e: any) => {
     e.preventDefault()
@@ -25,19 +29,23 @@ const useContextMenu: Action = (node: any, {
       x,
       y,
       menus,
-      actionHandler: async (e: any) => {
-        await actionHandler(e)
-        contentMenuInstance.$set()
+      actionHandler: async (e: any, menu: ContextMenuItem) => {
+        await actionHandler(e, menu)
+        contentMenuInstance?.$set({
+          show: false,
+        })
       },
     }
     if (!contentMenuInstance) {
-      const div = document.createElement('div')
-      div.className = 'j-context-menu'
+      if (!div) {
+        div = document.createElement('div')
+        div.className = 'j-context-menu'
+        document.body.append(div)
+      }
       contentMenuInstance = new ContextMenu__SvelteComponent_({
         target: div,
         props,
       })
-      document.body.append(div)
     } else {
       contentMenuInstance.$set(props)
     }
@@ -50,6 +58,15 @@ const useContextMenu: Action = (node: any, {
       })
     },
   })
+
+  return {
+    destroy() {
+      contentMenuInstance?.$destroy()
+      div?.remove()
+      contentMenuInstance = undefined
+      div = undefined
+    },
+  }
 }
 
 export default useContextMenu

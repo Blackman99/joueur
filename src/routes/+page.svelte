@@ -1,8 +1,9 @@
 <script lang="ts">
   import Songs from '$lib/components/Songs.svelte'
-  import { currentPlaylistSongs } from '$lib/store'
+  import { currentPlaylistSongs, selectedPlaylistId } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import { db } from '$lib/db'
+  import type { ContextMenuItem } from '$lib/actions/contextMenu'
 
   let draggingSongId: number | null
   let waitForDroppingPlaylistId: number | null
@@ -21,6 +22,33 @@
     draggingSongId = null
     waitForDroppingPlaylistId = null
   }
+
+  const menus: ContextMenuItem[] = [
+    {
+      title: 'Delete from playlist',
+      name: 'delete-from-playlist',
+    },
+  ]
+
+  const handleRemoveFromList = async (e: CustomEvent<number>) => {
+    const songIdToRemove = e.detail
+    const currentPlaylist = await db.playlists
+      .where('id')
+      .equals($selectedPlaylistId)
+      .first()
+    if (currentPlaylist) {
+      const songIndexToRemove = currentPlaylist.songIds.findIndex(
+        id => id === songIdToRemove
+      )
+      if (songIndexToRemove !== -1) {
+        currentPlaylist.songIds = [
+          ...currentPlaylist.songIds.slice(0, songIndexToRemove),
+          ...currentPlaylist.songIds.slice(songIndexToRemove + 1),
+        ]
+        await db.playlists.update(currentPlaylist.id, currentPlaylist)
+      }
+    }
+  }
 </script>
 
 <div class="start">
@@ -34,8 +62,10 @@
     <Songs
       songs="{songs}"
       draggable
+      contextMenus="{menus}"
       bind:draggingSongId="{draggingSongId}"
       on:maybe-drop-in-playlist="{handleMaybeDropInPlaylist}"
+      on:delete-from-playlist="{handleRemoveFromList}"
     />
   {/await}
 </div>

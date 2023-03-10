@@ -10,12 +10,14 @@
   import PlayingIcon from './PlayingIcon.svelte'
   import contextMenu from '../actions/contextMenu'
   import type { ContextMenu } from '../actions/contextMenu'
+  import ContextMenu from './ContextMenu.svelte'
 
   export let songs: Song[]
   export let showActionsOnEmpty = true
   export let resetCurrentSongsOnClick = true
   export let draggable = false
   export let draggingSongId: number | null = null
+  export let contextMenus: ContextMenu[] = []
 
   const dispatch = createEventDispatcher()
 
@@ -26,23 +28,13 @@
       $currentSongs = songs
     }
   }
-  const handleDragstart = (e: any, song: Song) => {
+  const handleDragstart = (song: Song) => {
     draggingSongId = song.id
   }
 
-  const onDragend = (e: any) => {
+  const onDragend = () => {
     dispatch('maybe-drop-in-playlist')
   }
-
-  const handleContextMenuClick = (e: any) => {
-    console.log(e)
-  }
-
-  const menus: ContextMenu[] = [
-    {
-      title: 'Menu1',
-    },
-  ]
 </script>
 
 <div class="songs">
@@ -50,14 +42,19 @@
     {@const isPlaying = song.id === $playingSongId}
     <!-- ignore the type error below -->
     <div
+      draggable="{draggable}"
       class="song-row"
       class:active="{isPlaying}"
       class:dragging="{draggingSongId === song.id}"
       on:dblclick="{() => handlePlay(song)}"
-      draggable="{draggable}"
-      on:dragstart="{e => handleDragstart(e, song)}"
+      on:dragstart="{() => handleDragstart(song)}"
       on:dragend="{onDragend}"
-      use:contextMenu="{{ actionHandler: handleContextMenuClick, menus }}"
+      use:contextMenu="{{
+        actionHandler: (_e, m) => {
+          dispatch(m.name, song.id)
+        },
+        menus: contextMenus,
+      }}"
     >
       <img
         class="cover"

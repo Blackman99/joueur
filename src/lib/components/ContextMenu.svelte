@@ -1,12 +1,16 @@
 <script lang="ts">
-  import type { ContextMenu } from '$lib/actions/contextMenu'
+  // @ts-nocheck
+  import type {
+    ContextMenuItem,
+    ContextHandler,
+  } from '$lib/actions/contextMenu'
   import { fade } from 'svelte/transition'
 
   export let x: number
   export let y: number
-  export let menus: ContextMenu[]
+  export let menus: ContextMenuItem[]
   export let show: boolean = false
-  export let actionHandler: (e: any) => any
+  export let actionHandler: ContextHandler
 </script>
 
 {#if show}
@@ -15,8 +19,12 @@
     class="context-menu"
     style="--joueur-context-menu-x:{x}px;--joueur-context-menu-y:{y}px;"
   >
-    {#each menus as menu (menu.title)}
-      <div class="menu-item" on:keypress on:click="{actionHandler}">
+    {#each menus as menu (menu.name)}
+      <div
+        class="menu-item"
+        on:keypress
+        on:click="{e => actionHandler(e, menu)}"
+      >
         {menu.title}
       </div>
     {/each}
@@ -25,11 +33,11 @@
 
 <style>
   .context-menu {
-    --uno: 'fixed z-101 bg-white shadow-lg';
+    --uno: 'fixed z-101 bg-white shadow-xxl w-[20vw] min-w-[180px] max-2-[320px] rounded text-[14px]';
     left: var(--joueur-context-menu-x);
     top: var(--joueur-context-menu-y);
   }
   .menu-item {
-    --uno: 'j-clickable-item';
+    --uno: 'j-clickable-item px-4 py-3';
   }
 </style>
