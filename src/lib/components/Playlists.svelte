@@ -43,7 +43,7 @@
     },
   ]
 
-  const contextMenuHandler = async (name: string) => {
+  const contextMenuHandler = async (name: string, id: number) => {
     switch (name) {
       case 'delete-playlist':
         const yes = await ask(
@@ -51,7 +51,7 @@
           { title: 'Confirm', type: 'warning' }
         )
         if (yes) {
-          await db.playlists.delete($selectedPlaylistId)
+          await db.playlists.delete(id)
           $selectedPlaylistId = -1
         }
     }
@@ -74,7 +74,7 @@
           on:dragleave="{handleDragleave}"
           use:contextMenu="{{
             menus: contextMenus,
-            actionHandler: (e, m) => contextMenuHandler(m.name),
+            actionHandler: (e, m) => contextMenuHandler(m.name, playlist.id),
           }}"
         >
           {#if (draggingSongId || draggingSongIds.length) && waitForDroppingPlaylistId === playlist.id}
