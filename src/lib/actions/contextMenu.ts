@@ -12,12 +12,15 @@ export type ContextHandler = (e: any, menu: ContextMenuItem) => any
 let contentMenuInstance: ContextMenu__SvelteComponent_ | undefined
 let div: HTMLDivElement | undefined
 
-const useContextMenu: Action = (node: any, {
-  menus,
-  actionHandler,
-}: {
+const useContextMenu: Action<any, {
   menus: ContextMenuItem[]
   actionHandler: ContextHandler
+}> = (node: any, {
+  menus,
+  actionHandler,
+} = {
+  menus: [],
+  actionHandler: () => {},
 }) => {
   node.addEventListener('contextmenu', (e: any) => {
     e.preventDefault()

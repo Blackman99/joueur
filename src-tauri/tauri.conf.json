@@ -37,6 +37,9 @@
         "assetScope": [
           "/**/*"
         ]
+      },
+      "notification": {
+        "all": true 
       }
     },
     "bundle": {

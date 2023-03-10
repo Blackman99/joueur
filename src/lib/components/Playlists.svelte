@@ -1,8 +1,12 @@
 <script lang="ts">
+  import contextMenu, { type ContextMenuItem } from '$lib/actions/contextMenu'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import { selectedPlaylistId } from '$lib/store'
   import { playlists } from '$lib/store'
   import CreatePlaylistInput from './CreatePlaylistInput.svelte'
+  import { ask } from '@tauri-apps/api/dialog'
+  import { db } from '$lib/db'
+
   export let draggingSongId: number | null
   export let waitForDroppingPlaylistId: number | null = null
 
@@ -30,6 +34,27 @@
       }
     }
   }
+
+  const contextMenus: ContextMenuItem[] = [
+    {
+      title: 'Delete playlist',
+      name: 'delete-playlist',
+    },
+  ]
+
+  const contextMenuHandler = async (name: string) => {
+    switch (name) {
+      case 'delete-playlist':
+        const yes = await ask(
+          'Deleting of playlist cannot be reverted. Are you sure?',
+          { title: 'Confirm', type: 'warning' }
+        )
+        if (yes) {
+          await db.playlists.delete($selectedPlaylistId)
+          $selectedPlaylistId = -1
+        }
+    }
+  }
 </script>
 
 <div class="playlist">
@@ -46,6 +71,10 @@
           on:keyup="{() => handlePlaylistClick(playlist.id)}"
           on:dragenter="{handleDragenter}"
           on:dragleave="{handleDragleave}"
+          use:contextMenu="{{
+            menus: contextMenus,
+            actionHandler: (e, m) => contextMenuHandler(m.name),
+          }}"
         >
           {#if draggingSongId && waitForDroppingPlaylistId === playlist.id}
             <div class="drop-hint"></div>

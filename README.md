@@ -34,11 +34,11 @@ A tiny and logical music player you've always wanted
       * [ ] By context menu multi-selected songs
     * [ ] Remove Song
       * [x] Remove single by context menu
-  * [ ] Delete 
+  * [ ] Delete by context menu
 * [ ] Now playing List
   * [ ] Songs resort by dragging 
   * [ ] Remove single song by context menu
-* [ ] Player
+* [ ] Player core
   * [x] Play & Pause
   * [x] Next & Prev
   * [x] Volume
@@ -48,11 +48,17 @@ A tiny and logical music player you've always wanted
 * [ ] Search
   * [ ] Global search song/artist/album
   * [ ] Specify category search
-* [x] Lyrics display
-* [ ] Virtual scroll
-* [x] List View
-* [ ] Table view
-* [ ] Grid view
+* [ ] Lyrics
+  * [x] Basic display
+  * [x] Auto scroll
+  * [ ] Edit
+  * [ ] Upload .lrc file
+  * [ ] Update by directly edit
+* [ ] View
+  * [x] List view
+  * [ ] Table view
+  * [ ] Grid view
+  * [ ] Virtual scroll
 * [ ] Dark mode
 * [ ] I18n
 * [ ] Toggle with different theming color
