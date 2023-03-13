@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SoundFull from '$lib/icons/SoundFull.svelte'
   import SoundLow from '$lib/icons/SoundLow.svelte'
   import { volume } from '$lib/store'
   import IconButton from './IconButton.svelte'
@@ -43,6 +44,7 @@
   on:wheel="{handleVolumeWheel}"
   on:mouseenter="{() => (showBar = true)}"
   on:mouseleave="{() => (showBar = false)}"
+  on:click="{() => ($volume = 0)}"
 >
   <div class="icon">
     <SoundLow />
@@ -50,9 +52,10 @@
   {#if showBar}
     <div
       class="volume-wrapper"
-      on:mousedown="{handleBarMousedown}"
-      on:mousemove="{handleBarMousemove}"
-      on:mouseup="{handleMouseup}"
+      on:mousedown|stopPropagation="{handleBarMousedown}"
+      on:mousemove|stopPropagation="{handleBarMousemove}"
+      on:mouseup|stopPropagation="{handleMouseup}"
+      on:click|stopPropagation
       on:keypress
     >
       <div
@@ -63,6 +66,11 @@
         <div class="volume-thumb">
           <div class="volume-indicator"></div>
         </div>
+      </div>
+      <div class="sound-full">
+        <IconButton on:click="{() => ($volume = 1)}">
+          <SoundFull />
+        </IconButton>
       </div>
     </div>
   {/if}
@@ -87,5 +95,8 @@
   .volume-thumb {
     --uno: 'absolute left-0 bottom-0 right-0 bg-primary bg-opacity-50 z-3 rounded-[8px] pointer-events-none';
     height: calc(var(--joueur-volume));
+  }
+  .sound-full {
+    --uno: 'absolute top-[-12px]';
   }
 </style>

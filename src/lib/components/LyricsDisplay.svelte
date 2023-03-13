@@ -63,9 +63,10 @@
   <div class="lyrics-display" bind:this="{lyricsContainer}">
     {#if lyricsLines && lyricsLines.length}
       {#each lyricsLines as line, i}
+        {@const active = i === activeIndex}
         <div
           class="lyrics-line"
-          class:active="{i === activeIndex}"
+          class:active="{active}"
           style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) - 1}px;"
         >
           {line.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '')}
