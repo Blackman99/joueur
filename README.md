@@ -43,7 +43,7 @@ A tiny and logical music player you've always wanted
   * [x] Play & Pause
   * [x] Next & Prev
   * [x] Volume
-  * [ ] Modes: list cycle, single, shuffle
+  * [x] Modes: list cycle, single, shuffle
   * [x] Progress bar click & drag
   * [ ] Spectrum
 * [ ] Search
