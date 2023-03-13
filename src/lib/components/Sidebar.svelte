@@ -12,6 +12,7 @@
   import { cubicInOut } from 'svelte/easing'
   import LyricsDisplay from './LyricsDisplay.svelte'
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
+  import GlobalSearch from './GlobalSearch.svelte'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -55,7 +56,10 @@
 </script>
 
 <aside class="j-side">
-  <img src="/logo.svg" alt="Joueur" class="logo" />
+  <div>
+    <img src="/logo.svg" alt="Joueur" class="logo" />
+    <GlobalSearch />
+  </div>
   <div class="menus">
     <Menu label="Musics" to="/" rounded>
       <MenuMusics slot="icon" />
