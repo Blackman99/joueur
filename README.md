@@ -38,7 +38,8 @@ A tiny and logical music player you've always wanted
   * [x] Delete by context menu
 * [ ] Now playing List
   * [ ] Songs resort by dragging 
-  * [ ] Remove single song by context menu
+  * [x] Remove single song by context menu
+  * [ ] Add single song from other list by context menu
 * [ ] Player core
   * [x] Play & Pause
   * [x] Next & Prev

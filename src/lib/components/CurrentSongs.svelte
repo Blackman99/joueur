@@ -4,6 +4,17 @@
   import Songs from './Songs.svelte'
 
   export let show = false
+
+  const handleRemoveFromList = (e: CustomEvent<number>) => {
+    const songIdToRemove = e.detail
+    const idx = $currentSongs.findIndex(song => song.id === songIdToRemove)
+    if (idx !== -1) {
+      $currentSongs = [
+        ...$currentSongs.slice(0, idx),
+        ...$currentSongs.slice(idx + 1),
+      ]
+    }
+  }
 </script>
 
 <div class="current-songs" class:show="{show}">
@@ -11,6 +22,13 @@
     songs="{$currentSongs}"
     resetCurrentSongsOnClick="{false}"
     showActionsOnEmpty="{false}"
+    contextMenus="{[
+      {
+        title: 'Remove from list',
+        name: 'remove-from-list',
+      },
+    ]}"
+    on:remove-from-list="{handleRemoveFromList}"
   />
 </div>
 
