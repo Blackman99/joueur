@@ -107,8 +107,4 @@
     filter: none;
     -webkit-filter: none;
   }
-  .lyrics-display:hover .active {
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-  }
 </style>

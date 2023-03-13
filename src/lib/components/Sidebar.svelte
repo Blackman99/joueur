@@ -11,6 +11,7 @@
   import MenuSettings from '$lib/icons/MenuSettings.svelte'
   import { cubicInOut } from 'svelte/easing'
   import LyricsDisplay from './LyricsDisplay.svelte'
+  import DefaultCover from '$lib/icons/DefaultCover.svelte'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -73,13 +74,19 @@
     <LyricsDisplay />
     {#if $playingSong}
       {#key $playingSongId}
-        <img
-          in:coverIn
-          out:coverOut
-          class="cover"
-          src="{$playingSong.cover}"
-          alt="{$playingSong.title}"
-        />
+        {#if $playingSong.cover}
+          <img
+            in:coverIn
+            out:coverOut
+            class="cover"
+            src="{$playingSong.cover}"
+            alt="{$playingSong.title}"
+          />
+        {:else}
+          <div class="default-cover">
+            <DefaultCover />
+          </div>
+        {/if}
       {/key}
     {/if}
   </div>
@@ -100,5 +107,8 @@
   }
   .cover-wrapper {
     --uno: 'relative z-9';
+  }
+  .default-cover {
+    --uno: 'w-full aspect-1 flex items-center text-10 justify-center bg-white';
   }
 </style>

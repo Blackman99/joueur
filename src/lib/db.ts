@@ -98,6 +98,11 @@ class JoueurDB extends Dexie {
       song = isExist
     } else {
       song.addTime = new Date()
+      if (!song.title)
+        song.title = song.path.split('/').pop()?.replace(/\.mp3/, '') || ''
+      if (!song.album) song.album = 'Unknown'
+      if (!song.artist) song.artist = 'Unknown'
+
       const newSongId = await this.songs.put(song)
       song.id = newSongId
       // grouping the artist
