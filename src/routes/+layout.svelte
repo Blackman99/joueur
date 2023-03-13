@@ -160,7 +160,7 @@
   }
 
   let isFirst = true
-  const handleCanPlaythrough = (e: any) => {
+  const handleLoadedMetadata = (e: any) => {
     if (isFirst) {
       e.target.currentTime = Number(localStorage.getItem(CURRENT_TIME_KEY))
       isFirst = false
@@ -203,7 +203,7 @@
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
     on:ended="{playNext}"
-    on:loadedmetadata="{handleCanPlaythrough}"
+    on:loadedmetadata="{handleLoadedMetadata}"
   >
   </audio>
 {/if}
