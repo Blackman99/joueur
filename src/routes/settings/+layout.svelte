@@ -33,7 +33,7 @@
     --uno: 'flex-grow flex items-stretch bg-light-2';
   }
   .settings-category {
-    --uno: 'w-[20vw] max-w-[320px] min-w-[220px]';
+    --uno: 'w-[30vw] max-w-[480px] min-w-[200px]';
   }
   .arrow {
     --uno: 'flex items-center text-5';

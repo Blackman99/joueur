@@ -3,6 +3,7 @@
   import { currentPlaylistSongs, selectedPlaylistId } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import { db } from '$lib/db'
+  import { message, ask } from '@tauri-apps/api/dialog'
 
   let draggingSongId: number | null
   let draggingSongIds: number[] = []
@@ -41,6 +42,10 @@
     {
       title: 'Delete from playlist',
       name: 'delete-from-playlist',
+    },
+    {
+      title: 'Delete from application',
+      name: 'delete-from-application',
     },
   ]
 
@@ -84,6 +89,58 @@
       selectedSongIds = []
     }
   }
+
+  const handleDeleteFromApplication = async (e: CustomEvent<number>) => {
+    const yes = await ask(
+      'Deletion from application can not be reverted. Are you sure?',
+      { type: 'warning', title: 'Confirm' }
+    )
+    if (!yes) return
+    const songIdToRemove = e.detail
+    db.transaction(
+      'rw',
+      db.playlists,
+      db.songs,
+      db.artists,
+      db.albums,
+      async () => {}
+    )
+      .then(async () => {
+        const playlistsContainSong = await db.playlists
+          .filter(pl => pl.songIds.includes(songIdToRemove))
+          .toArray()
+        for (const pl of playlistsContainSong) {
+          pl.songIds = pl.songIds.filter(id => id !== songIdToRemove)
+          await db.playlists.update(pl.id, pl)
+        }
+        await db.songs.where('id').equals(songIdToRemove).delete()
+
+        const artistsContainSong = await db.artists
+          .filter(ar => ar.songIds.includes(songIdToRemove))
+          .toArray()
+
+        for (const ar of artistsContainSong) {
+          ar.songIds = ar.songIds.filter(id => id !== songIdToRemove)
+          if (!ar.songIds.length) await db.artists.delete(ar.id)
+          else await db.artists.update(ar.id, ar)
+        }
+
+        const albumsContainSong = await db.albums
+          .filter(al => al.songIds.includes(songIdToRemove))
+          .toArray()
+
+        for (const al of albumsContainSong) {
+          al.songIds = al.songIds.filter(id => id !== songIdToRemove)
+          if (!al.songIds.length) await db.albums.delete(al.id)
+          else await db.albums.update(al.id, al)
+        }
+
+        message('Delete success', { title: 'Success', type: 'info' })
+      })
+      .catch(err => {
+        message(err.message, { title: 'Error', type: 'error' })
+      })
+  }
 </script>
 
 <div class="start">
@@ -107,6 +164,7 @@
       on:maybe-drop-in-playlist="{handleMaybeDropInPlaylist}"
       on:delete-from-playlist="{handleRemoveFromList}"
       on:delete-all-selected-songs-from-play-list="{handleRemoveAllSelectedSongsFromList}"
+      on:delete-from-application="{handleDeleteFromApplication}"
     />
   {/await}
 </div>
