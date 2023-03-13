@@ -7,6 +7,8 @@
     playedSeconds,
     playNext,
     playPrev,
+    duration,
+    displayDuration,
   } from '$lib/store'
   import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
   import ControlPrev from '$lib/icons/ControlPrev.svelte'
@@ -28,13 +30,12 @@
 
   const dispatch = createEventDispatcher()
 
-  $: percentage =
-    ($playedSeconds / (($playingSong?.duration || 0) / 1000)) * 100
+  $: percentage = ($playedSeconds / ($duration || 0)) * 100
 
   const handleBarClick = (e: any) => {
     const newPercentage = e.offsetX / barDom.offsetWidth
     if ($playingSong) {
-      $playedSeconds = ($playingSong.duration / 1000) * newPercentage
+      $playedSeconds = $duration * newPercentage
     }
   }
 
@@ -106,7 +107,7 @@
             {$playingSong.artist} - {$playingSong.album || 'Unknown'}
           </div>
           <div class="seconds">
-            {$displayPlayedSeconds} / {$playingSong.display_duration}
+            {$displayPlayedSeconds} / {$displayDuration}
           </div>
         </div>
       </div>

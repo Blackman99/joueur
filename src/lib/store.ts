@@ -26,10 +26,17 @@ const storeVolume = localStorage.getItem(VOLUME_KEY)
 export const volume = writable(storeVolume === null ? 1 : Number(storeVolume))
 export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) as Mode || 'repeat-list')
 export const audioDom = writable<HTMLAudioElement>()
+export const duration = writable(0)
 
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
   const minutes = Math.floor($playedSeconds / 60)
   const secondsRemain = $playedSeconds % 60
+  return `${twoDigits(minutes)}:${twoDigits(Math.ceil(secondsRemain))}`
+})
+
+export const displayDuration = derived(duration, $duration => {
+  const minutes = Math.floor($duration / 60)
+  const secondsRemain = $duration % 60
   return `${twoDigits(minutes)}:${twoDigits(Math.ceil(secondsRemain))}`
 })
 
@@ -66,7 +73,7 @@ export const playNext = () => {
 
       break
     case 'repeat-one':
-      playedSeconds.set(0)
+      get(audioDom).load()
       break
     case 'shuffle':
       shuffleNext()

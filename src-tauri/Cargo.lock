@@ -1231,7 +1231,6 @@ version = "0.0.1"
 dependencies = [
  "base64 0.21.0",
  "id3",
- "mp3-duration",
  "serde",
  "serde_json",
  "tauri",
@@ -1419,15 +1418,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b275950c28b37e794e8c55d88aeb5e139d0ce23fdbbeda68f8d7174abdf9e8fa"
 dependencies = [
  "adler",
-]
-
-[[package]]
-name = "mp3-duration"
-version = "0.1.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "348bdc7300502f0801e5b57c448815713cd843b744ef9bda252a2698fdf90a0f"
-dependencies = [
- "thiserror",
 ]
 
 [[package]]

@@ -35,6 +35,7 @@
     mode,
     PLAYING_KEY,
     togglePlayOrPause,
+    duration,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
@@ -192,6 +193,7 @@
     bind:volume="{$volume}"
     bind:currentTime="{$playedSeconds}"
     bind:paused="{$paused}"
+    bind:duration="{$duration}"
     src="{convertFileSrc($playingSong.path)}"
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
