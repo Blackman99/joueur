@@ -63,7 +63,11 @@
   <div class="lyrics-display" bind:this="{lyricsContainer}">
     {#if lyricsLines && lyricsLines.length}
       {#each lyricsLines as line, i}
-        <div class="lyrics-line" class:active="{i === activeIndex}">
+        <div
+          class="lyrics-line"
+          class:active="{i === activeIndex}"
+          style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) - 1}px;"
+        >
           {line.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '')}
         </div>
       {/each}
@@ -90,15 +94,17 @@
   }
   .lyrics-line {
     padding: 0 12px;
-    filter: blur(1px);
-    -webkit-filter: blur(1px);
+    filter: blur(var(--joueur-lyrics-blur));
+    -webkit-filter: blur(var(--joueur-lyrics-blur));
   }
   .lyrics-wrapper:hover .lyrics-line {
     filter: none;
+    -webkit-filter: none;
   }
   .active {
     --uno: 'text-light-1';
     filter: none;
+    -webkit-filter: none;
   }
   .lyrics-display:hover .active {
     backdrop-filter: blur(5px);
