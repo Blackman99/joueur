@@ -61,6 +61,12 @@
   let unsubscribePaused: () => void
   let playlistSubscriber: Subscription
 
+  const handleSpaceKeyboard = (e: KeyboardEvent) => {
+    if (e.code === 'Space') {
+      togglePlayOrPause()
+    }
+  }
+
   onMount(async () => {
     const currentSongIds = JSON.parse(
       localStorage.getItem(CURRENT_SONGS_KEY) || '[]'
@@ -105,10 +111,6 @@
       localStorage.setItem(MODE_KEY, m)
     })
 
-    unsubscribePaused = paused.subscribe(p => {
-      localStorage.setItem(PLAYING_KEY, p ? 'off' : 'on')
-    })
-
     unsubscribeCurrentSongs = currentSongs.subscribe(async songs => {
       localStorage.setItem(
         CURRENT_SONGS_KEY,
@@ -142,15 +144,7 @@
       localStorage.setItem(VOLUME_KEY, v.toString())
     })
 
-    const handleSpaceKeyboard = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
-        togglePlayOrPause()
-      }
-    }
     window.addEventListener('keyup', handleSpaceKeyboard)
-    return () => {
-      window.removeEventListener('keyup', handleSpaceKeyboard)
-    }
   })
 
   const handleContextMenu = (e: any) => {
@@ -164,13 +158,17 @@
     if (isFirst) {
       e.target.currentTime = Number(localStorage.getItem(CURRENT_TIME_KEY))
       isFirst = false
+      if (localStorage.getItem(PLAYING_KEY) === 'on') {
+        e.target.play()
+      }
     } else {
       e.target.currentTime = 0
-    }
-
-    if (e.target.paused && localStorage.getItem(PLAYING_KEY) === 'on') {
       e.target.play()
     }
+  }
+
+  $: {
+    localStorage.setItem(PLAYING_KEY, $paused ? 'off' : 'on')
   }
 
   onDestroy(() => {
@@ -183,8 +181,8 @@
     unsubscribeMode?.()
     unsubscribePaused?.()
     playlistSubscriber?.unsubscribe()
-
     localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
+    window.removeEventListener('keyup', handleSpaceKeyboard)
   })
 </script>
 
@@ -193,19 +191,12 @@
     bind:this="{$audioDom}"
     bind:volume="{$volume}"
     bind:currentTime="{$playedSeconds}"
+    bind:paused="{$paused}"
     src="{convertFileSrc($playingSong.path)}"
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
     on:ended="{playNext}"
     on:canplaythrough="{handleCanPlaythrough}"
-    on:play="{() => {
-      localStorage.setItem(PLAYING_KEY, 'on')
-      $paused = false
-    }}"
-    on:pause="{() => {
-      localStorage.setItem(PLAYING_KEY, 'off')
-      $paused = true
-    }}"
   >
   </audio>
 {/if}

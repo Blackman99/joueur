@@ -56,16 +56,16 @@
 <aside class="j-side">
   <img src="/logo.svg" alt="Joueur" class="logo" />
   <div class="menus">
-    <Menu label="Musics" to="/">
+    <Menu label="Musics" to="/" rounded>
       <MenuMusics slot="icon" />
     </Menu>
-    <Menu label="Artists" to="/artists">
+    <Menu label="Artists" to="/artists" rounded>
       <MenuArtists slot="icon" />
     </Menu>
-    <Menu label="Albums" to="/albums">
+    <Menu label="Albums" to="/albums" rounded>
       <MenuAlbums slot="icon" />
     </Menu>
-    <Menu label="Settings" to="/settings">
+    <Menu label="Settings" to="/settings" rounded>
       <MenuSettings slot="icon" />
     </Menu>
   </div>
