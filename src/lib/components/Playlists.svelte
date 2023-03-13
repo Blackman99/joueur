@@ -36,13 +36,6 @@
     }
   }
 
-  const contextMenus: ContextMenuItem[] = [
-    {
-      title: 'Delete playlist',
-      name: 'delete-playlist',
-    },
-  ]
-
   const contextMenuHandler = async (name: string, id: number) => {
     switch (name) {
       case 'delete-playlist':
@@ -80,7 +73,15 @@
           on:dragenter="{handleDragenter}"
           on:dragleave="{handleDragleave}"
           use:contextMenu="{{
-            menus: contextMenus,
+            menus:
+              playlist.id === -1
+                ? []
+                : [
+                    {
+                      title: 'Delete playlist',
+                      name: 'delete-playlist',
+                    },
+                  ],
             actionHandler: (e, m) => contextMenuHandler(m.name, playlist.id),
           }}"
         >

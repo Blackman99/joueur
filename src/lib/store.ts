@@ -12,6 +12,7 @@ export const CURRENT_TIME_KEY = 'JOUEUR_CURRENT_TIME_KEY'
 export const PLAYING_KEY = 'JOUEUR_PLAYING_KEY'
 export const CURRENT_SONGS_KEY = 'JOUEUR_CURRENT_SONGS_KEY'
 export const VOLUME_KEY = 'JOUEUR_VOLUME_KEY'
+export const MODE_KEY = 'JOUEUR_MODE_KEY'
 
 // global states
 export const playing = writable(localStorage.getItem(PLAYING_KEY) === 'on')
@@ -23,7 +24,7 @@ export const currentPlaylistSongs = writable<Song[]>([])
 export const currentSongs = writable<Song[]>([])
 const storeVolume = localStorage.getItem(VOLUME_KEY)
 export const volume = writable(storeVolume === null ? 1 : Number(storeVolume))
-export const mode = writable<Mode>('repeat-list')
+export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) || 'repeat-list')
 export const audioDom = writable<HTMLAudioElement>()
 
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
@@ -54,7 +55,9 @@ export const playNext = () => {
   const $mode = get(mode)
   const currentIndex = $currentSongs.findIndex(song => song.id === $playingSong.id)
   const shuffleNext = () => {
-    const nextIndex = Math.floor(Math.random() * $currentSongs.length)
+    let nextIndex = Math.floor(Math.random() * $currentSongs.length)
+    while (nextIndex === currentIndex)
+      nextIndex = Math.floor(Math.random() * $currentSongs.length)
     playingSongId.set($currentSongs[nextIndex].id)
     $audioDom.currentTime = 0
   }

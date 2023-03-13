@@ -18,6 +18,7 @@
     selectedPlaylistId,
     SELECTED_PLAYLIST_ID_KEY,
     PLAYING_SONG_ID_KEY,
+    MODE_KEY,
     refreshCurrentSongs,
     playlists,
     playing,
@@ -32,6 +33,7 @@
     volume,
     VOLUME_KEY,
     audioDom,
+    mode,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
@@ -56,6 +58,7 @@
   let unsubscribePlayedSeconds: () => void
   let unsubscribeCurrentSongs: () => void
   let unsubscribeVolume: () => void
+  let unsubscribeMode: () => void
   let currentTimerInterval: ReturnType<typeof setInterval>
   let playlistSubscriber: Subscription
 
@@ -97,6 +100,10 @@
             showDropLoading = false
           }
       }
+    })
+
+    unsubscribeMode = mode.subscribe(m => {
+      localStorage.setItem(MODE_KEY, m)
     })
 
     unsubscribeCurrentSongs = currentSongs.subscribe(async songs => {
@@ -208,6 +215,7 @@
     unsubscribePlayedSeconds?.()
     unsubscribeCurrentSongs?.()
     unsubscribeVolume?.()
+    unsubscribeMode?.()
     playlistSubscriber?.unsubscribe()
     if (currentTimerInterval) {
       clearInterval(currentTimerInterval)
