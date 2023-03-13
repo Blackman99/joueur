@@ -203,7 +203,7 @@
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
     on:ended="{playNext}"
-    on:canplaythrough="{handleCanPlaythrough}"
+    on:loadedmetadata="{handleCanPlaythrough}"
   >
   </audio>
 {/if}
