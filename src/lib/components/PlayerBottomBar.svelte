@@ -14,6 +14,7 @@
   import { createEventDispatcher } from 'svelte'
   import { spring } from 'svelte/motion'
   import VolumeControl from './VolumeControl.svelte'
+  import ModeSwitcher from './ModeSwitcher.svelte'
 
   const pointerX = spring(0, {
     stiffness: 0.1,
@@ -92,9 +93,12 @@
 
       <div class="middle">
         <div class="title">
-          <div>{$playingSong.title}</div>
+          <div>
+            {$playingSong.title}
+          </div>
           <div class="controls">
             <VolumeControl />
+            <ModeSwitcher />
             <IconButton on:click="{() => dispatch('show-current-songs')}">
               <ControlCurrentList />
             </IconButton>

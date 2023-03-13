@@ -45,3 +45,6 @@ export interface Artist extends WithSongs {
 export interface Setting extends WithTitle {
   description: string
 }
+
+export const modes = ['repeat-one', 'repeat-list', 'shuffle'] as const
+export type Mode = typeof modes[number]

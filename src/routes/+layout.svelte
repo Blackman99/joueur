@@ -31,6 +31,7 @@
     playNext,
     volume,
     VOLUME_KEY,
+    audioDom,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
@@ -57,8 +58,6 @@
   let unsubscribeVolume: () => void
   let currentTimerInterval: ReturnType<typeof setInterval>
   let playlistSubscriber: Subscription
-
-  let audio: HTMLAudioElement
 
   onMount(async () => {
     const currentSongIds = JSON.parse(
@@ -155,19 +154,19 @@
   // This happens as the audio element is ready
   const handleCanPlayThrough = () => {
     if (first) {
-      audio.currentTime = get(playedSeconds)
+      $audioDom.currentTime = get(playedSeconds)
       first = false
     } else if (get(playing)) {
-      audio.play()
+      $audioDom?.play()
     }
 
     // Subscriptions below should add here to avoid happen before audio is ready
     if (!unsubscribePlaying) {
       unsubscribePlaying = playing.subscribe(v => {
         if (!v) {
-          audio?.pause()
+          $audioDom?.pause()
         } else {
-          audio?.play()
+          $audioDom?.play()
         }
         localStorage.setItem(PLAYING_KEY, v ? 'on' : 'off')
       })
@@ -175,15 +174,13 @@
 
     if (!currentTimerInterval) {
       currentTimerInterval = setInterval(() => {
-        playedSeconds.set(audio?.currentTime)
+        playedSeconds.set($audioDom?.currentTime)
       }, 1000)
     }
 
     if (unsubscribePlayedSeconds) {
       unsubscribePlayedSeconds = playedSeconds.subscribe(ps => {
-        console.log('ps: ', ps)
-
-        audio.currentTime = ps
+        $audioDom.currentTime = ps
       })
     }
   }
@@ -195,8 +192,8 @@
   }
 
   const handleCurrentTimeChange = (e: any) => {
-    if (audio) {
-      audio.currentTime = e.detail
+    if ($audioDom) {
+      $audioDom.currentTime = e.detail
       playedSeconds.set(e.detail)
     }
   }
@@ -222,12 +219,14 @@
 
 {#if $playingSong}
   <audio
-    bind:this="{audio}"
+    bind:this="{$audioDom}"
     bind:volume="{$volume}"
     src="{convertFileSrc($playingSong.path)}"
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
     on:ended="{playNext}"
+    on:pause="{() => ($playing = false)}"
+    on:play="{() => ($playing = true)}"
     on:canplaythrough="{handleCanPlayThrough}"
   >
   </audio>

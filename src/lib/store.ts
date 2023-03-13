@@ -2,7 +2,7 @@ import { liveQuery } from 'dexie'
 import { derived, get, writable } from 'svelte/store'
 import type { Readable } from 'svelte/store'
 import { db } from './db'
-import type { Playlist, Song } from './types'
+import type { Mode, Playlist, Song } from './types'
 import { twoDigits } from './utils/format'
 
 // local storage keys
@@ -23,6 +23,8 @@ export const currentPlaylistSongs = writable<Song[]>([])
 export const currentSongs = writable<Song[]>([])
 const storeVolume = localStorage.getItem(VOLUME_KEY)
 export const volume = writable(storeVolume === null ? 1 : Number(storeVolume))
+export const mode = writable<Mode>('repeat-list')
+export const audioDom = writable<HTMLAudioElement>()
 
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
   const minutes = Math.floor($playedSeconds / 60)
@@ -46,15 +48,28 @@ export async function refreshCurrentSongs($id: number) {
 
 export const playNext = () => {
   const $playingSong = get(playingSong)
-  const $currentSongs = get(currentSongs)
   if (!$playingSong) return
+  const $currentSongs = get(currentSongs)
+  const $audioDom = get(audioDom)
+  const $mode = get(mode)
   const currentIndex = $currentSongs.findIndex(song => song.id === $playingSong.id)
-  if (currentIndex !== -1) {
-    if (currentIndex < $currentSongs.length - 1)
-      playingSongId.set($currentSongs[currentIndex + 1].id)
-    else
-      playingSongId.set($currentSongs[0].id)
-    playedSeconds.set(0)
+  const shuffleNext = () => {
+    const nextIndex = Math.floor(Math.random() * $currentSongs.length)
+    playingSongId.set($currentSongs[nextIndex].id)
+    $audioDom.currentTime = 0
+  }
+  switch ($mode) {
+    case 'repeat-list':
+      if (currentIndex !== -1) {
+        playingSongId.set($currentSongs[(currentIndex + 1) % $currentSongs.length].id)
+        $audioDom.currentTime = 0
+      }
+      break
+    case 'repeat-one':
+      $audioDom.currentTime = 0
+      break
+    case 'shuffle':
+      shuffleNext()
   }
 }
 
