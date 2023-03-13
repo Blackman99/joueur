@@ -112,6 +112,12 @@
       playingSong.set(await db.songs.where('id').equals(newSongId).first())
     })
 
+    unsubscribePlayingSong = playingSong.subscribe(song => {
+      if (song) {
+        appWindow.setTitle(`${song.title} - ${song.artist}`)
+      }
+    })
+
     // The subscriptions below can only put here cause would cause unexpected errors like:
     // can not reach variable before initialized
     playlistSubscriber = playlists.subscribe(
@@ -170,7 +176,7 @@
     if (!currentTimerInterval) {
       currentTimerInterval = setInterval(() => {
         playedSeconds.set(audio?.currentTime)
-      }, 500)
+      }, 1000)
     }
 
     if (unsubscribePlayedSeconds) {

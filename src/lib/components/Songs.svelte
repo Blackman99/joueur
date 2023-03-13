@@ -3,7 +3,12 @@
  -->
 <script lang="ts">
   // @ts-nocheck
-  import { playingSongId, playing, currentSongs } from '$lib/store'
+  import {
+    playingSongId,
+    playing,
+    currentSongs,
+    playedSeconds,
+  } from '$lib/store'
   import type { Song } from '$lib/types'
   import { createEventDispatcher } from 'svelte'
   import Actions from './Actions.svelte'
@@ -33,6 +38,7 @@
     if (selectedSongIds.length) return
     $playing = true
     $playingSongId = song.id
+    $playedSeconds = 0
     if (resetCurrentSongsOnClick) {
       $currentSongs = songs
     }

@@ -54,6 +54,7 @@ export const playNext = () => {
       playingSongId.set($currentSongs[currentIndex + 1].id)
     else
       playingSongId.set($currentSongs[0].id)
+    playedSeconds.set(0)
   }
 }
 
@@ -67,6 +68,7 @@ export const playPrev = () => {
       playingSongId.set($currentSongs[currentIndex - 1].id)
     else
       playingSongId.set($currentSongs[$currentSongs.length - 1].id)
+    playedSeconds.set(0)
   }
 }
 
