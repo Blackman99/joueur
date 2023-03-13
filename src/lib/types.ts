@@ -20,6 +20,8 @@ export interface Song extends WithAddTime {
   album: string
   year?: number
   cover?: string
+  duration: number
+  display_duration?: string
   lyrics: Array<{
     text?: string
     description?: string

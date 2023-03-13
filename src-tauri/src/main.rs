@@ -1,6 +1,7 @@
 use base64::{Engine as _, engine::general_purpose};
 use song::{Song, LyricsItem};
 use id3::{Tag, TagLike};
+use mp3_duration;
 mod song;
 
 #[cfg_attr(
@@ -13,6 +14,10 @@ mod song;
 fn get_metadata(path: &str) -> Option<Song> {
     match Tag::read_from_path(path) {
         Ok(tag) => {
+            let d = match mp3_duration::from_path(path){
+                Ok(d) => Some(d),
+                Err(_e) => None
+            };
             let lyrics: Vec<LyricsItem> = tag.lyrics().into_iter().map(|f| LyricsItem {
                 text: f.text.to_owned(),
                 description: f.description.to_owned(),
@@ -25,6 +30,17 @@ fn get_metadata(path: &str) -> Option<Song> {
                 album: unwrap_str(tag.album()),
                 year: tag.year(),
                 lyrics: Some(lyrics),
+                duration: match d {
+                    Some(d) => Some(d.as_millis()),
+                    None => None
+                },
+                display_duration: match d {
+                    None => None,
+                    Some(d) => {
+                        let seconds = d.as_secs() % 60;
+                        Some(format!("{:02}:{:02}", (d.as_secs() - seconds) / 60, seconds))
+                    }
+                },
                 cover: match tag.pictures().next() {
                     None => None,
                     Some(p) => {
