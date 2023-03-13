@@ -223,11 +223,14 @@
 {#if $playingSong}
   <audio
     bind:this="{audio}"
+    bind:volume="{$volume}"
     src="{convertFileSrc($playingSong.path)}"
-    on:canplaythrough="{handleCanPlayThrough}"
     style="display: none;"
+    title="{$playingSong.title} - {$playingSong.artist}"
     on:ended="{playNext}"
-    bind:volume="{$volume}"></audio>
+    on:canplaythrough="{handleCanPlayThrough}"
+  >
+  </audio>
 {/if}
 
 <main class="j-main" on:contextmenu="{handleContextMenu}">
