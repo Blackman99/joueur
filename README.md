@@ -17,7 +17,7 @@ A tiny and logical music player you've always wanted
   </a>
 </p>
 
-## TODO
+## Features & TODOs
 
 * [x] Drag & Drop files
 * [x] Rust audio parser
