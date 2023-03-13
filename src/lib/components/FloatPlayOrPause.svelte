@@ -1,20 +1,16 @@
 <script lang="ts">
   import ControlPause from '$lib/icons/ControlPause.svelte'
   import ControlPlay from '$lib/icons/ControlPlay.svelte'
-  import { playing } from '$lib/store'
+  import { paused, togglePlayOrPause } from '$lib/store'
   import FloatAction from './FloatAction.svelte'
 </script>
 
-<div
-  class="play-or-pause"
-  on:click="{() => ($playing = !$playing)}"
-  on:keypress
->
+<div class="play-or-pause" on:click="{togglePlayOrPause}" on:keypress>
   <FloatAction>
-    {#if $playing}
-      <ControlPause />
-    {:else}
+    {#if $paused}
       <ControlPlay />
+    {:else}
+      <ControlPause />
     {/if}
   </FloatAction>
 </div>

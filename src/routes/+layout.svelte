@@ -21,12 +21,11 @@
     MODE_KEY,
     refreshCurrentSongs,
     playlists,
-    playing,
+    paused,
     playingSongId,
     playedSeconds,
     CURRENT_TIME_KEY,
     playingSong,
-    PLAYING_KEY,
     currentSongs,
     CURRENT_SONGS_KEY,
     playNext,
@@ -34,6 +33,8 @@
     VOLUME_KEY,
     audioDom,
     mode,
+    PLAYING_KEY,
+    togglePlayOrPause,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
@@ -49,17 +50,15 @@
   let showCurrentList = false
 
   // effects
+  // Notice that not use $ because the subscriptions timing is not fixed
   let cleanupDropListener: () => void
-  let cleanupWindowClose: () => void
-  let unsubscribePlaying: () => void
-  let unsubscribePlayingSong: () => void
   let unsubscribePlaylistId: () => void
   let unsubscribePlayingSongId: () => void
   let unsubscribePlayedSeconds: () => void
   let unsubscribeCurrentSongs: () => void
   let unsubscribeVolume: () => void
   let unsubscribeMode: () => void
-  let currentTimerInterval: ReturnType<typeof setInterval>
+  let unsubscribePaused: () => void
   let playlistSubscriber: Subscription
 
   onMount(async () => {
@@ -106,6 +105,10 @@
       localStorage.setItem(MODE_KEY, m)
     })
 
+    unsubscribePaused = paused.subscribe(p => {
+      localStorage.setItem(PLAYING_KEY, p ? 'off' : 'on')
+    })
+
     unsubscribeCurrentSongs = currentSongs.subscribe(async songs => {
       localStorage.setItem(
         CURRENT_SONGS_KEY,
@@ -116,12 +119,6 @@
     unsubscribePlayingSongId = playingSongId.subscribe(async newSongId => {
       localStorage.setItem(PLAYING_SONG_ID_KEY, newSongId.toString())
       playingSong.set(await db.songs.where('id').equals(newSongId).first())
-    })
-
-    unsubscribePlayingSong = playingSong.subscribe(song => {
-      if (song) {
-        appWindow.setTitle(`${song.title} - ${song.artist}`)
-      }
     })
 
     // The subscriptions below can only put here cause would cause unexpected errors like:
@@ -137,7 +134,7 @@
       ready = true
     })
 
-    cleanupWindowClose = await appWindow.onCloseRequested(async evt => {
+    await appWindow.onCloseRequested(async _evt => {
       localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
     })
 
@@ -147,7 +144,7 @@
 
     const handleSpaceKeyboard = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
-        playing.set(!get(playing))
+        togglePlayOrPause()
       }
     }
     window.addEventListener('keyup', handleSpaceKeyboard)
@@ -156,70 +153,36 @@
     }
   })
 
-  let first = true
-
-  // This happens as the audio element is ready
-  const handleCanPlayThrough = () => {
-    if (first) {
-      $audioDom.currentTime = get(playedSeconds)
-      first = false
-    } else if (get(playing)) {
-      $audioDom?.play()
-    }
-
-    // Subscriptions below should add here to avoid happen before audio is ready
-    if (!unsubscribePlaying) {
-      unsubscribePlaying = playing.subscribe(v => {
-        if (!v) {
-          $audioDom?.pause()
-        } else {
-          $audioDom?.play()
-        }
-        localStorage.setItem(PLAYING_KEY, v ? 'on' : 'off')
-      })
-    }
-
-    if (!currentTimerInterval) {
-      currentTimerInterval = setInterval(() => {
-        playedSeconds.set($audioDom?.currentTime)
-      }, 500)
-    }
-
-    if (unsubscribePlayedSeconds) {
-      unsubscribePlayedSeconds = playedSeconds.subscribe(ps => {
-        $audioDom.currentTime = ps
-      })
-    }
-  }
-
   const handleContextMenu = (e: any) => {
     if (!import.meta.env.DEV) {
       e.preventDefault()
     }
   }
 
-  const handleCurrentTimeChange = (e: any) => {
-    if ($audioDom) {
-      $audioDom.currentTime = e.detail
-      playedSeconds.set(e.detail)
+  let isFirst = true
+  const handleCanPlaythrough = (e: any) => {
+    if (isFirst) {
+      e.target.currentTime = Number(localStorage.getItem(CURRENT_TIME_KEY))
+      isFirst = false
+    } else {
+      e.target.currentTime = 0
+    }
+
+    if (e.target.paused && localStorage.getItem(PLAYING_KEY) === 'on') {
+      e.target.play()
     }
   }
 
   onDestroy(() => {
     cleanupDropListener?.()
-    cleanupWindowClose?.()
-    unsubscribePlaying?.()
     unsubscribePlaylistId?.()
-    unsubscribePlayingSong?.()
     unsubscribePlayingSongId?.()
     unsubscribePlayedSeconds?.()
     unsubscribeCurrentSongs?.()
     unsubscribeVolume?.()
     unsubscribeMode?.()
+    unsubscribePaused?.()
     playlistSubscriber?.unsubscribe()
-    if (currentTimerInterval) {
-      clearInterval(currentTimerInterval)
-    }
 
     localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
   })
@@ -229,13 +192,20 @@
   <audio
     bind:this="{$audioDom}"
     bind:volume="{$volume}"
+    bind:currentTime="{$playedSeconds}"
     src="{convertFileSrc($playingSong.path)}"
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
     on:ended="{playNext}"
-    on:pause="{() => ($playing = false)}"
-    on:play="{() => ($playing = true)}"
-    on:canplaythrough="{handleCanPlayThrough}"
+    on:canplaythrough="{handleCanPlaythrough}"
+    on:play="{() => {
+      localStorage.setItem(PLAYING_KEY, 'on')
+      $paused = false
+    }}"
+    on:pause="{() => {
+      localStorage.setItem(PLAYING_KEY, 'off')
+      $paused = true
+    }}"
   >
   </audio>
 {/if}
@@ -246,10 +216,7 @@
     {#if ready}
       <slot />
     {/if}
-    <PlayerBottomBar
-      on:current-time-change="{handleCurrentTimeChange}"
-      on:show-current-songs="{() => (showCurrentList = true)}"
-    />
+    <PlayerBottomBar on:show-current-songs="{() => (showCurrentList = true)}" />
     <CurrentSongs bind:show="{showCurrentList}" />
 
     <FloatPlayOrPause />

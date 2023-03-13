@@ -15,7 +15,7 @@ export const VOLUME_KEY = 'JOUEUR_VOLUME_KEY'
 export const MODE_KEY = 'JOUEUR_MODE_KEY'
 
 // global states
-export const playing = writable(localStorage.getItem(PLAYING_KEY) === 'on')
+export const paused = writable(localStorage.getItem(PLAYING_KEY) === 'off')
 export const playingSongId = writable(Number(localStorage.getItem(PLAYING_SONG_ID_KEY)))
 export const playingSong = writable<Song | undefined>()
 export const playedSeconds = writable(Number(localStorage.getItem(CURRENT_TIME_KEY)))
@@ -24,7 +24,7 @@ export const currentPlaylistSongs = writable<Song[]>([])
 export const currentSongs = writable<Song[]>([])
 const storeVolume = localStorage.getItem(VOLUME_KEY)
 export const volume = writable(storeVolume === null ? 1 : Number(storeVolume))
-export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) || 'repeat-list')
+export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) as Mode || 'repeat-list')
 export const audioDom = writable<HTMLAudioElement>()
 
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
@@ -51,7 +51,6 @@ export const playNext = () => {
   const $playingSong = get(playingSong)
   if (!$playingSong) return
   const $currentSongs = get(currentSongs)
-  const $audioDom = get(audioDom)
   const $mode = get(mode)
   const currentIndex = $currentSongs.findIndex(song => song.id === $playingSong.id)
   const shuffleNext = () => {
@@ -59,17 +58,15 @@ export const playNext = () => {
     while (nextIndex === currentIndex)
       nextIndex = Math.floor(Math.random() * $currentSongs.length)
     playingSongId.set($currentSongs[nextIndex].id)
-    $audioDom.currentTime = 0
   }
   switch ($mode) {
     case 'repeat-list':
-      if (currentIndex !== -1) {
+      if (currentIndex !== -1)
         playingSongId.set($currentSongs[(currentIndex + 1) % $currentSongs.length].id)
-        $audioDom.currentTime = 0
-      }
+
       break
     case 'repeat-one':
-      $audioDom.currentTime = 0
+      playedSeconds.set(0)
       break
     case 'shuffle':
       shuffleNext()
@@ -86,7 +83,17 @@ export const playPrev = () => {
       playingSongId.set($currentSongs[currentIndex - 1].id)
     else
       playingSongId.set($currentSongs[$currentSongs.length - 1].id)
-    playedSeconds.set(0)
+  }
+}
+
+export const togglePlayOrPause = () => {
+  const $audioDom = get(audioDom)
+  if ($audioDom.paused) {
+    $audioDom.currentTime = get(playedSeconds)
+    $audioDom.play()
+  }
+  else {
+    $audioDom.pause()
   }
 }
 

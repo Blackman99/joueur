@@ -34,10 +34,7 @@
   const handleBarClick = (e: any) => {
     const newPercentage = e.offsetX / barDom.offsetWidth
     if ($playingSong) {
-      dispatch(
-        'current-time-change',
-        ($playingSong.duration / 1000) * newPercentage
-      )
+      $playedSeconds = ($playingSong.duration / 1000) * newPercentage
     }
   }
 
@@ -93,7 +90,7 @@
 
       <div class="middle">
         <div class="title">
-          <div>
+          <div class="h-[24px] leading-[24px]">
             {$playingSong.title}
           </div>
           <div class="controls">
@@ -129,7 +126,7 @@
     --uno: 'flex items-center relative z-3 px-4 pb-2 pt-1';
   }
   .meta {
-    --uno: 'text-gray-4 text-3 flex justify-between';
+    --uno: 'text-gray-4 text-3 flex justify-between h-[20px] leading-[20px]';
   }
   .controls {
     --uno: 'flex items-center pointer-events-auto';
@@ -146,7 +143,7 @@
     --uno: 'flex items-center justify-between';
   }
   .progress-bg {
-    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-8 transition-transform transition-300';
+    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-8';
     transform: translateX(var(--joueur-played-percentage));
   }
   .pointer {

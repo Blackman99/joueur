@@ -3,7 +3,13 @@
  -->
 <script lang="ts">
   // @ts-nocheck
-  import { playingSongId, playing, currentSongs, audioDom } from '$lib/store'
+  import {
+    playingSongId,
+    paused,
+    currentSongs,
+    playedSeconds,
+    PLAYING_KEY,
+  } from '$lib/store'
   import type { Song } from '$lib/types'
   import { createEventDispatcher } from 'svelte'
   import Actions from './Actions.svelte'
@@ -31,9 +37,9 @@
 
   const handlePlay = (song: Song) => {
     if (selectedSongIds.length) return
-    $playing = true
+    localStorage.setItem(PLAYING_KEY, 'on')
     $playingSongId = song.id
-    $audioDom.currentTime = 0
+    $playedSeconds = 0
     if (resetCurrentSongsOnClick) {
       $currentSongs = songs
     }
@@ -152,7 +158,7 @@
           {#if isPlaying}
             <div class="playing-icon-wrapper">
               <PlayingIcon
-                animationPlayState="{$playing ? 'running' : 'paused'}"
+                animationPlayState="{$paused ? 'paused' : 'running'}"
               />
             </div>
           {/if}

@@ -10,7 +10,6 @@
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
   import MenuSettings from '$lib/icons/MenuSettings.svelte'
   import { cubicInOut } from 'svelte/easing'
-  import { playing } from '../store'
   import LyricsDisplay from './LyricsDisplay.svelte'
 
   $: playingSong = liveQuery(() =>
