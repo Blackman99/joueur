@@ -175,7 +175,7 @@
     if (!currentTimerInterval) {
       currentTimerInterval = setInterval(() => {
         playedSeconds.set($audioDom?.currentTime)
-      }, 1000)
+      }, 500)
     }
 
     if (unsubscribePlayedSeconds) {
