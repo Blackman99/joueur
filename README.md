@@ -65,3 +65,6 @@ A tiny and logical music player you've always wanted
 * [ ] I18n
 * [ ] Toggle with different theming color
 * [ ] Smooth animation
+* [ ] Zen Mode 
+  * [ ] (With only prev, next, pause/paly, volume, lyrics display, progress bar)
+  * [ ] Responsive zen mode ui layouts
