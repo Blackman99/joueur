@@ -8,30 +8,50 @@
   $: active = $page.route.id?.replace(/\([\s\S]*\)\/?/g, '') === to
 </script>
 
-<svelte:element
-  this="{to ? 'a' : 'div'}"
-  class="menu-item"
-  class:active="{active}"
-  href="{to}"
-  draggable="false"
-  class:menu-rounded="{rounded}"
-  target="{to?.startsWith('http') ? '_blank' : null}"
-  on:click|stopPropagation
-  on:keypress
->
-  <div class="prepend">
-    <div class="menu-icon">
-      <slot name="icon" />
+{#if to}
+  <a
+    class="menu-item"
+    class:active="{active}"
+    href="{to}"
+    draggable="false"
+    class:menu-rounded="{rounded}"
+    target="{to?.startsWith('http') ? '_blank' : null}"
+  >
+    <div class="prepend">
+      <div class="menu-icon">
+        <slot name="icon" />
+      </div>
+      <div>
+        {label}
+      </div>
     </div>
-    <div>
-      {label}
-    </div>
-  </div>
 
-  <div class="append">
-    <slot name="append" />
+    <div class="append">
+      <slot name="append" />
+    </div>
+  </a>
+{:else}
+  <div
+    class="menu-item"
+    class:active="{active}"
+    draggable="false"
+    class:menu-rounded="{rounded}"
+    on:click|stopPropagation
+    on:keypress|stopPropagation
+  >
+    <div class="prepend">
+      <div class="menu-icon">
+        <slot name="icon" />
+      </div>
+      <div>
+        {label}
+      </div>
+    </div>
+    <div class="append">
+      <slot name="append" />
+    </div>
   </div>
-</svelte:element>
+{/if}
 
 <style>
   .menu-item {
