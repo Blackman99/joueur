@@ -41,7 +41,6 @@
   import type { Subscription } from 'dexie'
   import CurrentSongs from '$lib/components/CurrentSongs.svelte'
   import FloatPlayOrPause from '$lib/components/FloatPlayOrPause.svelte'
-  import { event } from '@tauri-apps/api'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer

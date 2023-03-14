@@ -9,6 +9,7 @@
   import { currentSongs, playedSeconds, playingSongId } from '$lib/store'
   import { flip } from 'svelte/animate'
   import { crossfade, fade } from 'svelte/transition'
+  import { onMount } from 'svelte'
 
   const [send, receive] = crossfade({
     fallback() {
@@ -46,6 +47,18 @@
       getAlbumSongs()
     }
   }
+
+  onMount(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        $selectedAlbum = undefined
+      }
+    }
+    window.addEventListener('keyup', handler)
+    return () => {
+      window.removeEventListener('keyup', handler)
+    }
+  })
 </script>
 
 <div class="albums">
@@ -57,10 +70,11 @@
           on:click="{() => ($selectedAlbum = album)}"
           on:keypress
           animate:flip="{{
-            duration: 500,
+            delay: 0,
+            duration: 300,
           }}"
-          in:receive="{{ key: album.id }}"
-          out:send="{{ key: album.id }}"
+          in:receive="{{ key: album.id, duration: 500 }}"
+          out:send="{{ key: album.id, duration: 500 }}"
         >
           {#if album.cover}
             <img class="cover" src="{album.cover}" alt="{album.title}" />
@@ -92,11 +106,9 @@
         {#each $albums.filter(al => al.id === $selectedAlbum?.id) as sAlbum (sAlbum.id)}
           <img
             class="selected-album-cover"
-            animate:flip="{{
-              duration: 500,
-            }}"
-            in:receive="{{ key: sAlbum.id }}"
-            out:send="{{ key: sAlbum.id }}"
+            animate:flip
+            in:receive="{{ key: sAlbum.id, duration: 500 }}"
+            out:send="{{ key: sAlbum.id, duration: 500 }}"
             src="{sAlbum.cover}"
             alt="{sAlbum.title}"
           />
