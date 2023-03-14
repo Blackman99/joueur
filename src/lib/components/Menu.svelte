@@ -16,12 +16,13 @@
   draggable="false"
   class:menu-rounded="{rounded}"
   target="{to?.startsWith('http') ? '_blank' : null}"
+  on:click|stopPropagation
+  on:keypress
 >
   <div class="prepend">
     <div class="menu-icon">
       <slot name="icon" />
     </div>
-
     <div>
       {label}
     </div>

@@ -17,9 +17,9 @@
   import contextMenu, { type ContextMenuItem } from '../actions/contextMenu'
   import Checked from '$lib/icons/Checked.svelte'
   import Uncheck from '$lib/icons/Uncheck.svelte'
-  import FloatAction from './FloatAction.svelte'
+  import { slide } from 'svelte/transition'
+  import Menu from './Menu.svelte'
   import DialogClose from '$lib/icons/DialogClose.svelte'
-  import { fade } from 'svelte/transition'
 
   export let songs: Song[]
   export let showActionsOnEmpty = true
@@ -32,6 +32,8 @@
   export let canSelectedMultiple: boolean = false
   export let selectedSongIds: number[] = []
   export let draggingSongIds: number[] = []
+
+  let selectionMode = false
 
   const dispatch = createEventDispatcher()
 
@@ -57,7 +59,7 @@
   }
 
   const handleSongClick = (song: Song) => {
-    if (!selectedSongIds.length) return
+    if (!selectionMode) return
     const index = selectedSongIds.findIndex(id => id === song.id)
     if (index !== -1) {
       selectedSongIds = [
@@ -74,6 +76,7 @@
     switch (name) {
       case 'check-song':
         selectedSongIds.push(song.id)
+        selectionMode = true
         selectedSongIds = selectedSongIds
         break
       case 'uncheck-song':
@@ -83,19 +86,31 @@
         dispatch(name, song.id)
     }
   }
+
+  const handleQuitSelectionMode = () => {
+    selectionMode = false
+    selectedSongIds = []
+  }
 </script>
 
 <div class="songs">
-  {#if selectedSongIds.length}
-    <div
-      class="quit-selection"
-      transition:fade="{{ duration: 100 }}"
-      on:click="{() => (selectedSongIds = [])}"
-      on:keypress
-    >
-      <FloatAction>
-        <DialogClose />
-      </FloatAction>
+  {#if selectionMode}
+    <div class="selection-mode-buttons" transition:slide>
+      <div class="select-and-unselect-all">
+        <Menu
+          label="Select all"
+          on:click="{() =>
+            (selectedSongIds = $currentSongs.map(song => song.id))}"
+        >
+          <Checked slot="icon" />
+        </Menu>
+        <Menu label="Unselect all" on:click="{() => (selectedSongIds = [])}">
+          <Uncheck slot="icon" />
+        </Menu>
+      </div>
+      <Menu label="Quit" on:click="{handleQuitSelectionMode}">
+        <DialogClose slot="icon" />
+      </Menu>
     </div>
   {/if}
   {#each songs as song (song.id)}
@@ -137,7 +152,7 @@
           : contextMenus,
       }}"
     >
-      {#if selectedSongIds.length}
+      {#if selectionMode}
         <div class="checked-icon">
           {#if isInSelection}
             <Checked />
@@ -181,6 +196,12 @@
 </div>
 
 <style>
+  .selection-mode-buttons {
+    --uno: 'flex items-center justify-between sticky top-0 bg-white';
+  }
+  .select-and-unselect-all {
+    --uno: 'flex items-center';
+  }
   .songs {
     --uno: 'flex-grow text-[14px] relative overflow-y-auto h-full bg-light-4';
   }
@@ -219,8 +240,5 @@
   }
   .checked-icon {
     --uno: 'text-5 mr-2';
-  }
-  .quit-selection {
-    --uno: 'absolute right-4 top-4';
   }
 </style>
