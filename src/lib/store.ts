@@ -62,7 +62,7 @@ export const playNext = () => {
   const currentIndex = $currentSongs.findIndex(song => song.id === $playingSong.id)
   const shuffleNext = () => {
     let nextIndex = Math.floor(Math.random() * $currentSongs.length)
-    while (nextIndex === currentIndex)
+    while (nextIndex === currentIndex && $currentSongs.length > 1)
       nextIndex = Math.floor(Math.random() * $currentSongs.length)
     playingSongId.set($currentSongs[nextIndex].id)
   }

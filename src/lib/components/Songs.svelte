@@ -7,8 +7,8 @@
     playingSongId,
     paused,
     currentSongs,
+    currentPlaylistSongs,
     playedSeconds,
-    PLAYING_KEY,
   } from '$lib/store'
   import type { Song } from '$lib/types'
   import { createEventDispatcher } from 'svelte'
@@ -17,10 +17,10 @@
   import contextMenu, { type ContextMenuItem } from '../actions/contextMenu'
   import Checked from '$lib/icons/Checked.svelte'
   import Uncheck from '$lib/icons/Uncheck.svelte'
-  import { slide } from 'svelte/transition'
   import Menu from './Menu.svelte'
   import DialogClose from '$lib/icons/DialogClose.svelte'
 
+  export let transparentBg: boolean = false
   export let songs: Song[]
   export let showActionsOnEmpty = true
   export let resetCurrentSongsOnClick = true
@@ -39,7 +39,6 @@
 
   const handlePlay = (song: Song) => {
     if (selectedSongIds.length) return
-    localStorage.setItem(PLAYING_KEY, 'on')
     $playingSongId = song.id
     $playedSeconds = 0
     if (resetCurrentSongsOnClick) {
@@ -93,14 +92,14 @@
   }
 </script>
 
-<div class="songs">
+<div class="songs" class:transparent-bg="{transparentBg}">
   {#if selectionMode}
-    <div class="selection-mode-buttons" transition:slide>
+    <div class="selection-mode-buttons">
       <div class="select-and-unselect-all">
         <Menu
           label="Select all"
           on:click="{() =>
-            (selectedSongIds = $currentSongs.map(song => song.id))}"
+            (selectedSongIds = $currentPlaylistSongs.map(song => song.id))}"
         >
           <Checked slot="icon" />
         </Menu>
@@ -204,6 +203,9 @@
   }
   .songs {
     --uno: 'flex-grow text-[14px] relative overflow-y-auto h-full bg-light-4';
+  }
+  .transparent-bg {
+    --uno: 'bg-transparent';
   }
   .song-row {
     --uno: 'flex items-center px-4 py-2 cursor-pointer j-clickable-item transition-bg transition-200';
