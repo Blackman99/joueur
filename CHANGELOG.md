@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Global search
+
 ## 0.0.2
 
 * Playing spectrum

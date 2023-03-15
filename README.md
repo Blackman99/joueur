@@ -54,9 +54,8 @@ A tiny and playful music player
   * [x] Modes: list cycle, single, shuffle
   * [x] Progress bar click & drag
   * [x] Spectrum
-* [ ] Search
-  * [ ] Global search song/artist/album
-  * [ ] Specify category search
+* [x] Search
+  * [x] Global search song/artist/album
 * [ ] Lyrics
   * [x] Basic display
   * [x] Auto scroll
