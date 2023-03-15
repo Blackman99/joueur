@@ -12,7 +12,7 @@ There are many ways to contribute to Sveltepress, and many of them do not involv
 * Simply start using Joueur by downloading it from [Releases page](https://github.com/Blackman99/joueur/releases)
 * Look through the [open issues](https://github.com/Blackman99/joueur/issues). A good starting point would be issues tagged good first issue. Provide workarounds, ask for clarification, or suggest labels. Help triage issues.
 * If you find an issue you would like to fix, open a pull request.
-* Join [Discord](https://discord.com/invite/SUnF2WxsV5)
+* Join [Discord](https://discord.com/invite/SUnF2WxsV5) and ask for help or report bugs in the corresponding channel.
 
 ### Creating a branch
 
