@@ -72,3 +72,11 @@ A tiny and playful music player
 * [ ] Zen Mode 
   * [ ] (With only prev, next, pause/paly, volume, lyrics display, progress bar)
   * [ ] Responsive zen mode ui layouts
+
+## Help improve
+
+* Join [Discord](https://discord.com/invite/SUnF2WxsV5) 
+
+## LICENSE
+
+[MIT](./LICENSE)
