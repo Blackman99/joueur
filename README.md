@@ -23,6 +23,9 @@ A tiny and playful music player
 
 ## Features & TODOs
 
+<details>
+  <summary>Features & TODOs</summary>
+
 * [x] Drag & Drop files
 * [x] Rust audio parser
 * [x] Basic DB 
@@ -72,6 +75,9 @@ A tiny and playful music player
 * [ ] Zen Mode 
   * [ ] (With only prev, next, pause/paly, volume, lyrics display, progress bar)
   * [ ] Responsive zen mode ui layouts
+
+</details>
+
 
 ## Help improve
 
