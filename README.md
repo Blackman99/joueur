@@ -44,13 +44,13 @@ A tiny and logical music player you've always wanted
   * [ ] Songs resort by dragging 
   * [x] Remove single song by context menu
   * [ ] Add single song from other list by context menu
-* [ ] Player core
+* [x] Player core
   * [x] Play & Pause
   * [x] Next & Prev
   * [x] Volume
   * [x] Modes: list cycle, single, shuffle
   * [x] Progress bar click & drag
-  * [ ] Spectrum
+  * [x] Spectrum
 * [ ] Search
   * [ ] Global search song/artist/album
   * [ ] Specify category search
