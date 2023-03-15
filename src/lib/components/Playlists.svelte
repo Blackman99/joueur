@@ -1,5 +1,5 @@
 <script lang="ts">
-  import contextMenu from '$lib/actions/contextMenu'
+  import contextMenu from '$lib/actions/context-menu'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import { selectedPlaylistId } from '$lib/store'
   import { playlists } from '$lib/store'

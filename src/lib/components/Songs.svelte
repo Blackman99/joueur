@@ -14,7 +14,7 @@
   import { createEventDispatcher } from 'svelte'
   import Actions from './Actions.svelte'
   import PlayingIcon from './PlayingIcon.svelte'
-  import contextMenu, { type ContextMenuItem } from '../actions/contextMenu'
+  import contextMenu, { type ContextMenuItem } from '../actions/context-menu'
   import Checked from '$lib/icons/Checked.svelte'
   import Uncheck from '$lib/icons/Uncheck.svelte'
   import Menu from './Menu.svelte'

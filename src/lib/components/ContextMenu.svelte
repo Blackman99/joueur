@@ -3,7 +3,7 @@
   import type {
     ContextMenuItem,
     ContextHandler,
-  } from '$lib/actions/contextMenu'
+  } from '$lib/actions/context-menu'
   import { fade } from 'svelte/transition'
 
   export let x: number

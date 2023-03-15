@@ -79,9 +79,9 @@ A tiny and playful music player
 </details>
 
 
-## Help improve
+## Contributing
 
-* Join [Discord](https://discord.com/invite/SUnF2WxsV5) 
+See [Contributing](./CONTRIBUTING.md)
 
 ## LICENSE
 
