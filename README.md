@@ -8,7 +8,7 @@
 </h1>
 
 <p align="center">
-A tiny and logical music player you've always wanted
+A tiny and playful music player
 </p>
 
 <p align="center">
