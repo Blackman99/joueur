@@ -94,7 +94,7 @@
   </div>
 
   {#if focused}
-    <div class="search-result" transition:slide="{{ duration: 300 }}">
+    <div class="search-result" transition:slide="{{ duration: 200 }}">
       <div class="result-category">
         <div class="category-title">Tracks</div>
         {#each songs as song (song.id)}
@@ -110,7 +110,7 @@
           </div>
         {/each}
         {#if !songs.length}
-          <div class="text-gray-4">No data</div>
+          <div class="no-data">No data</div>
         {/if}
       </div>
       <div class="result-category">
@@ -128,7 +128,7 @@
           </div>
         {/each}
         {#if !artists.length}
-          <div class="text-gray-4">No data</div>
+          <div class="no-data">No data</div>
         {/if}
       </div>
       <div class="result-category">
@@ -146,7 +146,7 @@
           </div>
         {/each}
         {#if !albums.length}
-          <div class="text-gray-4">No data</div>
+          <div class="no-data">No data</div>
         {/if}
       </div>
     </div>
@@ -155,7 +155,7 @@
 
 <style>
   .global-search {
-    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 rounded-[16px] mx-3 h-[32px] px-2 text-gray-4 relative z-3';
+    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 rounded-[16px] mx-3 h-[32px] px-2 text-gray-4 relative z-10';
   }
   .focused {
     --uno: 'b-primary';
@@ -170,21 +170,27 @@
     --uno: 'border-none outline-none text-[14px] w-full pl-1';
   }
   .search-result {
-    --uno: 'absolute min-w-[200px] left-0 bg-white b-1 rounded b-gray-2 b-solid p-2 text-[14px] text-secondary';
+    --uno: 'absolute min-w-[200px] left-0 bg-white b-1 rounded b-gray-2 b-solid p-2 text-[14px] text-secondary z-3';
     top: calc(100% + 12px);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
-  .result-category:not(:first-child) {
+  .result-category {
+    --uno: 'max-h-[20vh] overflow-y-auto relative';
+  }
+  .result-category:not(:first-child) .category-title {
     --uno: 'pt-2';
   }
   .result-category:not(:last-child) {
     --uno: 'b-b-1 b-b-solid b-b-gray-2 pb-2';
   }
   .category-title {
-    --uno: 'font-700 mb-2';
+    --uno: 'font-700 pb-2 sticky top-0 bg-white';
   }
   .result-item {
     --uno: 'py-1 px-2 j-clickable-item text-gray-6';
+  }
+  .no-data {
+    --uno: 'text-gray-4 text-center';
   }
 </style>
