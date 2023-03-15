@@ -1,10 +1,10 @@
-## 0.2.0 (not released)
+## 0.0.2
 
 * Playing spectrum
 * Album animation detail
 * Settings about page
 
-## 0.1.0
+## 0.0.1
 
 * Player core
 * Drag & drop file
