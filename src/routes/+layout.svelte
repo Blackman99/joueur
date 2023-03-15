@@ -201,6 +201,7 @@
     src="{convertFileSrc($playingSong.path)}"
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
+    crossorigin="anonymous"
     on:ended="{playNext}"
     on:loadedmetadata="{handleLoadedMetadata}"
   >
