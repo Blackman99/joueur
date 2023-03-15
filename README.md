@@ -17,6 +17,10 @@ A tiny and logical music player you've always wanted
   </a>
 </p>
 
+## Download
+
+[Releases](https://github.com/Blackman99/joueur/releases)
+
 ## Features & TODOs
 
 * [x] Drag & Drop files

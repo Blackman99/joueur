@@ -67,7 +67,7 @@
         <div
           class="lyrics-line"
           class:active="{active}"
-          style="--joueur-lyrics-blur:{Math.abs(i - activeIndex)}px;"
+          style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
         >
           {line.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '')}
         </div>
@@ -83,7 +83,7 @@
     --uno: 'absolute left-0 right-0 top-0 bottom-0 overflow-x-hidden z-3';
   }
   .lyrics-display {
-    --uno: 'text-[12px] text-center absolute left-0 right-[-16px] top-0 bottom-0 py-[80px] text-warm-gray-3 z-2 bg-black bg-opacity-70 hover:bg-opacity-40 leading-5';
+    --uno: 'text-[12px] text-center absolute left-0 right-[-16px] top-0 bottom-0 py-[80px] text-warm-gray-3 z-2 bg-black bg-opacity-40 hover:bg-opacity-20 leading-5';
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     transition: all linear 0.2s;

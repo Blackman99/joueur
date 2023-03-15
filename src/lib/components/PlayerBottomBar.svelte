@@ -9,6 +9,7 @@
     playPrev,
     duration,
     displayDuration,
+    audioDom,
   } from '$lib/store'
   import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
   import ControlPrev from '$lib/icons/ControlPrev.svelte'
@@ -17,6 +18,7 @@
   import { spring } from 'svelte/motion'
   import VolumeControl from './VolumeControl.svelte'
   import ModeSwitcher from './ModeSwitcher.svelte'
+  import AudioVisualizer from './AudioVisualizer.svelte'
 
   const pointerX = spring(0, {
     stiffness: 0.1,
@@ -76,6 +78,10 @@
       class="progress-bg"
       style="--joueur-played-percentage: -{100 - percentage}%;"
     ></div>
+
+    {#if $audioDom}
+      <AudioVisualizer />
+    {/if}
 
     {#if showPointer}
       <div

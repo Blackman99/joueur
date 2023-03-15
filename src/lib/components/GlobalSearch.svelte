@@ -11,6 +11,7 @@
   <div class="input-wrapper">
     <input
       placeholder="search"
+      on:keyup|stopPropagation
       on:focus="{() => (focused = true)}"
       on:blur="{() => (focused = false)}"
     />
@@ -19,7 +20,7 @@
 
 <style>
   .global-search {
-    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 rounded-[16px] mx-3 h-[32px] px-2 text-gray-4';
+    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 rounded mx-3 h-[32px] px-2 text-gray-4';
   }
   .focused {
     --uno: 'b-primary';
