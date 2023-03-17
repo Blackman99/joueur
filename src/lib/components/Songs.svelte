@@ -233,6 +233,9 @@
     user-select: none;
     -webkit-user-select: none;
   }
+  .transparent-bg .song-row {
+    --uno: 'hover:bg-opacity-10';
+  }
   .active {
     --uno: 'j-active-item';
   }

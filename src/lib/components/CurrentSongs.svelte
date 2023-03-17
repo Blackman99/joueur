@@ -21,6 +21,7 @@
 <div class="current-songs" class:show="{show}" class:fullscreen="{$fullscreen}">
   <Songs
     songs="{$currentSongs}"
+    transparentBg="{$fullscreen}"
     resetCurrentSongsOnClick="{false}"
     showActionsOnEmpty="{false}"
     contextMenus="{[
@@ -42,7 +43,10 @@
     --uno: 'fixed z-106 left-[100%] top-0 bottom-0 overflow-y-auto w-[40vw] min-w-[320px] transition-transform transition-300';
   }
   .fullscreen {
-    --uno: 'w-[80vw] sm:w-[60vw]';
+    --uno: 'w-[80vw] sm:w-[60vw] text-gray-2';
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transform: translateZ(0);
   }
   .show {
     transform: translateX(-100%);
