@@ -1,5 +1,6 @@
 <script lang="ts">
   import DialogClose from '$lib/icons/DialogClose.svelte'
+  import { onMount } from 'svelte'
   import { cubicInOut } from 'svelte/easing'
   import Backdrop from './Backdrop.svelte'
   import IconButton from './IconButton.svelte'
@@ -25,6 +26,19 @@
         }px); opacity: ${t};`,
     }
   }
+
+  onMount(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        handleClose()
+      }
+    }
+    window.addEventListener('keyup', handler)
+
+    return () => {
+      window.removeEventListener('keyup', handler)
+    }
+  })
 </script>
 
 {#if open}

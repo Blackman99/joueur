@@ -1,5 +1,6 @@
 <script>
   import { updateSongLyrics } from '$lib/utils/audio'
+  import { onMount } from 'svelte'
   import Dialog from '../Dialog.svelte'
   import {
     updateLyricsDialogOpen,
