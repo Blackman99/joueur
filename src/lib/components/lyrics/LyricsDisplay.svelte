@@ -1,6 +1,12 @@
 <script lang="ts">
+  import LyricsEdit from '$lib/icons/LyricsEdit.svelte'
   import { playedSeconds, playingSong } from '$lib/store'
   import { spring } from 'svelte/motion'
+  import {
+    editLyricsContent,
+    songToUpdateLyrics,
+    updateLyricsDialogOpen,
+  } from './store'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
 
@@ -44,6 +50,14 @@
     }
   }
 
+  const handleOpenLyricsEdit = () => {
+    if ($playingSong) {
+      $songToUpdateLyrics = $playingSong
+      $editLyricsContent = $playingSong?.lyrics?.[0]?.text || ''
+      $updateLyricsDialogOpen = true
+    }
+  }
+
   $: {
     $playedSeconds
     computedActiveIndex()
@@ -60,7 +74,12 @@
 </script>
 
 <div class="lyrics-wrapper" bind:clientHeight="{totalHeight}">
-  <div class="lyrics-display" bind:this="{lyricsContainer}">
+  <div
+    class="lyrics-display"
+    bind:this="{lyricsContainer}"
+    on:click="{handleOpenLyricsEdit}"
+    on:keypress
+  >
     {#if lyricsLines && lyricsLines.length}
       {#each lyricsLines as line, i}
         {@const active = i === activeIndex}
@@ -73,7 +92,10 @@
         </div>
       {/each}
     {:else}
-      <div class="lyfics-line active">No lyrics</div>
+      <div class="lyfics-line active pr-7">
+        <LyricsEdit />
+        Click to edit
+      </div>
     {/if}
   </div>
 </div>

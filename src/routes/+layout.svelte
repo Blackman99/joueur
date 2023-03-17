@@ -41,6 +41,7 @@
   import type { Subscription } from 'dexie'
   import CurrentSongs from '$lib/components/CurrentSongs.svelte'
   import FloatPlayOrPause from '$lib/components/FloatPlayOrPause.svelte'
+  import EditLyrics from '$lib/components/lyrics/EditLyrics.svelte'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -228,6 +229,8 @@
 {#if showDropLoading}
   <DropLoading />
 {/if}
+
+<EditLyrics />
 
 <style uno:preflights uno:safelist global>
   :global(body) {

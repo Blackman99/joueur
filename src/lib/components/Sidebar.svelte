@@ -10,7 +10,7 @@
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
   import MenuSettings from '$lib/icons/MenuSettings.svelte'
   import { cubicInOut } from 'svelte/easing'
-  import LyricsDisplay from './LyricsDisplay.svelte'
+  import LyricsDisplay from './lyrics/LyricsDisplay.svelte'
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
   import GlobalSearch from './GlobalSearch.svelte'
 
