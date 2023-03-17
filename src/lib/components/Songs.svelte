@@ -21,6 +21,7 @@
   import DialogClose from '$lib/icons/DialogClose.svelte'
   import {
     editLyricsContent,
+    fullscreen,
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './lyrics/store'
@@ -106,7 +107,11 @@
   }
 </script>
 
-<div class="songs" class:transparent-bg="{transparentBg}">
+<div
+  class="songs"
+  class:transparent-bg="{transparentBg}"
+  class:fullscreen="{$fullscreen}"
+>
   {#if selectionMode}
     <div class="selection-mode-buttons">
       <div class="select-and-unselect-all">
@@ -237,6 +242,9 @@
   }
   .meta {
     --uno: 'text-warm-gray-5 text-[12px] flex justify-between';
+  }
+  .fullscreen .meta {
+    --uno: 'display-none sm:flex';
   }
   .info {
     --uno: 'flex-grow';

@@ -67,7 +67,7 @@
 
 <style>
   .dialog {
-    --uno: 'bg-white rounded-lg border-0 relative z-100 fixed top-10vh p-0';
+    --uno: 'bg-white rounded-lg border-0 relative z-200 fixed top-10vh p-0';
     --joueur-dialog-width: 60vw;
     width: var(--joueur-dialog-width);
   }

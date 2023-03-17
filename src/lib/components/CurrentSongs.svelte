@@ -1,6 +1,7 @@
 <script lang="ts">
   import { currentSongs } from '$lib/store'
   import Backdrop from './Backdrop.svelte'
+  import { fullscreen } from './lyrics/store'
   import Songs from './Songs.svelte'
 
   export let show = false
@@ -17,7 +18,7 @@
   }
 </script>
 
-<div class="current-songs" class:show="{show}">
+<div class="current-songs" class:show="{show}" class:fullscreen="{$fullscreen}">
   <Songs
     songs="{$currentSongs}"
     resetCurrentSongsOnClick="{false}"
@@ -38,7 +39,10 @@
 
 <style>
   .current-songs {
-    --uno: 'fixed z-101 left-[100%] top-0 bottom-0 overflow-y-auto w-[40vw] min-w-[320px] transition-transform transition-300';
+    --uno: 'fixed z-106 left-[100%] top-0 bottom-0 overflow-y-auto w-[40vw] min-w-[320px] transition-transform transition-300';
+  }
+  .fullscreen {
+    --uno: 'w-[80vw] sm:w-[60vw]';
   }
   .show {
     transform: translateX(-100%);

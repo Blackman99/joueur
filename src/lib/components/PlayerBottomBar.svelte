@@ -19,6 +19,7 @@
   import VolumeControl from './VolumeControl.svelte'
   import ModeSwitcher from './ModeSwitcher.svelte'
   import AudioVisualizer from './AudioVisualizer.svelte'
+  import { fullscreen } from './lyrics/store'
 
   const pointerX = spring(0, {
     stiffness: 0.1,
@@ -66,6 +67,7 @@
   <div
     bind:this="{barDom}"
     class="player-bottom-bar"
+    class:fullscreen="{$fullscreen}"
     transition:slide
     on:mouseup="{handleMouseup}"
     on:mousedown="{() => (mouseTabbing = true)}"
@@ -127,13 +129,19 @@
 
 <style>
   .player-bottom-bar {
-    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative';
+    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative transition-all';
+  }
+  .fullscreen {
+    --uno: 'fixed bottom-0 left-0 right-0 z-104 bg-transparent text-gray-2';
   }
   .inner {
     --uno: 'flex items-center relative z-3 px-4 pb-2 pt-1';
   }
   .meta {
     --uno: 'text-gray-4 text-3 flex justify-between h-[20px] leading-[20px]';
+  }
+  .fullscreen .meta {
+    --uno: 'display-none sm:flex';
   }
   .controls {
     --uno: 'flex items-center pointer-events-auto';

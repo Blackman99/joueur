@@ -14,5 +14,6 @@
 * Player core
 * Drag & drop file
 * Playlist CRUD
+* Basic context menu
 * Auto artist and album grouping
 * Lyrics display
