@@ -1,6 +1,8 @@
 import type { FileEntry } from '@tauri-apps/api/fs'
 import { invoke } from '@tauri-apps/api'
+import { get } from 'svelte/store'
 import type { Song } from '../types'
+import { playingSong } from '../store'
 import { AUDIO_EXTENSIONS } from '$lib/constants'
 import { db } from '$lib/db'
 
@@ -39,7 +41,8 @@ export const updateSongLyrics = async (song: Song, lyrics: string) => {
       })
     }
     await db.songs.update(song.id, song)
+    if (get(playingSong)?.id === song.id)
+      playingSong.set(song)
   } catch (error) {
-    console.log(error)
   }
 }

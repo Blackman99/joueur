@@ -1,8 +1,11 @@
 <script lang="ts">
-  export let animationPlayState: 'running' | 'paused' = 'running'
+  import { paused } from '$lib/store'
 </script>
 
-<div class="bars" style="--joueur-playing-icon-state: {animationPlayState};">
+<div
+  class="bars"
+  style="--joueur-playing-icon-state: {$paused ? 'paused' : 'running'};"
+>
   <div class="bar"></div>
   <div class="bar"></div>
   <div class="bar"></div>

@@ -195,9 +195,7 @@
           {song.title}
           {#if isPlaying}
             <div class="playing-icon-wrapper">
-              <PlayingIcon
-                animationPlayState="{$paused ? 'paused' : 'running'}"
-              />
+              <PlayingIcon />
             </div>
           {/if}
         </div>
