@@ -2,6 +2,7 @@
 
 * Global search
 * Lyrics editable
+* Zen mode toggle
 
 ## 0.0.2
 
