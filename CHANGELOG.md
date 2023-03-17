@@ -1,6 +1,7 @@
 ## 0.0.3
 
 * Global search
+* Lyrics editable
 
 ## 0.0.2
 

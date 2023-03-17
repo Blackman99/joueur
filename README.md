@@ -59,9 +59,9 @@ A tiny and playful music player
 * [ ] Lyrics
   * [x] Basic display
   * [x] Auto scroll
-  * [ ] Edit
+  * [x] Edit
+  * [x] Update by directly edit
   * [ ] Upload .lrc file
-  * [ ] Update by directly edit
 * [ ] View
   * [x] List view
   * [ ] Table view
