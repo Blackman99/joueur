@@ -67,13 +67,13 @@ A tiny and playful music player
   * [ ] Table view
   * [ ] Grid view
   * [ ] Virtual scroll
+  * [ ] Zen Mode 
+    * [ ] (With only prev, next, pause/paly, volume, lyrics display, progress bar)
+    * [ ] Responsive zen mode ui layouts
 * [ ] Dark mode
 * [ ] I18n
-* [ ] Toggle with different theming color
-* [ ] Smooth animation
-* [ ] Zen Mode 
-  * [ ] (With only prev, next, pause/paly, volume, lyrics display, progress bar)
-  * [ ] Responsive zen mode ui layouts
+* [ ] Theme color toggle
+
 
 </details>
 
