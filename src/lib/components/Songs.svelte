@@ -19,6 +19,8 @@
   import Uncheck from '$lib/icons/Uncheck.svelte'
   import Menu from './Menu.svelte'
   import DialogClose from '$lib/icons/DialogClose.svelte'
+  import Dialog from './Dialog.svelte'
+  import { updateSongLyrics } from '$lib/utils/audio'
 
   export let transparentBg: boolean = false
   export let songs: Song[]
@@ -33,6 +35,9 @@
   export let selectedSongIds: number[] = []
   export let draggingSongIds: number[] = []
 
+  let updateLyricsDialogOpen = false
+  let songToUpdateLyrics: Song
+  let editLyricsContent = ''
   let selectionMode = false
 
   const dispatch = createEventDispatcher()
@@ -71,6 +76,12 @@
     }
   }
 
+  const handleEditLyrics = (song: Song) => {
+    songToUpdateLyrics = song
+    editLyricsContent = song.lyrics?.[0]?.text || ''
+    updateLyricsDialogOpen = true
+  }
+
   const handleContextMenuClick = (name: string, song: Song) => {
     switch (name) {
       case 'check-song':
@@ -81,6 +92,9 @@
       case 'uncheck-song':
         handleSongClick(song)
         break
+      case 'edit-lyrics':
+        handleEditLyrics(song)
+        break
       default:
         dispatch(name, song.id)
     }
@@ -89,6 +103,12 @@
   const handleQuitSelectionMode = () => {
     selectionMode = false
     selectedSongIds = []
+  }
+
+  const handleSaveLyrics = async () => {
+    await updateSongLyrics(songToUpdateLyrics, editLyricsContent)
+    updateLyricsDialogOpen = false
+    editLyricsContent = ''
   }
 </script>
 
@@ -146,6 +166,10 @@
                       name: 'check-song',
                     },
                   ]),
+              {
+                title: 'Edit lyrics',
+                name: 'edit-lyrics',
+              },
               ...contextMenus,
             ]
           : contextMenus,
@@ -193,6 +217,28 @@
     <Actions />
   {/if}
 </div>
+
+<Dialog title="Update lyrics" bind:open="{updateLyricsDialogOpen}">
+  <div class="flex items-center mb-2" slot="title">
+    <img
+      class="cover"
+      src="{songToUpdateLyrics?.cover}"
+      alt="{songToUpdateLyrics?.title}"
+    />
+    <div class="flex items-end">
+      {songToUpdateLyrics?.title}
+      <span class="meta ml-2">
+        {songToUpdateLyrics?.artist} - {songToUpdateLyrics?.album}
+      </span>
+    </div>
+  </div>
+  <textarea class="lyrics-editor" bind:value="{editLyricsContent}"></textarea>
+  <div class="footer-actions">
+    <div class="save-lyrics-btn" on:click="{handleSaveLyrics}" on:keypress>
+      Save
+    </div>
+  </div>
+</Dialog>
 
 <style>
   .selection-mode-buttons {
@@ -242,5 +288,14 @@
   }
   .checked-icon {
     --uno: 'text-5 mr-2';
+  }
+  .lyrics-editor {
+    --uno: 'w-full resize-none h-[40vh] b-none outline-none b-1 b-solid b-gray-4 rounded text-secondary leading-5';
+  }
+  .footer-actions {
+    --uno: 'flex justify-end pt-4';
+  }
+  .save-lyrics-btn {
+    --uno: 'py-2 px-3 bg-primary bg-opacity-80 rounded text-[14px] text-white cursor-pointer hover:bg-opacity-90 active:bg-opacity-100';
   }
 </style>

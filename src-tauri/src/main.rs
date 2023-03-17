@@ -1,6 +1,7 @@
 use base64::{Engine as _, engine::general_purpose};
 use song::{Song, LyricsItem};
-use id3::{Tag, TagLike};
+use id3::{Tag, TagLike, Frame, Version};
+use id3::frame::{Content, Lyrics};
 use mp3_duration;
 mod song;
 
@@ -58,6 +59,25 @@ fn get_metadata(path: &str) -> Option<Song> {
     }
 }
 
+#[tauri::command]
+fn update_lyrics(path: &str, lyrics: &str) -> Result<String, String> {
+    let tag = Tag::read_from_path(path);
+    match tag {
+        Ok(mut t) => {
+            t.add_frame(Frame::with_content("USLT", Content::Lyrics(Lyrics {
+                text: lyrics.to_owned(),
+                lang: String::from("XXX"),
+                description: String::from("")
+            })));
+            match t.write_to_path(path, Version::Id3v24) {
+                Err(e) => Err(e.description),
+                Ok(_o) => Ok("Success".to_owned())
+            }
+        },
+        Err(e) => Err(e.description)
+    }
+}
+
 fn unwrap_str(var: Option<&str>) -> Option<String> {
     match var {
         None => None,
@@ -67,7 +87,7 @@ fn unwrap_str(var: Option<&str>) -> Option<String> {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_metadata])
+        .invoke_handler(tauri::generate_handler![get_metadata, update_lyrics])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

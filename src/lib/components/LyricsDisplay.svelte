@@ -14,7 +14,7 @@
   })
 
   const getStartSecondsFromLine = (line: string) => {
-    const matches = /^\[(\d{2}):(\d{2}\.\d{2})\]/.exec(line)
+    const matches = /^\[(\d{2}):(\d{2}\.\d{2,})\]/.exec(line)
     if (matches) {
       const [, mins, secs] = matches
       return parseInt(mins) * 60 + parseFloat(secs)
@@ -69,7 +69,7 @@
           class:active="{active}"
           style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
         >
-          {line.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '')}
+          {line.replace(/^\[\d{2}:\d{2}\.\d{2,}\]/, '')}
         </div>
       {/each}
     {:else}
