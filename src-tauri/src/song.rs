@@ -7,6 +7,7 @@ pub struct LyricsItem {
     pub lang: String
 }
 
+
 #[derive(Serialize)]
 pub struct Song {
     pub path: String,

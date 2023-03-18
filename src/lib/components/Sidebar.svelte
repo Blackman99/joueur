@@ -10,9 +10,10 @@
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
   import MenuSettings from '$lib/icons/MenuSettings.svelte'
   import { cubicInOut } from 'svelte/easing'
-  import LyricsDisplay from './LyricsDisplay.svelte'
+  import LyricsDisplay from './lyrics/LyricsDisplay.svelte'
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
   import GlobalSearch from './GlobalSearch.svelte'
+  import { fullscreen } from './lyrics/store'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -74,7 +75,7 @@
       <MenuSettings slot="icon" />
     </Menu>
   </div>
-  <div class="cover-wrapper">
+  <div class="cover-wrapper" class:fullscreen="{$fullscreen}">
     <LyricsDisplay />
     {#if $playingSong}
       {#key $playingSongId}
@@ -97,6 +98,16 @@
 </aside>
 
 <style>
+  @keyframes fullscreen-enter {
+    from {
+      width: 18vw;
+      height: 18vw;
+    }
+    to {
+      height: 100%;
+      width: 100%;
+    }
+  }
   .j-side {
     --uno: 'flex flex-col shrink-0 justify-between bg-white w-[18vw] min-w-180px max-w-[240px] box-border';
   }
@@ -110,7 +121,14 @@
     --uno: 'w-full aspect-1 object-cover block';
   }
   .cover-wrapper {
-    --uno: 'relative z-9';
+    --uno: 'relative z-9 transition-all transition-300 left-0 bottom-0 text-[12px] leading-5';
+  }
+  .fullscreen {
+    --uno: 'fixed bottom-0 left-0 h-full w-full z-103 text-14px leading-[28px] sm:text-[16px] leading-[32px] lg:text-[18px] lg:leading-[36px]';
+    animation: fullscreen-enter 300ms ease-in-out 0s 1;
+  }
+  .fullscreen .cover {
+    --uno: 'aspect-unset h-full';
   }
   .default-cover {
     --uno: 'w-full aspect-1 flex items-center text-10 justify-center bg-white';

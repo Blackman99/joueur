@@ -1,6 +1,17 @@
 <script lang="ts">
+  import LyricsEdit from '$lib/icons/LyricsEdit.svelte'
+  import OpenFullscreen from '$lib/icons/OpenFullscreen.svelte'
+  import QuitFullscreen from '$lib/icons/QuitFullscreen.svelte'
   import { playedSeconds, playingSong } from '$lib/store'
   import { spring } from 'svelte/motion'
+  import { appWindow, LogicalSize } from '@tauri-apps/api/window'
+
+  import {
+    editLyricsContent,
+    fullscreen,
+    songToUpdateLyrics,
+    updateLyricsDialogOpen,
+  } from './store'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
 
@@ -14,7 +25,7 @@
   })
 
   const getStartSecondsFromLine = (line: string) => {
-    const matches = /^\[(\d{2}):(\d{2}\.\d{2})\]/.exec(line)
+    const matches = /^\[(\d{2}):(\d{2}\.\d{2,})\]/.exec(line)
     if (matches) {
       const [, mins, secs] = matches
       return parseInt(mins) * 60 + parseFloat(secs)
@@ -44,6 +55,23 @@
     }
   }
 
+  const handleOpenLyricsEdit = () => {
+    if ($playingSong) {
+      $songToUpdateLyrics = $playingSong
+      $editLyricsContent = $playingSong?.lyrics?.[0]?.text || ''
+      $updateLyricsDialogOpen = true
+    }
+  }
+
+  const handleToggleFullscreen = async () => {
+    if ($fullscreen) {
+      appWindow.setSize(new LogicalSize(1000, 800))
+    } else {
+      appWindow.setSize(new LogicalSize(380, 600))
+    }
+    $fullscreen = !$fullscreen
+  }
+
   $: {
     $playedSeconds
     computedActiveIndex()
@@ -59,8 +87,17 @@
   }
 </script>
 
-<div class="lyrics-wrapper" bind:clientHeight="{totalHeight}">
-  <div class="lyrics-display" bind:this="{lyricsContainer}">
+<div
+  class="lyrics-wrapper"
+  bind:clientHeight="{totalHeight}"
+  class:fullscreen="{$fullscreen}"
+>
+  <div
+    class="lyrics-display"
+    bind:this="{lyricsContainer}"
+    on:click="{handleOpenLyricsEdit}"
+    on:keypress
+  >
     {#if lyricsLines && lyricsLines.length}
       {#each lyricsLines as line, i}
         {@const active = i === activeIndex}
@@ -69,11 +106,26 @@
           class:active="{active}"
           style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
         >
-          {line.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '')}
+          {line.replace(/^\[\d{2}:\d{2}\.\d{2,}\]/, '')}
         </div>
       {/each}
     {:else}
-      <div class="lyfics-line active">No lyrics</div>
+      <div class="lyfics-line active pr-6 flex items-center justify-center">
+        <LyricsEdit />
+        <div class="ml-1">No lyrics</div>
+      </div>
+    {/if}
+  </div>
+
+  <div
+    class="fullscreen-toggle"
+    on:click="{handleToggleFullscreen}"
+    on:keypress
+  >
+    {#if $fullscreen}
+      <QuitFullscreen />
+    {:else}
+      <OpenFullscreen />
     {/if}
   </div>
 </div>
@@ -82,8 +134,14 @@
   .lyrics-wrapper {
     --uno: 'absolute left-0 right-0 top-0 bottom-0 overflow-x-hidden z-3';
   }
+  .fullscreen {
+    --uno: '';
+  }
+  .fullscreen-toggle {
+    --uno: 'absolute top-[4px] right-[4px] z-2 text-white text-5 cursor-pointer';
+  }
   .lyrics-display {
-    --uno: 'text-[12px] text-center absolute left-0 right-[-16px] top-0 bottom-0 py-[80px] text-warm-gray-3 z-2 bg-black bg-opacity-40 hover:bg-opacity-20 leading-5';
+    --uno: 'text-center absolute left-0 right-[-16px] top-0 bottom-0 py-[80px] text-warm-gray-3 z-2 bg-black bg-opacity-40 hover:bg-opacity-20';
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     transition: all linear 0.2s;

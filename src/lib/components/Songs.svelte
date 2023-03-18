@@ -19,6 +19,12 @@
   import Uncheck from '$lib/icons/Uncheck.svelte'
   import Menu from './Menu.svelte'
   import DialogClose from '$lib/icons/DialogClose.svelte'
+  import {
+    editLyricsContent,
+    fullscreen,
+    songToUpdateLyrics,
+    updateLyricsDialogOpen,
+  } from './lyrics/store'
 
   export let transparentBg: boolean = false
   export let songs: Song[]
@@ -71,6 +77,12 @@
     }
   }
 
+  const handleEditLyrics = (song: Song) => {
+    $songToUpdateLyrics = song
+    $editLyricsContent = song.lyrics?.[0]?.text || ''
+    $updateLyricsDialogOpen = true
+  }
+
   const handleContextMenuClick = (name: string, song: Song) => {
     switch (name) {
       case 'check-song':
@@ -80,6 +92,9 @@
         break
       case 'uncheck-song':
         handleSongClick(song)
+        break
+      case 'edit-lyrics':
+        handleEditLyrics(song)
         break
       default:
         dispatch(name, song.id)
@@ -92,7 +107,11 @@
   }
 </script>
 
-<div class="songs" class:transparent-bg="{transparentBg}">
+<div
+  class="songs"
+  class:transparent-bg="{transparentBg}"
+  class:fullscreen="{$fullscreen}"
+>
   {#if selectionMode}
     <div class="selection-mode-buttons">
       <div class="select-and-unselect-all">
@@ -146,6 +165,10 @@
                       name: 'check-song',
                     },
                   ]),
+              {
+                title: 'Edit lyrics',
+                name: 'edit-lyrics',
+              },
               ...contextMenus,
             ]
           : contextMenus,
@@ -171,9 +194,7 @@
           {song.title}
           {#if isPlaying}
             <div class="playing-icon-wrapper">
-              <PlayingIcon
-                animationPlayState="{$paused ? 'paused' : 'running'}"
-              />
+              <PlayingIcon />
             </div>
           {/if}
         </div>
@@ -212,6 +233,9 @@
     user-select: none;
     -webkit-user-select: none;
   }
+  .transparent-bg .song-row {
+    --uno: 'hover:bg-opacity-10';
+  }
   .active {
     --uno: 'j-active-item';
   }
@@ -221,6 +245,9 @@
   }
   .meta {
     --uno: 'text-warm-gray-5 text-[12px] flex justify-between';
+  }
+  .fullscreen .meta {
+    --uno: 'display-none sm:flex';
   }
   .info {
     --uno: 'flex-grow';

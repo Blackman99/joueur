@@ -1,5 +1,6 @@
 <script lang="ts">
   import DialogClose from '$lib/icons/DialogClose.svelte'
+  import { onMount } from 'svelte'
   import { cubicInOut } from 'svelte/easing'
   import Backdrop from './Backdrop.svelte'
   import IconButton from './IconButton.svelte'
@@ -25,6 +26,19 @@
         }px); opacity: ${t};`,
     }
   }
+
+  onMount(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        handleClose()
+      }
+    }
+    window.addEventListener('keyup', handler)
+
+    return () => {
+      window.removeEventListener('keyup', handler)
+    }
+  })
 </script>
 
 {#if open}
@@ -35,8 +49,8 @@
           {title}
         </slot>
       </div>
-      <div class="close" on:click="{handleClose}" on:keyup="{handleClose}">
-        <IconButton>
+      <div class="close">
+        <IconButton on:click="{handleClose}">
           <DialogClose />
         </IconButton>
       </div>
@@ -53,7 +67,7 @@
 
 <style>
   .dialog {
-    --uno: 'bg-white rounded-lg border-0 relative z-100 fixed top-20vh p-0';
+    --uno: 'bg-white rounded-lg border-0 relative z-200 fixed top-10vh p-0';
     --joueur-dialog-width: 60vw;
     width: var(--joueur-dialog-width);
   }

@@ -59,21 +59,19 @@ A tiny and playful music player
 * [ ] Lyrics
   * [x] Basic display
   * [x] Auto scroll
-  * [ ] Edit
+  * [x] Edit
+  * [x] Update by directly edit
   * [ ] Upload .lrc file
-  * [ ] Update by directly edit
 * [ ] View
   * [x] List view
   * [ ] Table view
   * [ ] Grid view
   * [ ] Virtual scroll
+  * [x] Zen Mode 
 * [ ] Dark mode
 * [ ] I18n
-* [ ] Toggle with different theming color
-* [ ] Smooth animation
-* [ ] Zen Mode 
-  * [ ] (With only prev, next, pause/paly, volume, lyrics display, progress bar)
-  * [ ] Responsive zen mode ui layouts
+* [ ] Theme color toggle
+
 
 </details>
 

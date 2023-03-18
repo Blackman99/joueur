@@ -41,6 +41,7 @@
   import type { Subscription } from 'dexie'
   import CurrentSongs from '$lib/components/CurrentSongs.svelte'
   import FloatPlayOrPause from '$lib/components/FloatPlayOrPause.svelte'
+  import EditLyrics from '$lib/components/lyrics/EditLyrics.svelte'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -80,11 +81,7 @@
     cleanupDropListener = await appWindow.onFileDropEvent(async evt => {
       switch (evt.payload.type) {
         case 'hover':
-          if (
-            !evt.payload?.paths.length ||
-            !evt.payload.paths.some(p => isAudio(p))
-          )
-            return
+          if (!evt.payload?.paths.length) return
           showDropZone = true
           break
         case 'cancel':
@@ -98,6 +95,7 @@
             for (const path of evt.payload.paths) {
               if (isAudio(path)) {
                 const song = await getSongInfoFromFile(path)
+                console.log(song)
                 await db.addSong(song)
               } else {
                 const res = await readDir(path, { recursive: true })
@@ -228,6 +226,8 @@
 {#if showDropLoading}
   <DropLoading />
 {/if}
+
+<EditLyrics />
 
 <style uno:preflights uno:safelist global>
   :global(body) {

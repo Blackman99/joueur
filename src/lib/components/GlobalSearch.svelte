@@ -188,7 +188,7 @@
     --uno: 'font-700 pb-2 sticky top-0 bg-white';
   }
   .result-item {
-    --uno: 'py-1 px-2 j-clickable-item text-gray-6';
+    --uno: 'py-2 px-2 j-clickable-item text-gray-6';
   }
   .no-data {
     --uno: 'text-gray-4 text-center';

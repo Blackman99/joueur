@@ -1,6 +1,8 @@
 ## 0.0.3
 
 * Global search
+* Lyrics editable
+* Zen mode toggle
 
 ## 0.0.2
 
@@ -13,5 +15,6 @@
 * Player core
 * Drag & drop file
 * Playlist CRUD
+* Basic context menu
 * Auto artist and album grouping
 * Lyrics display
