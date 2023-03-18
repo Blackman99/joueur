@@ -132,7 +132,7 @@
     --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative transition-all';
   }
   .fullscreen {
-    --uno: 'fixed bottom-0 left-0 right-0 z-104 bg-transparent text-gray-2';
+    --uno: 'fixed bottom-0 left-0 right-0 z-104 bg-opacity-20 bg-black text-gray-2';
   }
   .inner {
     --uno: 'flex items-center relative z-3 px-4 pb-2 pt-1';

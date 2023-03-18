@@ -167,7 +167,7 @@
     --uno: 'text-warm-gray-5 text-[12px]';
   }
   .selected-album {
-    --uno: 'fixed w-[80vw] h-[80vh] top-[10vh] left-[10vw] z-101 flex flex-col rounded-lg p-4 bg-white bg-opacity-20;';
+    --uno: 'fixed w-[80vw] h-[80vh] top-[10vh] left-[10vw] z-101 flex flex-col rounded-lg p-4 bg-white bg-opacity-20 z-105';
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
   }
