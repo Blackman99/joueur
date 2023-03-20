@@ -12,6 +12,7 @@
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './store'
+  import { onMount } from 'svelte'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
 
@@ -85,6 +86,13 @@
   $: {
     if (lyricsContainer) lyricsContainer.scrollTop = $scrollTop
   }
+
+  onMount(() => {
+    const observer = new ResizeObserver(() => {
+      computedScrollPosition()
+    })
+    observer.observe(lyricsContainer)
+  })
 </script>
 
 <div

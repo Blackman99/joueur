@@ -124,7 +124,7 @@
     --uno: 'relative z-9 transition-all transition-300 left-0 bottom-0 text-[12px] leading-5';
   }
   .fullscreen {
-    --uno: 'fixed bottom-0 left-0 h-full w-full z-103 text-14px leading-[28px] sm:text-[16px] leading-[32px] lg:text-[18px] lg:leading-[36px]';
+    --uno: 'fixed bottom-0 left-0 h-full w-full z-103 text-14px leading-[28px] sm:text-[16px] leading-[32px] lg:text-[18px] lg:leading-[48px]';
     animation: fullscreen-enter 300ms ease-in-out 0s 1;
   }
   .fullscreen .cover {
