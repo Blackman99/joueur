@@ -1,21 +1,21 @@
 ## 0.0.3
 
-### Added
+### 💡 Added
 
 * Global search
 * Lyrics editable
   * By context menu
   * By current playing lyrics display module 
 * Zen mode toggle
-* Lyrics display exclude empty line
 
-### Optimized
+### 💪 Optimized
 
 * Context menu popup position
 * Lyrics display position recompute when size change
 
-### Fixes
+### 🐛 Fixes
 
+* Lyrics display exclude empty line
 
 ## 0.0.2
 
