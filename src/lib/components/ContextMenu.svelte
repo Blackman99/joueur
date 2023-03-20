@@ -11,13 +11,18 @@
   export let menus: ContextMenuItem[]
   export let show: boolean = false
   export let actionHandler: ContextHandler
+
+  $: aliasX = x < window.innerWidth / 2 ? 'left' : 'right'
+  $: offsetX = aliasX === 'left' ? x : window.innerWidth - x
+  $: aliasY = y < window.innerHeight / 2 ? 'top' : 'bottom'
+  $: offsetY = aliasY === 'top' ? y : window.innerHeight - y
 </script>
 
 {#if show}
   <div
     out:fade="{{ duration: 100 }}"
     class="context-menu"
-    style="--joueur-context-menu-x:{x}px;--joueur-context-menu-y:{y}px;"
+    style="{aliasX}:{offsetX}px;{aliasY}:{offsetY}px;"
   >
     {#each menus as menu (menu.name)}
       <div
@@ -34,7 +39,6 @@
 <style>
   .context-menu {
     --uno: 'fixed z-101 bg-white shadow-xxl w-[20vw] min-w-[180px] max-2-[320px] rounded text-[14px] b-1 b-solid b-gray-4';
-    left: var(--joueur-context-menu-x);
     top: var(--joueur-context-menu-y);
   }
   .menu-item {
