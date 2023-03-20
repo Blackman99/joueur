@@ -40,13 +40,13 @@
     recomputeInitialData()
   }
 
-  const handleScroll = (e: any) => {
+  const handleScroll = debounce((e: any) => {
     const st = e.target.scrollTop
     scrollTop = st
     start = Math.floor(scrollTop / itemHeight) * cols
 
     offset = (start / cols) * itemHeight - st
-  }
+  }, 50)
 </script>
 
 <div
