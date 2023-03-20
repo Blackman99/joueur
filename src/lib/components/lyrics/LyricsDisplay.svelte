@@ -4,8 +4,6 @@
   import QuitFullscreen from '$lib/icons/QuitFullscreen.svelte'
   import { playedSeconds, playingSong } from '$lib/store'
   import { spring } from 'svelte/motion'
-  import { appWindow, LogicalSize } from '@tauri-apps/api/window'
-
   import {
     editLyricsContent,
     fullscreen,
@@ -13,7 +11,7 @@
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './store'
-  import { onMount, tick } from 'svelte'
+  import { onMount } from 'svelte'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
 
@@ -37,7 +35,7 @@
 
   const computedActiveIndex = () => {
     const newActiveIndex = lyricsLines.findIndex((line, i) => {
-      if (!line) return false
+      if (!line.trim()) return false
       if (i >= lyricsLines.length - 1) return true
       const lineStartSeconds = getStartSecondsFromLine(line)
       const nextLineStartSeconds = getStartSecondsFromLine(lyricsLines[i + 1])

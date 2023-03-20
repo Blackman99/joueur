@@ -7,6 +7,7 @@
   * By context menu
   * By current playing lyrics display module 
 * Zen mode toggle
+* Lyrics display exclude empty line
 
 ### Optimized
 
