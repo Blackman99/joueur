@@ -86,7 +86,7 @@
         <div class="info">
           <div class="title">
             <div class="title-skeleton"></div>
-            <span class="meta meta-skeleton"> </span>
+            <div class="meta meta-skeleton"></div>
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@
     --uno: 'aspect-1 w-full object-cover';
   }
   .album-row {
-    --uno: 'flex flex-col item-start';
+    --uno: 'flex flex-col item-start max-w-[200px]';
   }
   .info {
     --uno: 'ml-2 text-[14px] mt-2 text-center';
@@ -181,16 +181,16 @@
     --uno: 'flex items-center transition-colors px-2 justify-between py-1 hover:bg-white hover:bg-opacity-30';
   }
   .selected-album-cover {
-    --uno: 'w-[200px] aspect-1 object-cover';
+    --uno: 'w-[180px] aspect-1 object-cover';
   }
   .cover-skeleton {
     --uno: 'bg-gray-2';
   }
   .title-skeleton {
-    --uno: 'h-[14px] bg-gray-3 w-[100px]';
+    --uno: 'h-[14px] bg-gray-3 w-[100px] mx-auto';
   }
   .meta-skeleton {
-    --uno: 'h-[12px] w-[40%] bg-gray-2';
+    --uno: 'h-[12px] w-[40%] bg-gray-2 mt-2 mx-auto';
   }
   :global(.bg-light-2) {
     --uno: 'bg-light-2';
