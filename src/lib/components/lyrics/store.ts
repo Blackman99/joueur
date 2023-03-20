@@ -6,3 +6,4 @@ export const songToUpdateLyrics = writable<Song>()
 export const editLyricsContent = writable('')
 
 export const fullscreen = writable(false)
+export const quittingFullscreen = writable(false)

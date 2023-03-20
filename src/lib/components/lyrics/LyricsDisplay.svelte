@@ -9,10 +9,11 @@
   import {
     editLyricsContent,
     fullscreen,
+    quittingFullscreen,
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './store'
-  import { onMount } from 'svelte'
+  import { onMount, tick } from 'svelte'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
 
@@ -66,11 +67,10 @@
 
   const handleToggleFullscreen = async () => {
     if ($fullscreen) {
-      appWindow.setSize(new LogicalSize(1000, 800))
+      $quittingFullscreen = true
     } else {
-      appWindow.setSize(new LogicalSize(380, 600))
+      $fullscreen = true
     }
-    $fullscreen = !$fullscreen
   }
 
   $: {

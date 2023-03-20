@@ -13,7 +13,7 @@
   import LyricsDisplay from './lyrics/LyricsDisplay.svelte'
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
   import GlobalSearch from './GlobalSearch.svelte'
-  import { fullscreen } from './lyrics/store'
+  import { fullscreen, quittingFullscreen } from './lyrics/store'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -36,6 +36,12 @@
     }
   }
 
+  const handleTransitionEnd = () => {
+    if ($quittingFullscreen) {
+      $quittingFullscreen = false
+      $fullscreen = false
+    }
+  }
   const coverOut = (node: any) => {
     const existingTransform = getComputedStyle(node).transform.replace(
       'none',
@@ -75,7 +81,12 @@
       <MenuSettings slot="icon" />
     </Menu>
   </div>
-  <div class="cover-wrapper" class:fullscreen="{$fullscreen}">
+  <div
+    class="cover-wrapper"
+    class:fullscreen="{$fullscreen}"
+    class:quitting-fullscreen="{$quittingFullscreen}"
+    on:transitionend="{handleTransitionEnd}"
+  >
     <LyricsDisplay />
     {#if $playingSong}
       {#key $playingSongId}
@@ -108,6 +119,16 @@
       width: 100%;
     }
   }
+  @keyframes fullscreen-quit {
+    from {
+      height: 100vh;
+      width: 100vw;
+    }
+    to {
+      width: 18vw;
+      height: 18vw;
+    }
+  }
   .j-side {
     --uno: 'flex flex-col shrink-0 justify-between bg-white w-[18vw] min-w-180px max-w-[240px] box-border';
   }
@@ -123,9 +144,13 @@
   .cover-wrapper {
     --uno: 'relative z-9 transition-all transition-300 left-0 bottom-0 text-[12px] leading-5';
   }
-  .fullscreen {
+  .fullscreen:not(.quitting-fullscreen) {
     --uno: 'fixed bottom-0 left-0 h-full w-full z-103 text-14px leading-[28px] sm:text-[16px] leading-[32px] lg:text-[18px] lg:leading-[48px]';
     animation: fullscreen-enter 300ms ease-in-out 0s 1;
+  }
+  .quitting-fullscreen {
+    --uno: 'fixed bottom-0 left-0 z-103';
+    animation: fullscreen-quit 300ms ease-in-out 0s 1;
   }
   .fullscreen .cover {
     --uno: 'aspect-unset h-full';
