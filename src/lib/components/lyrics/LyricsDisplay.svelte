@@ -37,6 +37,7 @@
 
   const computedActiveIndex = () => {
     const newActiveIndex = lyricsLines.findIndex((line, i) => {
+      if (!line) return false
       if (i >= lyricsLines.length - 1) return true
       const lineStartSeconds = getStartSecondsFromLine(line)
       const nextLineStartSeconds = getStartSecondsFromLine(lyricsLines[i + 1])
