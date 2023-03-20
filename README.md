@@ -66,8 +66,8 @@ A tiny and playful music player
   * [x] List view
   * [ ] Table view
   * [ ] Grid view
-  * [ ] Virtual scroll
-  * [x] Zen Mode 
+  * [x] Virtual scroll
+  * [x] Zen/Full screen Mode 
 * [ ] Dark mode
 * [ ] I18n
 * [ ] Theme color toggle

@@ -13,10 +13,11 @@
 
 * Context menu popup position
 * Lyrics display position recompute when size change
+* Global search layout ui
 
 ### 🐛 Fixes
 
-* Lyrics display exclude empty line
+* Lyrics display should exclude empty line
 
 ## 0.0.2
 

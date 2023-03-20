@@ -20,18 +20,21 @@
   const getSongs = async () => {
     songs = await db.songs
       .filter(song => song.title.indexOf(keyword) !== -1)
+      .limit(10)
       .toArray()
   }
 
   const getArtists = async () => {
     artists = await db.artists
       .filter(ar => ar.title.indexOf(keyword) !== -1)
+      .limit(10)
       .toArray()
   }
 
   const getAlbums = async () => {
     albums = await db.albums
       .filter(al => al.title.indexOf(keyword) !== -1)
+      .limit(10)
       .toArray()
   }
 
@@ -170,22 +173,22 @@
     --uno: 'border-none outline-none text-[14px] w-full pl-1';
   }
   .search-result {
-    --uno: 'absolute min-w-[200px] left-0 bg-white b-1 rounded b-gray-2 b-solid p-2 text-[14px] text-secondary z-3';
+    --uno: 'absolute min-w-[320px] w-[70vw] left-0 bg-white b-1 rounded b-gray-2 b-solid p-2 text-[14px] flex text-secondary z-3';
     top: calc(100% + 12px);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
   .result-category {
-    --uno: 'max-h-[20vh] overflow-y-auto relative';
+    --uno: 'max-h-[50vh] overflow-y-auto relative pb-2 flex-grow';
   }
   .result-category:not(:first-child) .category-title {
     --uno: 'pt-2';
   }
   .result-category:not(:last-child) {
-    --uno: 'b-b-1 b-b-solid b-b-gray-2 pb-2';
+    --uno: 'b-r-1 b-r-solid b-r-gray-2';
   }
   .category-title {
-    --uno: 'font-700 pb-2 sticky top-0 bg-white';
+    --uno: 'font-700 py-2 pl-2 sticky top-0 bg-white';
   }
   .result-item {
     --uno: 'py-2 px-2 j-clickable-item text-gray-6';
