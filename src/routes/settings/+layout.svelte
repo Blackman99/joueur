@@ -2,8 +2,14 @@
   import Menu from '$lib/components/Menu.svelte'
   import ArrowRight from '$lib/icons/ArrowRight.svelte'
   import SettingsAbout from '$lib/icons/SettingsAbout.svelte'
+  import SettingsPreference from '$lib/icons/SettingsPreference.svelte'
 
   const settingCategories = [
+    {
+      label: 'Preference',
+      to: '/settings/preference',
+      icon: SettingsPreference,
+    },
     {
       label: 'About',
       to: '/settings',

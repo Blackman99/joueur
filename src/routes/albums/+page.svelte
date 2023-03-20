@@ -51,7 +51,6 @@
 </script>
 
 <div class="albums">
-  <!-- <div class="album-list"> -->
   {#if hasAlbum}
     <VirtualScroll
       items="{$albums}"
@@ -59,6 +58,7 @@
       gapY="12px"
       cols="{4}"
       customStyle="padding: 24px;"
+      customClass="bg-light-2"
     >
       <div
         slot="item"
@@ -81,9 +81,17 @@
           </div>
         </div>
       </div>
+      <div slot="skeleton-item" class="album-row">
+        <div class="cover cover-skeleton"></div>
+        <div class="info">
+          <div class="title">
+            <div class="title-skeleton"></div>
+            <span class="meta meta-skeleton"> </span>
+          </div>
+        </div>
+      </div>
     </VirtualScroll>
   {/if}
-  <!-- </div> -->
 </div>
 
 {#if $selectedAlbum}
@@ -135,7 +143,7 @@
 
 <style>
   .albums {
-    --uno: 'flex-grow overflow-y-hidden';
+    --uno: 'flex-grow overflow-y-hidden relative';
   }
   .cover {
     --uno: 'aspect-1 w-full object-cover';
@@ -174,5 +182,17 @@
   }
   .selected-album-cover {
     --uno: 'w-[200px] aspect-1 object-cover';
+  }
+  .cover-skeleton {
+    --uno: 'bg-gray-2';
+  }
+  .title-skeleton {
+    --uno: 'h-[14px] bg-gray-3 w-[100px]';
+  }
+  .meta-skeleton {
+    --uno: 'h-[12px] w-[40%] bg-gray-2';
+  }
+  :global(.bg-light-2) {
+    --uno: 'bg-light-2';
   }
 </style>

@@ -26,6 +26,7 @@
     updateLyricsDialogOpen,
   } from './lyrics/store'
   import VirtualScroll from './VirtualScroll.svelte'
+  import DefaultCover from '$lib/icons/DefaultCover.svelte'
 
   export let transparentBg: boolean = false
   export let songs: Song[]
@@ -132,7 +133,7 @@
       </Menu>
     </div>
   {/if}
-  <VirtualScroll items="{songs}">
+  <VirtualScroll items="{songs}" customClass="bg-light-4">
     <svelte:fragment slot="item" let:item="{song}">
       {@const isPlaying = song.id === $playingSongId}
       {@const isInSelection = selectedSongIds.includes(song.id)}
@@ -212,6 +213,16 @@
         </div>
       </div>
     </svelte:fragment>
+    <div class="song-row" slot="skeleton-item">
+      <div class="cover cover-skeleton"></div>
+      <div class="info">
+        <div class="title title-skeleton"></div>
+        <div class="meta mt-2">
+          <div class="meta-skeleton"></div>
+          <div class="duration-skeleton"></div>
+        </div>
+      </div>
+    </div>
   </VirtualScroll>
   {#if !songs.length && showActionsOnEmpty}
     <Actions />
@@ -226,7 +237,7 @@
     --uno: 'flex items-center';
   }
   .songs {
-    --uno: 'flex-grow text-[14px] relative overflow-y-hidden h-full bg-light-4';
+    --uno: 'flex-grow text-[14px] relative overflow-y-hidden h-full';
   }
   .transparent-bg {
     --uno: 'bg-transparent';
@@ -272,5 +283,21 @@
   }
   .checked-icon {
     --uno: 'text-5 mr-2';
+  }
+  :global(.bg-light-4) {
+    --uno: 'bg-light-4';
+  }
+  .cover-skeleton {
+    --uno: 'bg-gray-2';
+  }
+  .title-skeleton {
+    --uno: 'h-[14px] bg-gray-3 w-[100px]';
+  }
+  .duration-skeleton,
+  .meta-skeleton {
+    --uno: 'h-[12px] w-[40%] bg-gray-2';
+  }
+  .duration-skeleton {
+    --uno: 'w-[20%]';
   }
 </style>

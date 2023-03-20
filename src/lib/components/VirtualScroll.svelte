@@ -7,6 +7,7 @@
   export let gapY = '0'
   export let items: any[]
   export let customStyle = ''
+  export let customClass = ''
 
   let vScrollContainer: HTMLDivElement
   let maxItemsDisplayed = 10
@@ -57,7 +58,7 @@
 >
   <div class="v-scroller"></div>
   <div
-    class="v-scroll-grid"
+    class="v-scroll-grid {customClass}"
     style="--j-v-scroll-top: {scrollTop}px;--j-v-scroll-item-offset:{offset}px;{customStyle}"
   >
     {#each items.slice(start, start + maxItemsDisplayed) as item}
@@ -67,6 +68,18 @@
     {/each}
   </div>
 </div>
+{#if items.length > maxItemsDisplayed}
+  <div
+    class="v-skeletons"
+    style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-cols:{cols};"
+  >
+    {#each Array.from({ length: maxItemsDisplayed }) as _, i (i)}
+      <div class="v-skeleton-item" style="--j-skeleton-item-h: {itemHeight}px;">
+        <slot name="skeleton-item" />
+      </div>
+    {/each}
+  </div>
+{/if}
 
 <style>
   .v-scroll {
@@ -77,14 +90,24 @@
     height: var(--j-v-scroll-total-height);
   }
   .v-scroll-grid {
-    --uno: 'grid absolute left-0 box-border';
+    --uno: 'grid absolute left-0 box-border z-3';
     width: 100%;
     column-gap: var(--j-v-scroll-gap-y);
     row-gap: var(--j-v-scroll-gap-x);
     grid-template-columns: repeat(var(--j-v-scroll-cols), minmax(0, 1fr));
     top: var(--j-v-scroll-top);
   }
+
   .v-scroll-item {
     transform: translateY(var(--j-v-scroll-item-offset));
+  }
+  .v-skeletons {
+    --uno: 'grid absolute top-0 bottom-0 z-2 left-0 right-0';
+    column-gap: var(--j-v-scroll-gap-y);
+    row-gap: var(--j-v-scroll-gap-x);
+    grid-template-columns: repeat(var(--j-v-scroll-cols), minmax(0, 1fr));
+  }
+  .v-skeleton-item {
+    height: var(--j-skeleton-item-h);
   }
 </style>

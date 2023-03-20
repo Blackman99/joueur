@@ -240,6 +240,6 @@
     --uno: 'flex h-[100vh] items-stretch';
   }
   .j-content {
-    --uno: 'flex-grow bg-light- flex flex-col relative';
+    --uno: 'flex-grow flex flex-col relative';
   }
 </style>
