@@ -133,7 +133,10 @@
       </Menu>
     </div>
   {/if}
-  <VirtualScroll items="{songs}" customClass="bg-light-4">
+  <VirtualScroll
+    items="{songs}"
+    customClass="{transparentBg ? 'bg-black' : 'bg-light-4'}"
+  >
     <svelte:fragment slot="item" let:item="{song}">
       {@const isPlaying = song.id === $playingSongId}
       {@const isInSelection = selectedSongIds.includes(song.id)}
@@ -287,15 +290,28 @@
   :global(.bg-light-4) {
     --uno: 'bg-light-4';
   }
+  :global(.bg-black) {
+    --uno: 'bg-black';
+  }
   .cover-skeleton {
     --uno: 'bg-gray-2';
+  }
+  .fullscreen .cover-skeleton {
+    --uno: 'bg-gray-8';
   }
   .title-skeleton {
     --uno: 'h-[14px] bg-gray-3 w-[100px]';
   }
+  .fullscreen .title-skeleton {
+    --uno: 'h-[14px] bg-gray-8 w-[100px]';
+  }
   .duration-skeleton,
   .meta-skeleton {
     --uno: 'h-[12px] w-[40%] bg-gray-2';
+  }
+  .fullscreen .duration-skeleton,
+  .fullscreen .meta-skeleton {
+    --uno: 'bg-gray-9';
   }
   .duration-skeleton {
     --uno: 'w-[20%]';
