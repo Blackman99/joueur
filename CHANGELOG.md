@@ -19,7 +19,7 @@
 
 ## 0.0.2
 
-### Added
+### 💡 Added
 
 * Playing spectrum
 * Album animation detail
@@ -28,7 +28,7 @@
 ## 0.0.1
 
 
-### Added
+### 💡 Added
 
 * Player core
 * Drag & drop file
