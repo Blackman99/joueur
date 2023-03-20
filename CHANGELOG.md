@@ -10,6 +10,8 @@
 
 ### Optimized
 
+* Context menu popup position
+
 ### Fixes
 
 
