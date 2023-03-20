@@ -11,6 +11,7 @@
 ### Optimized
 
 * Context menu popup position
+* Lyrics display position recompute when size change
 
 ### Fixes
 
