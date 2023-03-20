@@ -129,7 +129,8 @@
 
 <style>
   .player-bottom-bar {
-    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative transition-all';
+    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative';
+    transition: all cubic-bezier(0, 0.55, 0.45, 1) 0.3s;
   }
   .fullscreen {
     --uno: 'fixed bottom-0 left-0 right-0 z-104 bg-opacity-20 bg-black text-gray-2';

@@ -146,11 +146,11 @@
   }
   .fullscreen:not(.quitting-fullscreen) {
     --uno: 'fixed bottom-0 left-0 h-full w-full z-103 text-14px leading-[28px] sm:text-[16px] leading-[32px] lg:text-[18px] lg:leading-[48px]';
-    animation: fullscreen-enter 300ms ease-in-out 0s 1;
+    animation: fullscreen-enter 300ms cubic-bezier(0, 0.55, 0.45, 1) 0s 1;
   }
   .quitting-fullscreen {
     --uno: 'fixed bottom-0 left-0 z-103';
-    animation: fullscreen-quit 300ms ease-in-out 0s 1;
+    animation: fullscreen-quit 300ms cubic-bezier(0, 0.55, 0.45, 1) 0s 1;
   }
   .fullscreen .cover {
     --uno: 'aspect-unset h-full';

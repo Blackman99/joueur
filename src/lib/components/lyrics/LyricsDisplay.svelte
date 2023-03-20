@@ -68,6 +68,7 @@
   const handleToggleFullscreen = async () => {
     if ($fullscreen) {
       $quittingFullscreen = true
+      $fullscreen = false
     } else {
       $fullscreen = true
     }
