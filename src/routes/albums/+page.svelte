@@ -7,20 +7,9 @@
   import Backdrop from '$lib/components/Backdrop.svelte'
   import PlayingIcon from '$lib/components/PlayingIcon.svelte'
   import { currentSongs, playedSeconds, playingSongId } from '$lib/store'
-  import { flip } from 'svelte/animate'
-  import { crossfade, fade } from 'svelte/transition'
+  import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
-
-  const [send, receive] = crossfade({
-    fallback() {
-      return {
-        duration: 0,
-        css: () => `
-					display: none;
-				`,
-      }
-    },
-  })
+  import VirtualScroll from '$lib/components/VirtualScroll.svelte'
 
   const albums = liveQuery(() => db.albums.toArray()) as unknown as Readable<
     Album[]
@@ -62,37 +51,39 @@
 </script>
 
 <div class="albums">
-  <div class="album-list">
-    {#if hasAlbum}
-      {#each $albums.filter(al => al.id !== $selectedAlbum?.id) as album (album.id)}
-        <div
-          class="album-row"
-          on:click="{() => ($selectedAlbum = album)}"
-          on:keypress
-          animate:flip="{{
-            delay: 0,
-            duration: 300,
-          }}"
-          in:receive="{{ key: album.id, duration: 500 }}"
-          out:send="{{ key: album.id, duration: 500 }}"
-        >
-          {#if album.cover}
-            <img class="cover" src="{album.cover}" alt="{album.title}" />
-          {/if}
-          <div class="info">
-            <div class="title">
-              <div>
-                {album.title}
-              </div>
-              <span class="meta">
-                {album.artist} · {album.songIds.length} tracks
-              </span>
+  <!-- <div class="album-list"> -->
+  {#if hasAlbum}
+    <VirtualScroll
+      items="{$albums}"
+      gapX="12px"
+      gapY="12px"
+      cols="{4}"
+      customStyle="padding: 24px;"
+    >
+      <div
+        slot="item"
+        let:item="{album}"
+        class="album-row"
+        on:click="{() => ($selectedAlbum = album)}"
+        on:keypress
+      >
+        {#if album.cover}
+          <img class="cover" src="{album.cover}" alt="{album.title}" />
+        {/if}
+        <div class="info">
+          <div class="title">
+            <div>
+              {album.title}
             </div>
+            <span class="meta">
+              {album.artist} · {album.songIds.length} tracks
+            </span>
           </div>
         </div>
-      {/each}
-    {/if}
-  </div>
+      </div>
+    </VirtualScroll>
+  {/if}
+  <!-- </div> -->
 </div>
 
 {#if $selectedAlbum}
@@ -103,16 +94,11 @@
   <div class="selected-album" transition:fade="{{ duration: 300 }}">
     <div class="selected-album-info">
       {#if $albums}
-        {#each $albums.filter(al => al.id === $selectedAlbum?.id) as sAlbum (sAlbum.id)}
-          <img
-            class="selected-album-cover"
-            animate:flip
-            in:receive="{{ key: sAlbum.id, duration: 500 }}"
-            out:send="{{ key: sAlbum.id, duration: 500 }}"
-            src="{sAlbum.cover}"
-            alt="{sAlbum.title}"
-          />
-        {/each}
+        <img
+          class="selected-album-cover"
+          src="{$selectedAlbum.cover}"
+          alt="{$selectedAlbum.title}"
+        />
       {/if}
       <div class="selected-album-meta">
         <div class="selected-album-title">
@@ -149,10 +135,7 @@
 
 <style>
   .albums {
-    --uno: 'flex-grow overflow-y-auto';
-  }
-  .album-list {
-    --uno: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4';
+    --uno: 'flex-grow overflow-y-hidden';
   }
   .cover {
     --uno: 'aspect-1 w-full object-cover';

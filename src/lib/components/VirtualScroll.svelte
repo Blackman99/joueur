@@ -1,17 +1,12 @@
-<script lang="ts" context="module">
-  export type FetchParams = {
-    start: number
-    limit: 1
-  }
-</script>
-
 <script lang="ts">
+  import debounce from '$lib/utils/debounce'
   import { onMount } from 'svelte'
 
   export let cols = 1
   export let gapX = '0'
   export let gapY = '0'
   export let items: any[]
+  export let customStyle = ''
 
   let vScrollContainer: HTMLDivElement
   let maxItemsDisplayed = 10
@@ -27,8 +22,9 @@
       vScrollContainer.querySelector<HTMLDivElement>('.v-scroll-item')
     if (!firstItem) return
     itemHeight = firstItem.offsetHeight
-    maxItemsDisplayed = Math.ceil(vScrollContainer.clientHeight / itemHeight)
-    totalHeight = (itemHeight * items.length) / cols
+    maxItemsDisplayed =
+      Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
+    totalHeight = itemHeight * (items.length / cols)
   }
 
   onMount(() => {
@@ -47,8 +43,9 @@
   const handleScroll = (e: any) => {
     const st = e.target.scrollTop
     scrollTop = st
-    start = Math.ceil(scrollTop / itemHeight)
-    offset = start * itemHeight - st
+    start = Math.floor(scrollTop / itemHeight) * cols
+
+    offset = (start / cols) * itemHeight - st
   }
 </script>
 
@@ -61,7 +58,7 @@
   <div class="v-scroller"></div>
   <div
     class="v-scroll-grid"
-    style="--j-v-scroll-top: {scrollTop}px;--j-v-scroll-item-offset:{offset}px;"
+    style="--j-v-scroll-top: {scrollTop}px;--j-v-scroll-item-offset:{offset}px;{customStyle}"
   >
     {#each items.slice(start, start + maxItemsDisplayed) as item}
       <div class="v-scroll-item">
@@ -80,7 +77,7 @@
     height: var(--j-v-scroll-total-height);
   }
   .v-scroll-grid {
-    --uno: 'grid absolute left-0';
+    --uno: 'grid absolute left-0 box-border';
     width: 100%;
     column-gap: var(--j-v-scroll-gap-y);
     row-gap: var(--j-v-scroll-gap-x);
