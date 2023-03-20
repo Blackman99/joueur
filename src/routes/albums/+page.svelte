@@ -56,7 +56,7 @@
       items="{$albums}"
       gapX="12px"
       gapY="12px"
-      cols="{4}"
+      mode="grid"
       customStyle="padding: 24px;"
       customClass="bg-light-2"
     >

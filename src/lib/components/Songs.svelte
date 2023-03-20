@@ -26,7 +26,6 @@
     updateLyricsDialogOpen,
   } from './lyrics/store'
   import VirtualScroll from './VirtualScroll.svelte'
-  import DefaultCover from '$lib/icons/DefaultCover.svelte'
 
   export let transparentBg: boolean = false
   export let songs: Song[]
