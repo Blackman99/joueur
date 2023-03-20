@@ -61,7 +61,6 @@ A tiny and playful music player
   * [x] Auto scroll
   * [x] Edit
   * [x] Update by directly edit
-  * [ ] Upload .lrc file
 * [ ] View
   * [x] List view
   * [ ] Table view
