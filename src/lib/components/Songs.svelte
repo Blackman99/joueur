@@ -25,6 +25,7 @@
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './lyrics/store'
+  import VirtualScroll from './VirtualScroll.svelte'
 
   export let transparentBg: boolean = false
   export let songs: Song[]
@@ -131,85 +132,87 @@
       </Menu>
     </div>
   {/if}
-  {#each songs as song (song.id)}
-    {@const isPlaying = song.id === $playingSongId}
-    {@const isInSelection = selectedSongIds.includes(song.id)}
-    {@const isDragging =
-      draggingSongId === song.id || draggingSongIds.includes(song.id)}
-    <div
-      draggable="{draggable}"
-      class="song-row"
-      class:active="{isPlaying}"
-      class:dragging="{isDragging}"
-      class:multi-selected="{isInSelection}"
-      on:keypress
-      on:click="{() => handleSongClick(song)}"
-      on:dblclick="{() => handlePlay(song)}"
-      on:dragstart="{() => handleDragstart(song)}"
-      on:dragend="{onDragend}"
-      use:contextMenu="{{
-        actionHandler: (_e, m) => handleContextMenuClick(m.name, song),
-        menus: canSelectedMultiple
-          ? [
-              ...(isInSelection
-                ? [
-                    {
-                      title: 'Unselect',
-                      name: 'uncheck-song',
-                    },
-                    ...inSelectionContextMenus,
-                  ]
-                : [
-                    {
-                      title: 'Select',
-                      name: 'check-song',
-                    },
-                  ]),
-              {
-                title: 'Edit lyrics',
-                name: 'edit-lyrics',
-              },
-              ...contextMenus,
-            ]
-          : contextMenus,
-      }}"
-    >
-      {#if selectionMode}
-        <div class="checked-icon">
-          {#if isInSelection}
-            <Checked />
-          {:else}
-            <Uncheck />
-          {/if}
-        </div>
-      {/if}
-      <img
-        class="cover"
-        src="{song.cover}"
-        alt="{song.title}"
-        draggable="false"
-      />
-      <div class="info">
-        <div class="title">
-          {song.title}
-          {#if isPlaying}
-            <div class="playing-icon-wrapper">
-              <PlayingIcon />
-            </div>
-          {/if}
-        </div>
-        <div class="meta">
-          <div>
-            {song.artist} - {song.album || 'Unknown'}
+  <VirtualScroll items="{songs}">
+    <svelte:fragment slot="item" let:item="{song}">
+      {@const isPlaying = song.id === $playingSongId}
+      {@const isInSelection = selectedSongIds.includes(song.id)}
+      {@const isDragging =
+        draggingSongId === song.id || draggingSongIds.includes(song.id)}
+      <div
+        draggable="{draggable}"
+        class="song-row"
+        class:active="{isPlaying}"
+        class:dragging="{isDragging}"
+        class:multi-selected="{isInSelection}"
+        on:keypress
+        on:click="{() => handleSongClick(song)}"
+        on:dblclick="{() => handlePlay(song)}"
+        on:dragstart="{() => handleDragstart(song)}"
+        on:dragend="{onDragend}"
+        use:contextMenu="{{
+          actionHandler: (_e, m) => handleContextMenuClick(m.name, song),
+          menus: canSelectedMultiple
+            ? [
+                ...(isInSelection
+                  ? [
+                      {
+                        title: 'Unselect',
+                        name: 'uncheck-song',
+                      },
+                      ...inSelectionContextMenus,
+                    ]
+                  : [
+                      {
+                        title: 'Select',
+                        name: 'check-song',
+                      },
+                    ]),
+                {
+                  title: 'Edit lyrics',
+                  name: 'edit-lyrics',
+                },
+                ...contextMenus,
+              ]
+            : contextMenus,
+        }}"
+      >
+        {#if selectionMode}
+          <div class="checked-icon">
+            {#if isInSelection}
+              <Checked />
+            {:else}
+              <Uncheck />
+            {/if}
           </div>
-          <div class="duration">
-            {song.display_duration} <span class="text-light-8">|</span>
-            {song.path.split('.').pop()}
+        {/if}
+        <img
+          class="cover"
+          src="{song.cover}"
+          alt="{song.title}"
+          draggable="false"
+        />
+        <div class="info">
+          <div class="title">
+            {song.title}
+            {#if isPlaying}
+              <div class="playing-icon-wrapper">
+                <PlayingIcon />
+              </div>
+            {/if}
+          </div>
+          <div class="meta">
+            <div>
+              {song.artist} - {song.album || 'Unknown'}
+            </div>
+            <div class="duration">
+              {song.display_duration} <span class="text-light-8">|</span>
+              {song.path.split('.').pop()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  {/each}
+    </svelte:fragment>
+  </VirtualScroll>
   {#if !songs.length && showActionsOnEmpty}
     <Actions />
   {/if}
@@ -223,7 +226,7 @@
     --uno: 'flex items-center';
   }
   .songs {
-    --uno: 'flex-grow text-[14px] relative overflow-y-auto h-full bg-light-4';
+    --uno: 'flex-grow text-[14px] relative overflow-y-hidden h-full bg-light-4';
   }
   .transparent-bg {
     --uno: 'bg-transparent';
