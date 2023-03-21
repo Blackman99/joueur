@@ -11,6 +11,7 @@
   } from './store'
   import { onMount } from 'svelte'
   import debounce from '$lib/utils/debounce'
+  import throttle from '$lib/utils/throttle'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
   $: noLyrics = !lyricsLines || !lyricsLines.length
@@ -33,7 +34,7 @@
     return -1
   }
 
-  const computedActiveIndex = () => {
+  const computedActiveIndex = throttle(() => {
     const newActiveIndex = lyricsLines.findIndex((line, i) => {
       if (!line.trim()) return false
       if (i >= lyricsLines.length - 1) return true
@@ -45,7 +46,7 @@
       )
     })
     activeIndex = newActiveIndex
-  }
+  })
 
   const computedScrollPosition = debounce(() => {
     const lineDom = lyricsContainer?.querySelector(

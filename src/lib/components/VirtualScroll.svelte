@@ -30,7 +30,7 @@
     cols = Math.floor(vScrollContainer.offsetWidth / firstItem.offsetWidth)
 
     maxItemsDisplayed =
-      Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
+      Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols
   }, 50)
 
   onMount(() => {
@@ -113,7 +113,7 @@
     top: var(--j-v-scroll-top);
   }
   .mode-grid {
-    --uno: ' grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
+    --uno: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
   }
 
   .v-scroll-item {

@@ -1,5 +1,6 @@
 <script lang="ts">
   import Songs from '$lib/components/Songs.svelte'
+  import VirtualScroll from '$lib/components/VirtualScroll.svelte'
   import { db } from '$lib/db'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import type { Artist, Song } from '$lib/types'
@@ -49,27 +50,29 @@
 <div class="artists">
   <div class="artist-list">
     {#if hasArtist}
-      {#each $artists as artist (artist.id)}
-        {@const active = artist.id === $selectedArtist?.id}
-        <div
-          class="artist-item"
-          class:active="{active}"
-          on:click="{() => handleArtistClick(artist)}"
-          on:keyup="{() => handleArtistClick(artist)}"
-        >
-          <div class="title">
-            {artist.title}
-            <div class="meta">
-              ({artist.songIds.length})
+      <VirtualScroll items="{$artists}">
+        <svelte:fragment slot="item" let:item="{artist}">
+          {@const active = artist.id === $selectedArtist?.id}
+          <div
+            class="artist-item"
+            class:active="{active}"
+            on:click="{() => handleArtistClick(artist)}"
+            on:keyup="{() => handleArtistClick(artist)}"
+          >
+            <div class="title">
+              {artist.title}
+              <div class="meta">
+                ({artist.songIds.length})
+              </div>
+            </div>
+            <div class="active-icon">
+              {#if active}
+                <PlaylistActive />
+              {/if}
             </div>
           </div>
-          <div class="active-icon">
-            {#if active}
-              <PlaylistActive />
-            {/if}
-          </div>
-        </div>
-      {/each}
+        </svelte:fragment>
+      </VirtualScroll>
     {/if}
   </div>
   <Songs songs="{$selectedArtistSongs}" showActionsOnEmpty="{false}" />
