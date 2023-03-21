@@ -80,7 +80,7 @@ fn update_lyrics(path: &str, lyrics: &str) -> Result<String, String> {
 
 fn unwrap_str(var: Option<&str>) -> Option<String> {
     match var {
-        None => None,
+        None => Some(String::from("Unknown")),
         Some(str) => Some(String::from(str))
     }
 }

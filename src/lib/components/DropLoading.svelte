@@ -5,7 +5,9 @@
 
 <div transition:fade="{{ delay: 0, duration: 100 }}" class="drop-loading">
   <Loading />
-  <div class="ml-2">Just a sec...</div>
+  <div class="ml-2">
+    <slot />
+  </div>
 </div>
 
 <style>

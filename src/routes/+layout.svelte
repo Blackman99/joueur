@@ -54,6 +54,7 @@
   let showDropLoading = false
   let ready = false
   let showCurrentList = false
+  let percentage = '0'
 
   // effects
   // Notice that not use $ because the subscriptions timing is not fixed
@@ -103,7 +104,11 @@
               } else {
                 const res = await readDir(path, { recursive: true })
                 const songs = await parseSongsFromFileEntries(res)
-                await db.addSongs(songs)
+                await db.addSongs(songs, addedSongNumber => {
+                  percentage = ((addedSongNumber * 100) / songs.length).toFixed(
+                    2
+                  )
+                })
               }
             }
           } catch (error) {
@@ -253,7 +258,9 @@
 {/if}
 
 {#if showDropLoading}
-  <DropLoading />
+  <DropLoading>
+    ({percentage}%) Just a sec...
+  </DropLoading>
 {/if}
 
 <EditLyrics />

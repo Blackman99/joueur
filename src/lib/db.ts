@@ -58,10 +58,10 @@ class JoueurDB extends Dexie {
    * @param song the new added song
    */
   async addOrUpdateArtistBySong(song: Song) {
-    const existingArtist = await this.artists.where('title').equals(song.artist).first()
+    const existingArtist = await this.artists.where('title').equals(song.artist).and(ar => ar.songIds.includes(song.id)).first()
     if (!existingArtist) {
       await this.artists.put({ title: song.artist, songIds: [song.id], addTime: new Date() } as unknown as Artist)
-    } else if (!existingArtist.songIds.includes(song.id)) {
+    } else {
       existingArtist.songIds.push(song.id)
       await this.artists.update(existingArtist.id, existingArtist)
     }
@@ -72,7 +72,7 @@ class JoueurDB extends Dexie {
    * @param song the new added song
    */
   async addOrUpdateAlbumBySong(song: Song) {
-    const existingAlbum = await this.albums.where('title').equals(song.album).and(al => al.artist === song.artist).first()
+    const existingAlbum = await this.albums.where('title').equals(song.album).and(al => al.artist === song.artist && al.songIds.includes(song.id)).first()
 
     if (!existingAlbum) {
       await this.albums.put({
@@ -82,7 +82,7 @@ class JoueurDB extends Dexie {
         cover: song.cover,
         addTime: new Date(),
       } as unknown as Album)
-    } else if (!existingAlbum.songIds.includes(song.id)) {
+    } else {
       existingAlbum.songIds.push(song.id)
       await this.albums.update(existingAlbum.id, existingAlbum)
     }
@@ -93,87 +93,106 @@ class JoueurDB extends Dexie {
    * @param song The song to add
    */
   async addSong(song: Song) {
-    const isExist = await this.songExists(song)
-    if (isExist) {
-      song = isExist
-    } else {
-      song.addTime = new Date()
-      if (!song.title)
-        song.title = song.path.split('/').pop()?.replace(/\.mp3/, '') || ''
-      if (!song.album) song.album = 'Unknown'
-      if (!song.artist) song.artist = 'Unknown'
+    if (!song) return
+    this.transaction(
+      'rw',
+      this.playlists,
+      this.songs,
+      this.artists,
+      this.albums,
+      async () => {
+        const isExist = await this.songExists(song)
+        if (isExist) {
+          song = isExist
+        } else {
+          song.addTime = new Date()
+          if (!song.title)
+            song.title = song.path.split('/').pop()?.replace(/\.mp3/, '') || ''
+          if (!song.album) song.album = 'Unknown'
+          if (!song.artist) song.artist = 'Unknown'
 
-      const newSongId = await this.songs.put(song)
-      song.id = newSongId
-      // grouping the artist
-      await this.addOrUpdateArtistBySong(song)
+          const newSongId = await this.songs.put(song)
+          song.id = newSongId
+          // grouping the artist
+          await this.addOrUpdateArtistBySong(song)
 
-      // grouping the album
-      await this.addOrUpdateAlbumBySong(song)
-    }
+          // grouping the album
+          await this.addOrUpdateAlbumBySong(song)
+        }
 
-    // Add new song to default `'all'` list
-    const allList = await this.getAllList()
-    if (!allList.songIds.includes(song.id)) {
-      allList.songIds.push(song.id)
-      await this.playlists.update(allList.id, allList)
-    }
+        // Add new song to default `'all'` list
+        const allList = await this.getAllList()
+        if (!allList.songIds.includes(song.id)) {
+          allList.songIds.push(song.id)
+          await this.playlists.update(allList.id, allList)
+        }
 
-    // Add new song to current playlist
-    const currentPlayListId = get(selectedPlaylistId)
-    if (currentPlayListId !== allList.id) {
-      const playList = await this.playlists.where('id').equals(currentPlayListId).first()
-      if (playList && !playList.songIds.includes(song.id)) {
-        playList.songIds.push(song.id)
-        await this.playlists.update(playList.id, playList)
-      }
-    }
+        // Add new song to current playlist
+        const currentPlayListId = get(selectedPlaylistId)
+        if (currentPlayListId !== allList.id) {
+          const playList = await this.playlists.where('id').equals(currentPlayListId).first()
+          if (playList && !playList.songIds.includes(song.id)) {
+            playList.songIds.push(song.id)
+            await this.playlists.update(playList.id, playList)
+          }
+        }
+      })
   }
 
   /**
    * Always use this instead of `db.songs.bulkAdd`
    * @param songs songs to add
    */
-  async addSongs(songs: Song[]) {
-    const newSongs = []
-    let songIdsWillAddToPlaylist = []
-    for (const song of songs) {
-      const isExist = await this.songExists(song)
-      if (!isExist) {
-        song.addTime = new Date()
-        newSongs.push(song)
-      }
-      else {
-        songIdsWillAddToPlaylist.push(isExist.id)
-      }
-    }
-    const newSongIds = await this.songs.bulkAdd(newSongs, {
-      allKeys: true,
-    })
+  async addSongs(songs: Song[], progressCb?: (addedSongNumber: number) => void) {
+    this.transaction(
+      'rw',
+      this.playlists,
+      this.songs,
+      this.artists,
+      this.albums,
+      async () => {
+        const newSongs = []
+        let songIdsWillAddToPlaylist = []
+        for (const song of songs) {
+          if (!song) continue
+          const isExist = await this.songExists(song)
+          if (!isExist) {
+            song.addTime = new Date()
+            newSongs.push(song)
+          }
+          else {
+            songIdsWillAddToPlaylist.push(isExist.id)
+          }
+        }
+        const newSongIds = await this.songs.bulkAdd(newSongs, {
+          allKeys: true,
+        })
 
-    songIdsWillAddToPlaylist = songIdsWillAddToPlaylist.concat(newSongIds)
+        songIdsWillAddToPlaylist = songIdsWillAddToPlaylist.concat(newSongIds)
 
-    for (let i = 0; i < newSongs.length; i++) {
-      const newSong = newSongs[i]
-      newSong.id = newSongIds[i]
-      await this.addOrUpdateArtistBySong(newSong)
-      await this.addOrUpdateAlbumBySong(newSong)
-    }
+        for (let i = 0; i < newSongs.length; i++) {
+          const newSong = newSongs[i]
+          newSong.id = newSongIds[i]
+          await this.addOrUpdateArtistBySong(newSong)
+          await this.addOrUpdateAlbumBySong(newSong)
+          progressCb?.(i + 1)
+        }
 
-    // Add new song to default `'all'` list
-    const allList = await this.getAllList()
-    allList.songIds = allList.songIds.concat(songIdsWillAddToPlaylist.filter(id => !allList.songIds.includes(id)))
-    await this.playlists.update(allList.id, allList)
+        // Add new song to default `'all'` list
+        const allList = await this.getAllList()
+        allList.songIds = allList.songIds.concat(songIdsWillAddToPlaylist.filter(id => !allList.songIds.includes(id)))
+        await this.playlists.update(allList.id, allList)
 
-    // Add new song to current selected playlist
-    const currentPlayListId = get(selectedPlaylistId)
-    if (currentPlayListId !== allList.id) {
-      const playList = await this.playlists.where('id').equals(currentPlayListId).first()
-      if (playList) {
-        playList.songIds = playList.songIds.concat(songIdsWillAddToPlaylist.filter(id => !playList.songIds.includes(id)))
-        await this.playlists.update(playList.id, playList)
-      }
-    }
+        // Add new song to current selected playlist
+        const currentPlayListId = get(selectedPlaylistId)
+        if (currentPlayListId !== allList.id) {
+          const playList = await this.playlists.where('id').equals(currentPlayListId).first()
+          if (playList) {
+            playList.songIds = playList.songIds.concat(songIdsWillAddToPlaylist.filter(id => !playList.songIds.includes(id)))
+            await this.playlists.update(playList.id, playList)
+          }
+        }
+      })
   }
 
   /**

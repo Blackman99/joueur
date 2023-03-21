@@ -131,103 +131,105 @@
       </Menu>
     </div>
   {/if}
-  <VirtualScroll
-    items="{songs}"
-    customClass="{transparentBg ? 'bg-black' : 'j-song-bg'}"
-  >
-    <svelte:fragment slot="item" let:item="{song}">
-      {@const isPlaying = song.id === $playingSongId}
-      {@const isInSelection = selectedSongIds.includes(song.id)}
-      {@const isDragging =
-        draggingSongId === song.id || draggingSongIds.includes(song.id)}
-      <div
-        draggable="{draggable}"
-        class="song-row"
-        class:active="{isPlaying}"
-        class:dragging="{isDragging}"
-        class:multi-selected="{isInSelection}"
-        on:keypress
-        on:click="{() => handleSongClick(song)}"
-        on:dblclick="{() => handlePlay(song)}"
-        on:dragstart="{() => handleDragstart(song)}"
-        on:dragend="{onDragend}"
-        use:contextMenu="{{
-          actionHandler: (_e, m) => handleContextMenuClick(m.name, song),
-          menus: canSelectedMultiple
-            ? [
-                ...(isInSelection
-                  ? [
-                      {
-                        title: 'Unselect',
-                        name: 'uncheck-song',
-                      },
-                      ...inSelectionContextMenus,
-                    ]
-                  : [
-                      {
-                        title: 'Select',
-                        name: 'check-song',
-                      },
-                    ]),
-                {
-                  title: 'Edit lyrics',
-                  name: 'edit-lyrics',
-                },
-                ...contextMenus,
-              ]
-            : contextMenus,
-        }}"
-      >
-        {#if selectionMode}
-          <div class="checked-icon">
-            {#if isInSelection}
-              <Checked />
-            {:else}
-              <Uncheck />
-            {/if}
-          </div>
-        {/if}
-        <img
-          class="cover"
-          src="{song.cover}"
-          alt="{song.title}"
-          draggable="false"
-        />
-        <div class="info">
-          <div class="title">
-            {song.title}
-            {#if isPlaying}
-              <div class="playing-icon-wrapper">
-                <PlayingIcon />
-              </div>
-            {/if}
-          </div>
-          <div class="meta">
-            <div>
-              {song.artist} - {song.album || 'Unknown'}
-            </div>
-            <div class="duration">
-              {song.display_duration}
-              <span class="text-light-8 dark:text-gray-7">|</span>
-              {song.path.split('.').pop()}
-            </div>
-          </div>
-        </div>
-      </div>
-    </svelte:fragment>
-    <div class="song-row" slot="skeleton-item">
-      <div class="cover cover-skeleton"></div>
-      <div class="info">
-        <div class="title title-skeleton"></div>
-        <div class="meta mt-2 pr-4">
-          <div class="meta-skeleton"></div>
-          <div class="duration-skeleton"></div>
-        </div>
-      </div>
-    </div>
-  </VirtualScroll>
+
   {#if !songs.length && showActionsOnEmpty}
     <Actions />
+  {:else}
+    <VirtualScroll
+      items="{songs}"
+      customClass="{transparentBg ? 'bg-black' : 'j-song-bg'}"
+    >
+      <svelte:fragment slot="item" let:item="{song}">
+        {@const isPlaying = song.id === $playingSongId}
+        {@const isInSelection = selectedSongIds.includes(song.id)}
+        {@const isDragging =
+          draggingSongId === song.id || draggingSongIds.includes(song.id)}
+        <div
+          draggable="{draggable}"
+          class="song-row"
+          class:active="{isPlaying}"
+          class:dragging="{isDragging}"
+          class:multi-selected="{isInSelection}"
+          on:keypress
+          on:click="{() => handleSongClick(song)}"
+          on:dblclick="{() => handlePlay(song)}"
+          on:dragstart="{() => handleDragstart(song)}"
+          on:dragend="{onDragend}"
+          use:contextMenu="{{
+            actionHandler: (_e, m) => handleContextMenuClick(m.name, song),
+            menus: canSelectedMultiple
+              ? [
+                  ...(isInSelection
+                    ? [
+                        {
+                          title: 'Unselect',
+                          name: 'uncheck-song',
+                        },
+                        ...inSelectionContextMenus,
+                      ]
+                    : [
+                        {
+                          title: 'Select',
+                          name: 'check-song',
+                        },
+                      ]),
+                  {
+                    title: 'Edit lyrics',
+                    name: 'edit-lyrics',
+                  },
+                  ...contextMenus,
+                ]
+              : contextMenus,
+          }}"
+        >
+          {#if selectionMode}
+            <div class="checked-icon">
+              {#if isInSelection}
+                <Checked />
+              {:else}
+                <Uncheck />
+              {/if}
+            </div>
+          {/if}
+          <img
+            class="cover"
+            src="{song.cover}"
+            alt="{song.title}"
+            draggable="false"
+          />
+          <div class="info">
+            <div class="title">
+              {song.title}
+              {#if isPlaying}
+                <div class="playing-icon-wrapper">
+                  <PlayingIcon />
+                </div>
+              {/if}
+            </div>
+            <div class="meta">
+              <div>
+                {song.artist} - {song.album || 'Unknown'}
+              </div>
+              <div class="duration">
+                {song.display_duration}
+                <span class="text-light-8 dark:text-gray-7">|</span>
+                {song.path.split('.').pop()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </svelte:fragment>
+      <div class="song-row" slot="skeleton-item">
+        <div class="cover cover-skeleton"></div>
+        <div class="info">
+          <div class="title title-skeleton"></div>
+          <div class="meta mt-2 pr-4">
+            <div class="meta-skeleton"></div>
+            <div class="duration-skeleton"></div>
+          </div>
+        </div>
+      </div>
+    </VirtualScroll>
   {/if}
 </div>
 

@@ -103,9 +103,7 @@
       db.songs,
       db.artists,
       db.albums,
-      async () => {}
-    )
-      .then(async () => {
+      async () => {
         const playlistsContainSong = await db.playlists
           .filter(pl => pl.songIds.includes(songIdToRemove))
           .toArray()
@@ -134,7 +132,9 @@
           if (!al.songIds.length) await db.albums.delete(al.id)
           else await db.albums.update(al.id, al)
         }
-
+      }
+    )
+      .then(() => {
         message('Delete success', { title: 'Success', type: 'info' })
       })
       .catch(err => {
