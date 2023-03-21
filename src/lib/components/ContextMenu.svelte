@@ -38,7 +38,7 @@
 
 <style>
   .context-menu {
-    --uno: 'fixed z-101 bg-white shadow-xxl w-[20vw] min-w-[180px] max-2-[320px] rounded text-[14px] b-1 b-solid b-gray-4';
+    --uno: 'fixed z-101 bg-white dark:bg-black shadow-xxl w-[20vw] min-w-[180px] max-2-[320px] rounded text-[14px] b-1 b-solid b-gray-4 dark:b-gray-8';
     top: var(--joueur-context-menu-y);
   }
   .menu-item {

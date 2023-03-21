@@ -233,7 +233,7 @@
 
 <style>
   .selection-mode-buttons {
-    --uno: 'flex items-center justify-between sticky top-0 bg-white dark:bg-dark-9 z-4';
+    --uno: 'flex items-center justify-between sticky top-0 bg-white dark:bg-black z-4';
   }
   .select-and-unselect-all {
     --uno: 'flex items-center';
