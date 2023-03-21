@@ -8,6 +8,7 @@
 ### 🐛 Fixes
 
 * Do not add song when id3 info pared is empty 
+* Should use transaction for song and songs adding
 
 ## 0.0.3
 
