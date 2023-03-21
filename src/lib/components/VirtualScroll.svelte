@@ -16,6 +16,8 @@
   let scrollTop = 0
   let offset = 0
   let cols = 1
+  let skeletonOffset = 0
+
   $: totalHeight = itemHeight * (items.length / cols)
 
   const recomputeInitialData = () => {
@@ -44,13 +46,17 @@
     recomputeInitialData()
   }
 
-  const handleScroll = debounce((e: any) => {
-    const st = e.target.scrollTop
+  const setStart = debounce((st: number) => {
+    offset = -(st % itemHeight)
     scrollTop = st
-    start = Math.floor(scrollTop / itemHeight) * cols
-
-    offset = (start / cols) * itemHeight - st
+    start = Math.floor(st / itemHeight) * cols
   }, 50)
+
+  const handleScroll = (e: any) => {
+    const st = e.target.scrollTop
+    skeletonOffset = -(st % itemHeight)
+    setStart(st)
+  }
 </script>
 
 <div
@@ -66,7 +72,7 @@
     class:mode-grid="{mode === 'grid'}"
     style="--j-v-scroll-top: {scrollTop}px;--j-v-scroll-item-offset:{offset}px;{customStyle}"
   >
-    {#each items.slice(start, start + maxItemsDisplayed) as item}
+    {#each items.slice(start, start + maxItemsDisplayed) as item (item.id)}
       <div class="v-scroll-item">
         <slot name="item" item="{item}" />
       </div>
@@ -78,7 +84,7 @@
     class="v-skeletons"
     class:mode-list="{mode === 'list'}"
     class:mode-grid="{mode === 'grid'}"
-    style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-cols:{cols};"
+    style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-cols:{cols};--j-v-scroll-skeleton-offset:{skeletonOffset}px;"
   >
     {#each Array.from({ length: maxItemsDisplayed }) as _, i (i)}
       <div class="v-skeleton-item" style="--j-skeleton-item-h: {itemHeight}px;">
@@ -111,9 +117,10 @@
     transform: translateY(var(--j-v-scroll-item-offset));
   }
   .v-skeletons {
-    --uno: 'grid absolute top-0 bottom-0 z-2 left-0 right-0';
+    --uno: 'grid absolute overflow-hidden top-0 bottom-0 z-2 left-0 right-0';
     column-gap: var(--j-v-scroll-gap-y);
     row-gap: var(--j-v-scroll-gap-x);
+    transform: translateY(var(--j-v-scroll-skeleton-offset));
   }
   .v-skeleton-item {
     height: var(--j-skeleton-item-h);

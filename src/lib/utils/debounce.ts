@@ -1,14 +1,13 @@
-type DebounceFun<T, R> = (params?: T) => R
-
-const debounce = <T extends Array<any> = any[], R = any>(func: DebounceFun<T, R>, timeout = 500) => {
+const debounce = <T extends Function>(func: T, timeout = 500) => {
   let timer: ReturnType<typeof setTimeout>
 
-  return (...params: T) => {
+  const wrappedFunc = (...params: any) => {
     clearTimeout(timer)
     timer = setTimeout(() => {
       func(...params)
     }, timeout)
   }
+  return <T>(<any>wrappedFunc)
 }
 
 export default debounce
