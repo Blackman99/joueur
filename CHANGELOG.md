@@ -1,3 +1,13 @@
+## 0.1.0 (Not release)
+
+### 💪 Optimized
+
+* Resize observe use debounce
+
+### 🐛 Fixes
+
+* Do not add song when id3 info pared is empty 
+
 ## 0.0.3
 
 ### 💡 Added

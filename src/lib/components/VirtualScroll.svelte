@@ -1,6 +1,7 @@
 <script lang="ts">
   import debounce from '$lib/utils/debounce'
   import { onMount } from 'svelte'
+  import { fullscreen } from './lyrics/store'
 
   export let gapX = '0'
   export let gapY = '0'
@@ -20,7 +21,7 @@
 
   $: totalHeight = itemHeight * (items.length / cols)
 
-  const recomputeInitialData = () => {
+  const recomputeInitialData = debounce(() => {
     if (!vScrollContainer) return
     const firstItem =
       vScrollContainer.querySelector<HTMLDivElement>('.v-scroll-item')
@@ -30,13 +31,15 @@
 
     maxItemsDisplayed =
       Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
-  }
+  }, 50)
 
   onMount(() => {
-    if (vScrollContainer) {
-      recomputeInitialData()
-      const resizeObserver = new ResizeObserver(recomputeInitialData)
-      resizeObserver.observe(vScrollContainer)
+    recomputeInitialData()
+    const resizeObserver = new ResizeObserver(recomputeInitialData)
+    resizeObserver.observe(vScrollContainer)
+    return () => {
+      resizeObserver.unobserve(vScrollContainer)
+      resizeObserver.disconnect()
     }
   })
 
@@ -52,6 +55,7 @@
   }, 50)
 
   const handleScroll = (e: any) => {
+    if ($fullscreen) return
     const st = e.target.scrollTop
     skeletonOffset = -(st % itemHeight)
     setStart(st)

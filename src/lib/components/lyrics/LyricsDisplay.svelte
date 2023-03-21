@@ -12,6 +12,7 @@
     updateLyricsDialogOpen,
   } from './store'
   import { onMount } from 'svelte'
+  import debounce from '$lib/utils/debounce'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
 
@@ -47,14 +48,14 @@
     activeIndex = newActiveIndex
   }
 
-  const computedScrollPosition = () => {
+  const computedScrollPosition = debounce(() => {
     const lineDom = lyricsContainer?.querySelector(
       `.lyrics-line:nth-child(${activeIndex + 1})`
     ) as any
     if (lineDom) {
       $scrollTop = lineDom.offsetTop - (totalHeight - lineDom.offsetHeight) / 2
     }
-  }
+  }, 50)
 
   const handleOpenLyricsEdit = () => {
     if ($playingSong) {
@@ -83,6 +84,11 @@
       computedScrollPosition()
     })
     observer.observe(lyricsContainer)
+
+    return () => {
+      observer.unobserve(lyricsContainer)
+      observer.disconnect()
+    }
   })
 </script>
 

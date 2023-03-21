@@ -98,7 +98,7 @@
             for (const path of evt.payload.paths) {
               if (isAudio(path)) {
                 const song = await getSongInfoFromFile(path)
-                await db.addSong(song)
+                if (song) await db.addSong(song)
               } else {
                 const res = await readDir(path, { recursive: true })
                 const songs = await parseSongsFromFileEntries(res)
