@@ -74,6 +74,9 @@ A tiny and playful music player
 
 </details>
 
+## Discussion
+
+[Discord](https://discord.com/invite/SUnF2WxsV5)
 
 ## Contributing
 
