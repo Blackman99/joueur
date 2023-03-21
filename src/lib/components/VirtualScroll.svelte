@@ -22,12 +22,11 @@
 
   const recomputeInitialData = () => {
     if (!vScrollContainer) return
-    const items =
-      vScrollContainer.querySelectorAll<HTMLDivElement>('.v-scroll-item')
-    const firstItem = items[0]
+    const firstItem =
+      vScrollContainer.querySelector<HTMLDivElement>('.v-scroll-item')
     if (!firstItem) return
     itemHeight = firstItem.offsetHeight
-    cols = [...items].filter(item => item.offsetTop < 50).length
+    cols = Math.floor(vScrollContainer.offsetWidth / firstItem.offsetWidth)
 
     maxItemsDisplayed =
       Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
