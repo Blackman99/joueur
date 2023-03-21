@@ -267,9 +267,9 @@
     color-scheme: dark;
   }
   .j-main {
-    --uno: 'flex h-[100vh] items-stretch pt-[30px] box-border';
+    --uno: 'flex h-[100vh] items-stretch box-border';
   }
   .j-content {
-    --uno: 'flex-grow flex flex-col relative';
+    --uno: 'flex-grow flex flex-col relative pt-[30px]';
   }
 </style>

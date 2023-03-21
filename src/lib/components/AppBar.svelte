@@ -52,7 +52,7 @@
 
 <style>
   .titlebar {
-    --uno: 'fixed bg-white dark:bg-black top-0 left-0 right-0 z-106 h-[30px] flex items-center justify-end gap-1 px-2';
+    --uno: 'fixed bg-white dark:bg-black top-0 left-[18vw] right-0 z-106 h-[30px] flex items-center justify-end gap-1 px-2 b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-8';
   }
   .fullscreen {
     --uno: 'text-gray-1 bg-transparent dark:bg-transparent';
