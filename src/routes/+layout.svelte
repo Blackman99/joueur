@@ -263,6 +263,9 @@
   :global(.j-song-bg) {
     --uno: 'bg-light-1 dark:bg-dark-9';
   }
+  :global(html.dark) {
+    color-scheme: dark;
+  }
   .j-main {
     --uno: 'flex h-[100vh] items-stretch pt-[30px] box-border';
   }
