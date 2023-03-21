@@ -3,6 +3,7 @@
   import QuitFullscreen from '$lib/icons/QuitFullscreen.svelte'
   import WindowMaximize from '$lib/icons/WindowMaximize.svelte'
   import WindowMinimize from '$lib/icons/WindowMinimize.svelte'
+  import { inWindow } from '$lib/store'
   import { ask } from '@tauri-apps/api/dialog'
   import { appWindow } from '@tauri-apps/api/window'
   import IconButton from './IconButton.svelte'
@@ -31,6 +32,7 @@
 <div
   class="titlebar"
   class:fullscreen="{$fullscreen}"
+  class:fullscreen-show="{$fullscreen && $inWindow}"
   on:mousedown="{handleMousedown}"
   on:dblclick="{async () => appWindow.toggleMaximize()}"
 >
@@ -52,9 +54,17 @@
 
 <style>
   .titlebar {
-    --uno: 'fixed bg-white dark:bg-black top-0 left-[18vw] right-0 z-106 h-[30px] flex items-center justify-end gap-1 px-2 b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-8';
+    --uno: 'fixed bg-white dark:bg-black top-0 left-[18vw] right-0 z-106 h-[30px] flex items-center justify-end gap-1 px-2';
+  }
+  .titlebar:not(.fullscreen) {
+    --uno: 'b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-8';
   }
   .fullscreen {
-    --uno: 'text-gray-1 bg-transparent dark:bg-transparent';
+    --uno: 'text-gray-1 bg-transparent dark:bg-transparent left-0';
+    transition: transform linear 0.3s;
+    transform: translateY(-100%);
+  }
+  .fullscreen-show {
+    transform: translateY(0);
   }
 </style>

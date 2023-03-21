@@ -10,6 +10,7 @@
     duration,
     displayDuration,
     audioDom,
+    inWindow,
   } from '$lib/store'
   import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
   import ControlPrev from '$lib/icons/ControlPrev.svelte'
@@ -68,6 +69,7 @@
     bind:this="{barDom}"
     class="player-bottom-bar"
     class:fullscreen="{$fullscreen}"
+    class:fullscreen-show="{$fullscreen && $inWindow}"
     transition:slide
     on:mouseup="{handleMouseup}"
     on:mousedown="{() => (mouseTabbing = true)}"
@@ -134,6 +136,10 @@
   }
   .fullscreen {
     --uno: 'fixed bottom-0 left-0 right-0 z-104 bg-opacity-20 bg-black text-gray-2';
+    transform: translateY(100%);
+  }
+  .fullscreen-show {
+    transform: translateY(0);
   }
   .inner {
     --uno: 'flex items-center relative z-3 px-4 pb-2 pt-1';

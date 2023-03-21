@@ -29,6 +29,7 @@ export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) as Mode || 're
 export const audioDom = writable<HTMLAudioElement>()
 export const duration = writable(0)
 export const isDark = writable(localStorage.getItem(COLOR_MODE_KEY) === 'on')
+export const inWindow = writable(true)
 
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
   const minutes = Math.floor($playedSeconds / 60)

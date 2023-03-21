@@ -1,13 +1,11 @@
 <script lang="ts">
   import LyricsEdit from '$lib/icons/LyricsEdit.svelte'
   import OpenFullscreen from '$lib/icons/OpenFullscreen.svelte'
-  import QuitFullscreen from '$lib/icons/QuitFullscreen.svelte'
   import { playedSeconds, playingSong } from '$lib/store'
   import { spring } from 'svelte/motion'
   import {
     editLyricsContent,
     fullscreen,
-    quittingFullscreen,
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './store'
@@ -15,6 +13,7 @@
   import debounce from '$lib/utils/debounce'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
+  $: noLyrics = !lyricsLines || !lyricsLines.length
 
   let totalHeight: number
   let activeIndex = 0
@@ -99,11 +98,12 @@
 >
   <div
     class="lyrics-display"
+    class:no-lyrics="{noLyrics}"
     bind:this="{lyricsContainer}"
     on:click="{handleOpenLyricsEdit}"
     on:keypress
   >
-    {#if lyricsLines && lyricsLines.length}
+    {#if !noLyrics}
       {#each lyricsLines as line, i}
         {@const active = i === activeIndex}
         <div
@@ -150,6 +150,9 @@
     transition: all linear 0.2s;
     overflow-y: auto;
     transform: translateZ(0);
+  }
+  .no-lyrics {
+    --uno: 'flex items-center justify-center';
   }
   .lyrics-display:hover {
     backdrop-filter: none;

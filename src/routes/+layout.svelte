@@ -38,6 +38,7 @@
     duration,
     COLOR_MODE_KEY,
     isDark,
+    inWindow,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
@@ -227,6 +228,11 @@
   }
 </script>`}
 </svelte:head>
+
+<svelte:body
+  on:mouseenter="{() => ($inWindow = true)}"
+  on:mouseleave="{() => ($inWindow = false)}"
+/>
 
 <AppBar />
 <main class="j-main" on:contextmenu="{handleContextMenu}">
