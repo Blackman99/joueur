@@ -54,11 +54,11 @@
   {#if hasAlbum}
     <VirtualScroll
       items="{$albums}"
-      gapX="12px"
-      gapY="12px"
+      gapX="20px"
+      gapY="20px"
       mode="grid"
       customStyle="padding: 24px;"
-      customClass="bg-light-2"
+      customClass="j-song-bg"
     >
       <div
         slot="item"
@@ -158,7 +158,7 @@
     --uno: 'text-warm-gray-5 text-[12px]';
   }
   .selected-album {
-    --uno: 'fixed w-[80vw] h-[80vh] top-[10vh] left-[10vw] z-101 flex flex-col rounded-lg p-4 bg-white bg-opacity-20 z-105';
+    --uno: 'fixed w-[80vw] h-[80vh] top-[10vh] left-[10vw] z-101 flex flex-col rounded-lg p-4 bg-white bg-opacity-20 dark:bg-black dark:bg-opacity-70 z-105';
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
   }
@@ -184,13 +184,13 @@
     --uno: 'w-[180px] aspect-1 object-cover';
   }
   .cover-skeleton {
-    --uno: 'bg-gray-2';
+    --uno: 'bg-gray-2 dark:bg-gray-8';
   }
   .title-skeleton {
-    --uno: 'h-[14px] bg-gray-3 w-[100px] mx-auto';
+    --uno: 'h-[14px] bg-gray-3 dark:bg-gray-8 w-[100px] mx-auto';
   }
   .meta-skeleton {
-    --uno: 'h-[12px] w-[40%] bg-gray-2 mt-2 mx-auto';
+    --uno: 'h-[12px] w-[40%] dark:bg-gray-8 bg-gray-2 mt-2 mx-auto';
   }
   :global(.bg-light-2) {
     --uno: 'bg-light-2';

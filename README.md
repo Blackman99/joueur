@@ -64,7 +64,7 @@ A tiny and playful music player
 * [ ] View
   * [x] List view
   * [ ] Table view
-  * [ ] Grid view
+  * [x] Grid view
   * [x] Virtual scroll
   * [x] Zen/Full screen Mode 
 * [ ] Dark mode

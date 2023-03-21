@@ -31,11 +31,11 @@
 
 <style>
   .create-wrapper {
-    --uno: 'flex h-[48px] items-center bg-white pl-2 relative';
+    --uno: 'flex h-[48px] items-center  pl-2 relative';
     transition: all linear 0.2s;
   }
   .focused {
-    --uno: 'bg-secondary text-white shadow-lg';
+    --uno: 'bg-secondary dark:bg-secondary text-white shadow-lg';
   }
   .placeholder {
     --uno: 'text-gray-4 absolute left-2 text-[14px] h-[16px] top-[16px] z-2 flex items-center';

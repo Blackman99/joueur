@@ -36,12 +36,15 @@
     PLAYING_KEY,
     togglePlayOrPause,
     duration,
+    COLOR_MODE_KEY,
+    isDark,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
   import CurrentSongs from '$lib/components/CurrentSongs.svelte'
   import FloatPlayOrPause from '$lib/components/FloatPlayOrPause.svelte'
   import EditLyrics from '$lib/components/lyrics/EditLyrics.svelte'
+  import AppBar from '$lib/components/AppBar.svelte'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -173,6 +176,15 @@
     localStorage.setItem(PLAYING_KEY, $paused ? 'off' : 'on')
   }
 
+  $: {
+    if ($isDark) {
+      document.querySelector('html')?.classList.add('dark')
+    } else {
+      document.querySelector('html')?.classList.remove('dark')
+    }
+    localStorage.setItem(COLOR_MODE_KEY, $isDark ? 'on' : 'off')
+  }
+
   onDestroy(() => {
     cleanupDropListener?.()
     unsubscribePlaylistId?.()
@@ -205,6 +217,18 @@
   </audio>
 {/if}
 
+<svelte:head>
+  {@html `
+<script>
+  if(window.localStorage.getItem('${COLOR_MODE_KEY}') === 'on') {
+    document.querySelector('html').classList.add('dark')
+  } else {
+    document.querySelector('html').classList.remove('dark')
+  }
+</script>`}
+</svelte:head>
+
+<AppBar />
 <main class="j-main" on:contextmenu="{handleContextMenu}">
   <Sidebar />
   <div class="j-content">
@@ -230,14 +254,17 @@
 
 <style uno:preflights uno:safelist global>
   :global(body) {
-    --uno: 'bg-light-3 m-0 p-0 overflow-hidden text-secondary';
+    --uno: 'bg-light-1 dark:bg-dark-9 m-0 p-0 overflow-hidden text-secondary text-secondary dark:text-[#e3e3e3]';
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
       'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     user-select: none;
     -webkit-user-select: none;
   }
+  :global(.j-song-bg) {
+    --uno: 'bg-light-1 dark:bg-dark-9';
+  }
   .j-main {
-    --uno: 'flex h-[100vh] items-stretch';
+    --uno: 'flex h-[100vh] items-stretch pt-[30px] box-border';
   }
   .j-content {
     --uno: 'flex-grow flex flex-col relative';

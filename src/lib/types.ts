@@ -48,3 +48,8 @@ export interface Setting extends WithTitle {
 
 export const modes = ['repeat-one', 'repeat-list', 'shuffle'] as const
 export type Mode = typeof modes[number]
+
+export interface Selection {
+  label: string
+  value: any
+}

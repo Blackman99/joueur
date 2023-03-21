@@ -80,10 +80,10 @@
 </div>
 {#if items.length > maxItemsDisplayed}
   <div
-    class="v-skeletons"
+    class="v-skeletons {customClass}"
     class:mode-list="{mode === 'list'}"
     class:mode-grid="{mode === 'grid'}"
-    style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-cols:{cols};--j-v-scroll-skeleton-offset:{skeletonOffset}px;"
+    style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-cols:{cols};--j-v-scroll-skeleton-offset:{skeletonOffset}px;{customStyle}"
   >
     {#each Array.from({ length: maxItemsDisplayed }) as _, i (i)}
       <div class="v-skeleton-item" style="--j-skeleton-item-h: {itemHeight}px;">

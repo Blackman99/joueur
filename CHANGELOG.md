@@ -8,6 +8,8 @@
   * By current playing lyrics display module 
 * Zen mode toggle
 * Virtual scroll
+* Dark Mode
+* Customize title bar
 
 ### 💪 Optimized
 

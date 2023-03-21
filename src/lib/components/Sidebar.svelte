@@ -4,7 +4,7 @@
   import Menu from './Menu.svelte'
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
-  import { playingSongId } from '$lib/store'
+  import { playingSongId, isDark } from '$lib/store'
   import MenuMusics from '$lib/icons/MenuMusics.svelte'
   import MenuArtists from '$lib/icons/MenuArtists.svelte'
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
@@ -64,7 +64,11 @@
 
 <aside class="j-side">
   <div>
-    <img src="/logo.svg" alt="Joueur" class="logo" />
+    <img
+      src="{$isDark ? '/logo-dark.svg' : '/logo.svg'}"
+      alt="Joueur"
+      class="logo"
+    />
     <GlobalSearch />
   </div>
   <div class="menus">
@@ -130,7 +134,7 @@
     }
   }
   .j-side {
-    --uno: 'flex flex-col shrink-0 justify-between bg-white w-[18vw] min-w-180px max-w-[240px] box-border';
+    --uno: 'flex flex-col shrink-0 justify-between bg-white dark:bg-black w-[18vw] min-w-180px max-w-[240px] box-border';
   }
   .menus {
     --uno: 'p-4';

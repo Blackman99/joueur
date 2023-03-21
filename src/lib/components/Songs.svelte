@@ -5,7 +5,6 @@
   // @ts-nocheck
   import {
     playingSongId,
-    paused,
     currentSongs,
     currentPlaylistSongs,
     playedSeconds,
@@ -134,7 +133,7 @@
   {/if}
   <VirtualScroll
     items="{songs}"
-    customClass="{transparentBg ? 'bg-black' : 'bg-light-4'}"
+    customClass="{transparentBg ? 'bg-black' : 'j-song-bg'}"
   >
     <svelte:fragment slot="item" let:item="{song}">
       {@const isPlaying = song.id === $playingSongId}
@@ -208,7 +207,8 @@
               {song.artist} - {song.album || 'Unknown'}
             </div>
             <div class="duration">
-              {song.display_duration} <span class="text-light-8">|</span>
+              {song.display_duration}
+              <span class="text-light-8 dark:text-gray-7">|</span>
               {song.path.split('.').pop()}
             </div>
           </div>
@@ -219,7 +219,7 @@
       <div class="cover cover-skeleton"></div>
       <div class="info">
         <div class="title title-skeleton"></div>
-        <div class="meta mt-2">
+        <div class="meta mt-2 pr-4">
           <div class="meta-skeleton"></div>
           <div class="duration-skeleton"></div>
         </div>
@@ -233,7 +233,7 @@
 
 <style>
   .selection-mode-buttons {
-    --uno: 'flex items-center justify-between sticky top-0 bg-white z-4';
+    --uno: 'flex items-center justify-between sticky top-0 bg-white dark:bg-dark-9 z-4';
   }
   .select-and-unselect-all {
     --uno: 'flex items-center';
@@ -286,33 +286,30 @@
   .checked-icon {
     --uno: 'text-5 mr-2';
   }
-  :global(.bg-light-4) {
-    --uno: 'bg-light-4';
-  }
   :global(.bg-black) {
     --uno: 'bg-black';
   }
   .cover-skeleton {
-    --uno: 'bg-gray-2';
+    --uno: 'bg-gray-2 dark:bg-gray-8';
   }
   .fullscreen .cover-skeleton {
     --uno: 'bg-gray-8';
   }
   .title-skeleton {
-    --uno: 'h-[14px] bg-gray-3 w-[100px]';
+    --uno: 'h-[14px] bg-gray-3 dark:bg-gray-9 w-[100px]';
   }
   .fullscreen .title-skeleton {
-    --uno: 'h-[14px] bg-gray-8 w-[100px]';
+    --uno: 'h-[14px] bg-gray-9 w-[100px]';
   }
   .duration-skeleton,
   .meta-skeleton {
-    --uno: 'h-[12px] w-[40%] bg-gray-2';
+    --uno: 'h-[12px] w-[30%] bg-gray-2 dark:bg-gray-9';
   }
   .fullscreen .duration-skeleton,
   .fullscreen .meta-skeleton {
     --uno: 'bg-gray-9';
   }
   .duration-skeleton {
-    --uno: 'w-[20%]';
+    --uno: 'w-[15%]';
   }
 </style>

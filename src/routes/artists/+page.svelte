@@ -80,7 +80,7 @@
     --uno: 'flex-grow overflow-y-hidden flex items-stretch';
   }
   .artist-list {
-    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] bg-light-2 overflow-y-auto';
+    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] overflow-y-auto';
   }
   .title {
     --uno: 'flex items-center';

@@ -89,7 +89,8 @@
         "resizable": true,
         "title": "Joueur",
         "width": 800,
-        "minWidth": 600
+        "minWidth": 600,
+        "decorations": false
       }
     ]
   }

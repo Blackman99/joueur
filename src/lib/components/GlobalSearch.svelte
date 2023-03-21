@@ -158,7 +158,7 @@
 
 <style>
   .global-search {
-    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 rounded-[16px] mx-3 h-[32px] px-2 text-gray-4 relative z-10';
+    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 dark:b-gray-7 rounded-[16px] mx-3 h-[32px] px-2 text-gray-4 relative z-10';
   }
   .focused {
     --uno: 'b-primary';
@@ -170,10 +170,10 @@
     --uno: 'text-5 flex items-center';
   }
   input {
-    --uno: 'border-none outline-none text-[14px] w-full pl-1';
+    --uno: 'border-none outline-none text-[14px] w-full pl-1 bg-transparent dark:text-gray-4';
   }
   .search-result {
-    --uno: 'absolute min-w-[320px] w-[70vw] left-0 bg-white b-1 rounded b-gray-2 b-solid p-2 text-[14px] flex text-secondary z-3';
+    --uno: 'absolute min-w-[320px] w-[70vw] left-0 bg-white dark:bg-black b-1 rounded b-gray-2 dark:b-gray-7 b-solid p-2 text-[14px] flex text-secondary dark:text-gray-3 z-3';
     top: calc(100% + 12px);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
@@ -185,13 +185,13 @@
     --uno: 'pt-2';
   }
   .result-category:not(:last-child) {
-    --uno: 'b-r-1 b-r-solid b-r-gray-2';
+    --uno: 'b-r-1 b-r-solid b-r-gray-2 dark:b-r-gray-7';
   }
   .category-title {
-    --uno: 'font-700 py-2 pl-2 sticky top-0 bg-white';
+    --uno: 'font-700 py-2 pl-2 sticky top-0 bg-inherit';
   }
   .result-item {
-    --uno: 'py-2 px-2 j-clickable-item text-gray-6';
+    --uno: 'py-2 px-2 j-clickable-item text-gray-6 dark:text-gray-4';
   }
   .no-data {
     --uno: 'text-gray-4 text-center';

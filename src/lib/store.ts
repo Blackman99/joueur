@@ -13,6 +13,7 @@ export const PLAYING_KEY = 'JOUEUR_PLAYING_KEY'
 export const CURRENT_SONGS_KEY = 'JOUEUR_CURRENT_SONGS_KEY'
 export const VOLUME_KEY = 'JOUEUR_VOLUME_KEY'
 export const MODE_KEY = 'JOUEUR_MODE_KEY'
+export const COLOR_MODE_KEY = 'JOUEUR_COLOR_MODE'
 
 // global states
 export const paused = writable(localStorage.getItem(PLAYING_KEY) === 'off')
@@ -27,6 +28,7 @@ export const volume = writable(storeVolume === null ? 1 : Number(storeVolume))
 export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) as Mode || 'repeat-list')
 export const audioDom = writable<HTMLAudioElement>()
 export const duration = writable(0)
+export const isDark = writable(localStorage.getItem(COLOR_MODE_KEY) === 'on')
 
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
   const minutes = Math.floor($playedSeconds / 60)

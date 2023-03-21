@@ -67,12 +67,15 @@
 
 <style>
   .dialog {
-    --uno: 'bg-white rounded-lg border-0 relative z-200 fixed top-10vh p-0';
+    --uno: 'bg-white dark:bg-black rounded-lg border-0 relative z-200 fixed top-10vh p-0';
     --joueur-dialog-width: 60vw;
     width: var(--joueur-dialog-width);
   }
   .header {
-    --uno: 'flex items-center justify-between px-4 py-3 b-b-1 b-b-solid b-b-light-4';
+    --uno: 'flex items-center justify-between px-4 py-3 b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-7';
+  }
+  .title {
+    --uno: 'text-secondary dark:text-gray-1';
   }
   .close {
     --uno: 'flex items-center';

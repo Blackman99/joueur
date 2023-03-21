@@ -129,7 +129,7 @@
 
 <style>
   .player-bottom-bar {
-    --uno: 'shrink-0 bg-white shadow-t-lg text-[14px] relative';
+    --uno: 'shrink-0 bg-white dark:bg-black shadow-t-lg text-[14px] relative';
     transition: all cubic-bezier(0, 0.55, 0.45, 1) 0.3s;
   }
   .fullscreen {
@@ -159,7 +159,7 @@
     --uno: 'flex items-center justify-between';
   }
   .progress-bg {
-    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-8';
+    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-8 dark:bg-opacity-15';
     transform: translateX(var(--joueur-played-percentage));
   }
   .pointer {

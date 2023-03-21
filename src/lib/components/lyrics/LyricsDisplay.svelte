@@ -64,15 +64,6 @@
     }
   }
 
-  const handleToggleFullscreen = async () => {
-    if ($fullscreen) {
-      $quittingFullscreen = true
-      $fullscreen = false
-    } else {
-      $fullscreen = true
-    }
-  }
-
   $: {
     $playedSeconds
     computedActiveIndex()
@@ -125,17 +116,15 @@
     {/if}
   </div>
 
-  <div
-    class="fullscreen-toggle"
-    on:click="{handleToggleFullscreen}"
-    on:keypress
-  >
-    {#if $fullscreen}
-      <QuitFullscreen />
-    {:else}
+  {#if !$fullscreen}
+    <div
+      class="fullscreen-toggle"
+      on:click="{() => ($fullscreen = true)}"
+      on:keypress
+    >
       <OpenFullscreen />
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -149,7 +138,7 @@
     --uno: 'absolute top-[4px] right-[4px] z-2 text-white text-5 cursor-pointer';
   }
   .lyrics-display {
-    --uno: 'text-center absolute left-0 right-[-16px] top-0 bottom-0 py-[80px] text-warm-gray-3 z-2 bg-black bg-opacity-40 hover:bg-opacity-20';
+    --uno: 'text-center absolute left-0 right-[-16px] top-0 bottom-0 py-[80px] text-warm-gray-3 z-2 bg-black bg-opacity-40 dark:bg-opacity-50 hover:bg-opacity-20 dark:hover:bg-opacity-20';
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     transition: all linear 0.2s;

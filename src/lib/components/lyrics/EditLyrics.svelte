@@ -39,7 +39,7 @@
 
 <style>
   .lyrics-editor {
-    --uno: 'w-full resize-none h-[40vh] b-none outline-none b-1 b-solid b-gray-4 rounded text-secondary leading-5';
+    --uno: 'w-full resize-none h-[40vh] b-none outline-none b-1 b-solid b-gray-4 dark:b-gray-7 rounded text-secondary dark:text-gray-2 leading-5 bg-transparent';
   }
   .footer-actions {
     --uno: 'flex justify-end pt-4';

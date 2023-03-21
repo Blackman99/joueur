@@ -12,7 +12,7 @@
     },
     {
       label: 'About',
-      to: '/settings',
+      to: '/settings/about',
       icon: SettingsAbout,
     },
   ]
@@ -36,15 +36,15 @@
 
 <style>
   .settings {
-    --uno: 'flex-grow flex items-stretch bg-light-2';
+    --uno: 'flex-grow flex items-stretch bg-light-2 dark:bg-dark-9';
   }
   .settings-category {
-    --uno: 'w-[30vw] max-w-[480px] min-w-[200px]';
+    --uno: 'w-[30vw] max-w-[480px] min-w-[200px] b-r-1 b-r-solid dark:b-r-gray-8 b-r-light-6';
   }
   .arrow {
     --uno: 'flex items-center text-5';
   }
   .settings-body {
-    --uno: 'bg-light-4 flex-grow';
+    --uno: 'bg-light-2 dark:bg-dark-9 flex-grow';
   }
 </style>

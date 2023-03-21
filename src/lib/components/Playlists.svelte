@@ -107,7 +107,7 @@
 
 <style>
   .playlist {
-    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] bg-light-2 flex flex-col text-[14px] overflow-y-auto';
+    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] flex flex-col text-[14px] overflow-y-auto b-r-solid b-r-1 dark:b-r-gray-8 b-r-light-5';
     user-select: none;
     -webkit-user-select: none;
   }
