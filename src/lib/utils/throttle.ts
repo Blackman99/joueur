@@ -4,9 +4,8 @@ const throttle = <T extends Function>(func: T, timeout = 500) => {
   const wrappedFunc = (...params: any) => {
     if (timer)
       return
-
+    func(...params)
     timer = setTimeout(() => {
-      func(...params)
       timer = null
     }, timeout)
   }
