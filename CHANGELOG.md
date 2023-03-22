@@ -1,4 +1,14 @@
-## 0.1.0 (Not release)
+## 0.1.1
+
+### 💪 Optimized
+
+* Add close button on album dialog
+
+### 🐛 Fixes
+
+* Title bar z-index should be less than backdrop
+
+## 0.1.0
 
 ### 💡 Added
 

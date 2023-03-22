@@ -21,6 +21,8 @@
   import VirtualScroll from '$lib/components/VirtualScroll.svelte'
   import PopupEditor from '$lib/components/PopupEditor.svelte'
   import { updateAlbum } from '$lib/utils/audio'
+  import IconButton from '$lib/components/IconButton.svelte'
+  import DialogClose from '$lib/icons/DialogClose.svelte'
 
   $: hasAlbum = !!$albums.length
 
@@ -137,31 +139,37 @@
 {#if $selectedAlbum}
   <div class="selected-album" transition:fade="{{ duration: 300 }}">
     <div class="selected-album-info">
-      {#if $albums}
-        <img
-          class="selected-album-cover"
-          src="{$selectedAlbum.cover}"
-          alt="{$selectedAlbum.title}"
-        />
-      {/if}
-      <div class="selected-album-meta">
-        <PopupEditor
-          bind:show="{showAlbumTitleEditor}"
-          bind:value="{editingAlbumTitle}"
-          on:done="{handleSaveAlbum}"
-        >
-          <div
-            class="selected-album-title"
-            on:keypress
-            on:click="{handleShowAlbumTitleEditor}"
+      <div class="flex">
+        {#if $albums}
+          <img
+            class="selected-album-cover"
+            src="{$selectedAlbum.cover}"
+            alt="{$selectedAlbum.title}"
+          />
+        {/if}
+        <div class="selected-album-meta">
+          <PopupEditor
+            bind:show="{showAlbumTitleEditor}"
+            bind:value="{editingAlbumTitle}"
+            on:done="{handleSaveAlbum}"
           >
-            {$selectedAlbum.title}
+            <div
+              class="selected-album-title"
+              on:keypress
+              on:click="{handleShowAlbumTitleEditor}"
+            >
+              {$selectedAlbum.title}
+            </div>
+          </PopupEditor>
+          <div class="selected-album-artist">
+            {$selectedAlbum.artist}
           </div>
-        </PopupEditor>
-        <div class="selected-album-artist">
-          {$selectedAlbum.artist}
         </div>
       </div>
+
+      <IconButton on:click="{() => ($selectedAlbum = undefined)}">
+        <DialogClose />
+      </IconButton>
     </div>
     <div class="selected-album-songs">
       <div class="py-2">Tracks</div>
@@ -209,7 +217,7 @@
     -webkit-backdrop-filter: blur(5px);
   }
   .selected-album-info {
-    --uno: 'flex mb-4 text-gray-2';
+    --uno: 'flex mb-4 text-gray-2 justify-between items-start';
   }
   .selected-album-meta {
     --uno: 'ml-2';

@@ -37,7 +37,7 @@
 
 <style>
   .icon-button {
-    --uno: 'cursor-pointer flex items-center hover:bg-primary hover:bg-opacity-8 dark:hover:bg-opacity-20 p-2 rounded-[20px] relative z-3';
+    --uno: 'cursor-pointer flex items-center hover:bg-primary hover:bg-opacity-8 active:bg-opacity-16 dark:hover:bg-opacity-20 dark:active:bg-opacity-30 p-2 rounded-[20px] relative z-3';
     font-size: var(--joueur-icon-button-size);
     user-select: none;
     -webkit-user-select: none;
