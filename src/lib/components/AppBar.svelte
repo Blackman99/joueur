@@ -6,12 +6,15 @@
   import { inWindow } from '$lib/store'
   import { ask } from '@tauri-apps/api/dialog'
   import { appWindow } from '@tauri-apps/api/window'
+  import { onMount } from 'svelte'
   import IconButton from './IconButton.svelte'
   import { fullscreen, quittingFullscreen } from './lyrics/store'
 
   const handleMousedown = async () => {
     appWindow.startDragging()
   }
+
+  let left = 0
 
   const askClose = async () => {
     const yes = await ask('Confirm to quit Joueur?', {
@@ -27,7 +30,17 @@
     $quittingFullscreen = true
     $fullscreen = false
   }
+
+  const handleResize = () => {
+    left = document.getElementById('sidebar')?.offsetWidth || 0
+  }
+
+  onMount(() => {
+    handleResize()
+  })
 </script>
+
+<svelte:window on:resize="{handleResize}" />
 
 <div
   class="titlebar"
@@ -35,6 +48,7 @@
   class:fullscreen-show="{$fullscreen && $inWindow}"
   on:mousedown="{handleMousedown}"
   on:dblclick="{async () => appWindow.toggleMaximize()}"
+  style="--j-app-bar-left: {left}px;"
 >
   <IconButton smallPadding on:click="{() => appWindow.minimize()}">
     <WindowMinimize />
@@ -54,13 +68,14 @@
 
 <style>
   .titlebar {
-    --uno: 'fixed bg-white dark:bg-black top-0 left-[18vw] right-0 z-106 h-[30px] flex items-center justify-end gap-1 px-2';
+    --uno: 'fixed bg-white dark:bg-black top-0 right-0 z-106 h-[30px] flex items-center justify-end gap-1 px-2';
+    left: var(--j-app-bar-left);
   }
   .titlebar:not(.fullscreen) {
     --uno: 'b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-8';
   }
   .fullscreen {
-    --uno: 'text-gray-1 bg-transparent dark:bg-transparent left-0';
+    --uno: 'text-gray-1 bg-transparent dark:bg-transparent';
     transition: transform linear 0.3s;
     transform: translateY(-100%);
   }

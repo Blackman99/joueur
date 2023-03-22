@@ -16,6 +16,7 @@
 * Do not add song when id3 info pared is empty 
 * Should use transaction for song and songs adding
 * Use "Unknown" for song that cannot get album metadata
+* Title bar left position should change along with sidebar width
 
 ## 0.0.3
 

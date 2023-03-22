@@ -62,7 +62,7 @@
   }
 </script>
 
-<aside class="j-side">
+<aside class="j-side" id="sidebar">
   <div>
     <img
       src="{$isDark ? '/logo-dark.svg' : '/logo.svg'}"
