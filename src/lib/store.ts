@@ -21,8 +21,12 @@ export const playingSongId = writable(Number(localStorage.getItem(PLAYING_SONG_I
 export const playingSong = writable<Song | undefined>()
 export const playedSeconds = writable(Number(localStorage.getItem(CURRENT_TIME_KEY)))
 export const selectedPlaylistId = writable(Number(localStorage.getItem(SELECTED_PLAYLIST_ID_KEY) || -1))
+export const selectedPlaylistSongNumber = writable(0)
 export const currentPlaylistSongs = writable<Song[]>([])
-export const currentSongs = writable<Song[]>([])
+export const selectedPlaylistOffset = writable(0)
+export const selectedPlaylistLimit = writable(10)
+
+export const currentPlayingSongIds = writable<number[]>([])
 const storeVolume = localStorage.getItem(VOLUME_KEY)
 export const volume = writable(storeVolume === null ? 1 : Number(storeVolume))
 export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) as Mode || 'repeat-list')
@@ -49,10 +53,12 @@ export const playlists = liveQuery(() =>
   db.playlists.toArray(),
 ) as unknown as Readable<Playlist[]>
 
-export async function refreshCurrentSongs($id: number) {
-  const selectedPlayList = await db.playlists.where('id').equals($id).first()
-  if (selectedPlayList)
-    return currentPlaylistSongs.set(await db.songs.where('id').anyOf(selectedPlayList.songIds || []).toArray())
+export async function refreshCurrentSongs() {
+  const selectedPlayList = await db.playlists.where('id').equals(get(selectedPlaylistId)).first()
+  if (selectedPlayList) {
+    selectedPlaylistSongNumber.set(selectedPlayList.songIds.length)
+    return currentPlaylistSongs.set(await db.songs.where('id').anyOf(selectedPlayList.songIds || []).offset(get(selectedPlaylistOffset)).limit(get(selectedPlaylistLimit)).toArray())
+  }
 
   return []
 }
@@ -60,19 +66,19 @@ export async function refreshCurrentSongs($id: number) {
 export const playNext = () => {
   const $playingSong = get(playingSong)
   if (!$playingSong) return
-  const $currentSongs = get(currentSongs)
+  const $currentPlayingSongIds = get(currentPlayingSongIds)
   const $mode = get(mode)
-  const currentIndex = $currentSongs.findIndex(song => song.id === $playingSong.id)
+  const currentIndex = $currentPlayingSongIds.findIndex(id => id === $playingSong.id)
   const shuffleNext = () => {
-    let nextIndex = Math.floor(Math.random() * $currentSongs.length)
-    while (nextIndex === currentIndex && $currentSongs.length > 1)
-      nextIndex = Math.floor(Math.random() * $currentSongs.length)
-    playingSongId.set($currentSongs[nextIndex].id)
+    let nextIndex = Math.floor(Math.random() * $currentPlayingSongIds.length)
+    while (nextIndex === currentIndex && $currentPlayingSongIds.length > 1)
+      nextIndex = Math.floor(Math.random() * $currentPlayingSongIds.length)
+    playingSongId.set($currentPlayingSongIds[nextIndex])
   }
   switch ($mode) {
     case 'repeat-list':
       if (currentIndex !== -1)
-        playingSongId.set($currentSongs[(currentIndex + 1) % $currentSongs.length].id)
+        playingSongId.set($currentPlayingSongIds[(currentIndex + 1) % $currentPlayingSongIds.length])
 
       break
     case 'repeat-one':
@@ -85,14 +91,14 @@ export const playNext = () => {
 
 export const playPrev = () => {
   const $playingSong = get(playingSong)
-  const $currentSongs = get(currentSongs)
+  const $currentPlayingSongIds = get(currentPlayingSongIds)
   if (!$playingSong) return
-  const currentIndex = $currentSongs.findIndex(song => song.id === $playingSong.id)
+  const currentIndex = $currentPlayingSongIds.findIndex(id => id === $playingSong.id)
   if (currentIndex !== -1) {
     if (currentIndex > 0)
-      playingSongId.set($currentSongs[currentIndex - 1].id)
+      playingSongId.set($currentPlayingSongIds[currentIndex - 1])
     else
-      playingSongId.set($currentSongs[$currentSongs.length - 1].id)
+      playingSongId.set($currentPlayingSongIds[$currentPlayingSongIds.length - 1])
   }
 }
 
@@ -107,4 +113,4 @@ export const togglePlayOrPause = () => {
   }
 }
 
-totalSongsNumber.subscribe(() => refreshCurrentSongs(get(selectedPlaylistId)))
+totalSongsNumber.subscribe(() => refreshCurrentSongs())

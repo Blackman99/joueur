@@ -26,7 +26,7 @@
     playedSeconds,
     CURRENT_TIME_KEY,
     playingSong,
-    currentSongs,
+    currentPlayingSongIds,
     CURRENT_SONGS_KEY,
     playNext,
     volume,
@@ -39,10 +39,11 @@
     COLOR_MODE_KEY,
     isDark,
     inWindow,
+    selectedPlaylistOffset,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
-  import CurrentSongs from '$lib/components/CurrentSongs.svelte'
+  import CurrentPlayingSongs from '$lib/components/CurrentPlayingSongs.svelte'
   import FloatPlayOrPause from '$lib/components/FloatPlayOrPause.svelte'
   import EditLyrics from '$lib/components/lyrics/EditLyrics.svelte'
   import AppBar from '$lib/components/AppBar.svelte'
@@ -59,7 +60,6 @@
   // effects
   // Notice that not use $ because the subscriptions timing is not fixed
   let cleanupDropListener: () => void
-  let unsubscribePlaylistId: () => void
   let unsubscribePlayingSongId: () => void
   let unsubscribePlayedSeconds: () => void
   let unsubscribeCurrentSongs: () => void
@@ -79,7 +79,7 @@
       localStorage.getItem(CURRENT_SONGS_KEY) || '[]'
     ) as number[]
 
-    currentSongs.set(await db.songs.where('id').anyOf(currentSongIds).toArray())
+    currentPlayingSongIds.set(currentSongIds)
 
     await db.getAllList()
 
@@ -122,12 +122,11 @@
       localStorage.setItem(MODE_KEY, m)
     })
 
-    unsubscribeCurrentSongs = currentSongs.subscribe(async songs => {
-      localStorage.setItem(
-        CURRENT_SONGS_KEY,
-        JSON.stringify(songs.map(song => song.id))
-      )
-    })
+    unsubscribeCurrentSongs = currentPlayingSongIds.subscribe(
+      async (songIds: number[]) => {
+        localStorage.setItem(CURRENT_SONGS_KEY, JSON.stringify(songIds))
+      }
+    )
 
     unsubscribePlayingSongId = playingSongId.subscribe(async newSongId => {
       localStorage.setItem(PLAYING_SONG_ID_KEY, newSongId.toString())
@@ -137,15 +136,8 @@
     // The subscriptions below can only put here cause would cause unexpected errors like:
     // can not reach variable before initialized
     playlistSubscriber = playlists.subscribe(
-      async () => await refreshCurrentSongs(get(selectedPlaylistId))
+      async () => await refreshCurrentSongs()
     ) as any
-
-    unsubscribePlaylistId = selectedPlaylistId.subscribe(async id => {
-      localStorage.setItem(SELECTED_PLAYLIST_ID_KEY, id.toString())
-      await refreshCurrentSongs(id)
-      // Mark page ready when live query is done.
-      ready = true
-    })
 
     await appWindow.onCloseRequested(async _evt => {
       localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
@@ -191,9 +183,22 @@
     localStorage.setItem(COLOR_MODE_KEY, $isDark ? 'on' : 'off')
   }
 
+  const resetPlaylistSongs = () => {
+    localStorage.setItem(
+      SELECTED_PLAYLIST_ID_KEY,
+      $selectedPlaylistId.toString()
+    )
+    $selectedPlaylistOffset = 0
+    refreshCurrentSongs()
+  }
+
+  $: {
+    $selectedPlaylistId
+    resetPlaylistSongs()
+  }
+
   onDestroy(() => {
     cleanupDropListener?.()
-    unsubscribePlaylistId?.()
     unsubscribePlayingSongId?.()
     unsubscribePlayedSeconds?.()
     unsubscribeCurrentSongs?.()
@@ -243,11 +248,9 @@
 <main class="j-main" on:contextmenu="{handleContextMenu}">
   <Sidebar />
   <div class="j-content">
-    {#if ready}
-      <slot />
-    {/if}
+    <slot />
     <PlayerBottomBar on:show-current-songs="{() => (showCurrentList = true)}" />
-    <CurrentSongs bind:show="{showCurrentList}" />
+    <CurrentPlayingSongs bind:show="{showCurrentList}" />
 
     <FloatPlayOrPause />
   </div>

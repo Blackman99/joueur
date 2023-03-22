@@ -1,6 +1,13 @@
 <script lang="ts">
   import Songs from '$lib/components/Songs.svelte'
-  import { currentPlaylistSongs, selectedPlaylistId } from '$lib/store'
+  import {
+    currentPlaylistSongs,
+    selectedPlaylistId,
+    selectedPlaylistLimit,
+    selectedPlaylistSongNumber,
+    selectedPlaylistOffset,
+    refreshCurrentSongs,
+  } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import { db } from '$lib/db'
   import { message, ask } from '@tauri-apps/api/dialog'
@@ -141,6 +148,12 @@
         message(err.message, { title: 'Error', type: 'error' })
       })
   }
+
+  $: {
+    $selectedPlaylistLimit
+    $selectedPlaylistOffset
+    refreshCurrentSongs()
+  }
 </script>
 
 <div class="start">
@@ -158,6 +171,9 @@
       canSelectedMultiple
       contextMenus="{menus}"
       inSelectionContextMenus="{menusOnSelected}"
+      total="{$selectedPlaylistSongNumber}"
+      bind:offset="{$selectedPlaylistOffset}"
+      bind:limit="{$selectedPlaylistLimit}"
       bind:draggingSongId="{draggingSongId}"
       bind:draggingSongIds="{draggingSongIds}"
       bind:selectedSongIds="{selectedSongIds}"

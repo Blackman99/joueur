@@ -1,23 +1,38 @@
 <script lang="ts">
   import { db } from '$lib/db'
-  import type { Album, Song } from '$lib/types'
-  import { liveQuery } from 'dexie'
-  import type { Readable } from 'svelte/store'
-  import { selectedAlbum, selectedAlbumSongs } from './store'
+  import type { Song } from '$lib/types'
+  import {
+    selectedAlbum,
+    selectedAlbumSongs,
+    albums,
+    offset,
+    limit,
+    totalAlbumNumber,
+  } from './store'
   import Backdrop from '$lib/components/Backdrop.svelte'
   import PlayingIcon from '$lib/components/PlayingIcon.svelte'
-  import { currentSongs, playedSeconds, playingSongId } from '$lib/store'
+  import {
+    currentPlayingSongIds,
+    playedSeconds,
+    playingSongId,
+  } from '$lib/store'
   import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
   import VirtualScroll from '$lib/components/VirtualScroll.svelte'
   import PopupEditor from '$lib/components/PopupEditor.svelte'
   import { updateAlbum } from '$lib/utils/audio'
 
-  const albums = liveQuery(() => db.albums.toArray()) as unknown as Readable<
-    Album[]
-  >
+  $: hasAlbum = !!$albums.length
 
-  $: hasAlbum = $albums && $albums.length
+  const queryAlbums = async () => {
+    $albums = await db.albums.offset($offset).limit($limit).toArray()
+  }
+
+  $: {
+    $offset
+    $limit
+    queryAlbums()
+  }
 
   const getAlbumSongs = async () => {
     if (!$selectedAlbum) return
@@ -30,7 +45,7 @@
   const handlePlayAlbumSongs = (song: Song) => {
     $playingSongId = song.id
     $playedSeconds = 0
-    $currentSongs = $selectedAlbumSongs
+    $currentPlayingSongIds = $selectedAlbum?.songIds || []
   }
 
   $: {
@@ -71,6 +86,9 @@
 <div class="albums">
   {#if hasAlbum}
     <VirtualScroll
+      bind:offset="{$offset}"
+      bind:limit="{$limit}"
+      total="{$totalAlbumNumber}"
       items="{$albums}"
       gapX="20px"
       gapY="20px"

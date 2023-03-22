@@ -9,17 +9,18 @@
   export let customStyle = ''
   export let customClass = ''
   export let mode: 'list' | 'grid' | 'table' = 'list'
+  export let limit = 10
+  export let offset = 0
+  export let total = 0
 
   let vScrollContainer: HTMLDivElement
-  let maxItemsDisplayed = 10
-  let start = 0
   let itemHeight = 0
   let scrollTop = 0
-  let offset = 0
+  let itemOffset = 0
   let cols = 1
   let skeletonOffset = 0
 
-  $: totalHeight = itemHeight * (items.length / cols)
+  $: totalHeight = itemHeight * (total / cols)
 
   const recomputeInitialData = debounce(() => {
     if (!vScrollContainer) return
@@ -29,8 +30,7 @@
     itemHeight = firstItem.offsetHeight
     cols = Math.floor(vScrollContainer.offsetWidth / firstItem.offsetWidth)
 
-    maxItemsDisplayed =
-      Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols
+    limit = Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols
   }, 50)
 
   onMount(() => {
@@ -48,17 +48,17 @@
     recomputeInitialData()
   }
 
-  const setStart = debounce((st: number) => {
-    offset = -(st % itemHeight)
+  const setOffset = debounce((st: number) => {
+    itemOffset = -(st % itemHeight)
     scrollTop = st
-    start = Math.floor(st / itemHeight) * cols
+    offset = Math.floor(st / itemHeight) * cols
   }, 50)
 
   const handleScroll = (e: any) => {
     if ($fullscreen) return
     const st = e.target.scrollTop
     skeletonOffset = -(st % itemHeight)
-    setStart(st)
+    setOffset(st)
   }
 </script>
 
@@ -73,23 +73,23 @@
     class="v-scroll-grid {customClass}"
     class:mode-list="{mode === 'list'}"
     class:mode-grid="{mode === 'grid'}"
-    style="--j-v-scroll-top: {scrollTop}px;--j-v-scroll-item-offset:{offset}px;{customStyle}"
+    style="--j-v-scroll-top: {scrollTop}px;--j-v-scroll-item-offset:{itemOffset}px;{customStyle}"
   >
-    {#each items.slice(start, start + maxItemsDisplayed) as item (item.id)}
+    {#each items as item (item.id)}
       <div class="v-scroll-item">
         <slot name="item" item="{item}" />
       </div>
     {/each}
   </div>
 </div>
-{#if items.length > maxItemsDisplayed}
+{#if total > limit}
   <div
     class="v-skeletons {customClass}"
     class:mode-list="{mode === 'list'}"
     class:mode-grid="{mode === 'grid'}"
     style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-cols:{cols};--j-v-scroll-skeleton-offset:{skeletonOffset}px;{customStyle}"
   >
-    {#each Array.from({ length: maxItemsDisplayed }) as _, i (i)}
+    {#each Array.from({ length: limit }) as _, i (i)}
       <div class="v-skeleton-item" style="--j-skeleton-item-h: {itemHeight}px;">
         <slot name="skeleton-item" />
       </div>

@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation'
   import { db } from '$lib/db'
   import Search from '$lib/icons/Search.svelte'
-  import { currentSongs, playingSongId } from '$lib/store'
+  import { currentPlayingSongIds, playingSongId } from '$lib/store'
   import type { Album, Artist, Song } from '$lib/types'
   import debounce from '$lib/utils/debounce'
   import { slide } from 'svelte/transition'
@@ -56,9 +56,9 @@
   }
 
   const handlePlay = (song: Song) => {
-    if (!$currentSongs.some(s => s.id === song.id)) {
-      $currentSongs.push(song)
-      $currentSongs = $currentSongs
+    if (!$currentPlayingSongIds.some(id => id === song.id)) {
+      $currentPlayingSongIds.push(song.id)
+      $currentPlayingSongIds = $currentPlayingSongIds
     }
     $playingSongId = song.id
     focused = false

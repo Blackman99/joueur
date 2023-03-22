@@ -3,21 +3,19 @@
   import VirtualScroll from '$lib/components/VirtualScroll.svelte'
   import { db } from '$lib/db'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
-  import type { Artist, Song } from '$lib/types'
-  import { liveQuery } from 'dexie'
+  import type { Artist } from '$lib/types'
   import { onMount } from 'svelte'
-  import type { Readable } from 'svelte/store'
   import {
     SELECTED_ARTIST_KEY,
     selectedArtist,
     selectedArtistSongs,
+    offset,
+    totalArtistNumber,
+    limit,
+    artists,
   } from './store'
 
-  const artists = liveQuery(() => db.artists.toArray()) as unknown as Readable<
-    Artist[]
-  >
-
-  $: hasArtist = $artists && $artists.length
+  $: hasArtist = !!$artists.length
 
   const handleArtistClick = (artist: Artist) => {
     $selectedArtist = artist
@@ -45,12 +43,30 @@
       .equals(selectedArtistId)
       .first()
   })
+
+  const paginateArtists = async () => {
+    $artists = await db.artists.offset($offset).limit($limit).toArray()
+  }
+
+  let songsOffset = 0
+  let songsLimit = 10
+
+  $: {
+    $limit
+    $offset
+    paginateArtists()
+  }
 </script>
 
 <div class="artists">
   <div class="artist-list">
     {#if hasArtist}
-      <VirtualScroll items="{$artists}">
+      <VirtualScroll
+        items="{$artists}"
+        total="{$totalArtistNumber}"
+        bind:limit="{$limit}"
+        bind:offset="{$offset}"
+      >
         <svelte:fragment slot="item" let:item="{artist}">
           {@const active = artist.id === $selectedArtist?.id}
           <div
@@ -75,7 +91,13 @@
       </VirtualScroll>
     {/if}
   </div>
-  <Songs songs="{$selectedArtistSongs}" showActionsOnEmpty="{false}" />
+  <Songs
+    total="{$selectedArtistSongs.length}"
+    songs="{$selectedArtistSongs.slice(songsOffset, songsOffset + songsLimit)}"
+    showActionsOnEmpty="{false}"
+    bind:offset="{songsOffset}"
+    bind:limit="{songsLimit}"
+  />
 </div>
 
 <style>

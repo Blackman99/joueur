@@ -5,9 +5,10 @@
   // @ts-nocheck
   import {
     playingSongId,
-    currentSongs,
+    currentPlayingSongIds,
     currentPlaylistSongs,
     playedSeconds,
+    selectedPlaylistId,
   } from '$lib/store'
   import type { Song } from '$lib/types'
   import { createEventDispatcher } from 'svelte'
@@ -25,9 +26,13 @@
     updateLyricsDialogOpen,
   } from './lyrics/store'
   import VirtualScroll from './VirtualScroll.svelte'
+  import { db } from '$lib/db'
 
   export let transparentBg: boolean = false
   export let songs: Song[]
+  export let offset: number
+  export let limit: number
+  export let total: number
   export let showActionsOnEmpty = true
   export let resetCurrentSongsOnClick = true
   export let draggable = false
@@ -43,12 +48,16 @@
 
   const dispatch = createEventDispatcher()
 
-  const handlePlay = (song: Song) => {
+  const handlePlay = async (song: Song) => {
     if (selectedSongIds.length) return
     $playingSongId = song.id
     $playedSeconds = 0
     if (resetCurrentSongsOnClick) {
-      $currentSongs = songs
+      const playlist = await db.playlists
+        .where('id')
+        .equals($selectedPlaylistId)
+        .first()
+      $currentPlayingSongIds = playlist?.songIds || []
     }
   }
   const handleDragstart = (song: Song) => {
@@ -136,6 +145,9 @@
     <Actions />
   {:else}
     <VirtualScroll
+      bind:offset="{offset}"
+      bind:limit="{limit}"
+      total="{total}"
       items="{songs}"
       customClass="{transparentBg ? 'bg-black' : 'j-song-bg'}"
     >
