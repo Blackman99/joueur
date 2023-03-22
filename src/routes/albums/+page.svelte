@@ -10,6 +10,8 @@
   import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
   import VirtualScroll from '$lib/components/VirtualScroll.svelte'
+  import PopupEditor from '$lib/components/PopupEditor.svelte'
+  import { updateAlbum } from '$lib/utils/audio'
 
   const albums = liveQuery(() => db.albums.toArray()) as unknown as Readable<
     Album[]
@@ -48,6 +50,22 @@
       window.removeEventListener('keyup', handler)
     }
   })
+
+  let editingAlbumTitle = ''
+  let showAlbumTitleEditor = false
+
+  const handleShowAlbumTitleEditor = () => {
+    editingAlbumTitle = $selectedAlbum?.title || ''
+    showAlbumTitleEditor = true
+  }
+
+  const handleSaveAlbum = async () => {
+    if (!$selectedAlbum) return
+    await updateAlbum($selectedAlbum, editingAlbumTitle)
+    $selectedAlbum.title = editingAlbumTitle
+    $selectedAlbum = $selectedAlbum
+    showAlbumTitleEditor = false
+  }
 </script>
 
 <div class="albums">
@@ -109,9 +127,19 @@
         />
       {/if}
       <div class="selected-album-meta">
-        <div class="selected-album-title">
-          {$selectedAlbum.title}
-        </div>
+        <PopupEditor
+          bind:show="{showAlbumTitleEditor}"
+          bind:value="{editingAlbumTitle}"
+          on:done="{handleSaveAlbum}"
+        >
+          <div
+            class="selected-album-title"
+            on:keypress
+            on:click="{handleShowAlbumTitleEditor}"
+          >
+            {$selectedAlbum.title}
+          </div>
+        </PopupEditor>
         <div class="selected-album-artist">
           {$selectedAlbum.artist}
         </div>

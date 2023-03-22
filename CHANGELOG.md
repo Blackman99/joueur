@@ -9,6 +9,7 @@
 
 * Do not add song when id3 info pared is empty 
 * Should use transaction for song and songs adding
+* Use "Unknown" for song that cannot get album metadata
 
 ## 0.0.3
 
@@ -18,7 +19,7 @@
 * Lyrics editable
   * By context menu
   * By current playing lyrics display module 
-* Zen mode toggle
+* Zen(Full screen) mode toggle
 * Virtual scroll
 * Dark Mode
 * Customize title bar

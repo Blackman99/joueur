@@ -1,7 +1,7 @@
 <script>
-  import { updateSongLyrics } from '$lib/utils/audio'
-  import { onMount } from 'svelte'
+  import { updateAlbumBySong, updateSongLyrics } from '$lib/utils/audio'
   import Dialog from '../Dialog.svelte'
+  import PopupEditor from '../PopupEditor.svelte'
   import {
     updateLyricsDialogOpen,
     songToUpdateLyrics,
@@ -13,6 +13,21 @@
     $updateLyricsDialogOpen = false
     $editLyricsContent = ''
   }
+
+  let editingAlbumTitle = ''
+  let showAlbumEditor = false
+
+  const handleEditAlbum = () => {
+    editingAlbumTitle = $songToUpdateLyrics?.album
+    showAlbumEditor = true
+  }
+
+  const handleSaveAlbum = async () => {
+    await updateAlbumBySong($songToUpdateLyrics, editingAlbumTitle)
+    $songToUpdateLyrics.title = editingAlbumTitle
+    $songToUpdateLyrics = $songToUpdateLyrics
+    showAlbumEditor = false
+  }
 </script>
 
 <Dialog title="Update lyrics" bind:open="{$updateLyricsDialogOpen}">
@@ -23,12 +38,25 @@
       alt="{$songToUpdateLyrics?.title}"
     />
     <div class="flex items-end">
-      {$songToUpdateLyrics?.title}
-      <span class="text-gray-4 text-3 ml-2">
-        {$songToUpdateLyrics?.artist} - {$songToUpdateLyrics?.album}
+      <span>
+        {$songToUpdateLyrics?.title}
       </span>
+      <div class="text-gray-4 text-3 ml-2">
+        {$songToUpdateLyrics?.artist}
+        -
+        <PopupEditor
+          bind:value="{editingAlbumTitle}"
+          bind:show="{showAlbumEditor}"
+          on:done="{handleSaveAlbum}"
+        >
+          <span on:click="{handleEditAlbum}" on:keypress
+            >{$songToUpdateLyrics?.album}
+          </span>
+        </PopupEditor>
+      </div>
     </div>
   </div>
+  <div class="label">Lyrics</div>
   <textarea class="lyrics-editor" bind:value="{$editLyricsContent}"></textarea>
   <div class="footer-actions">
     <div class="save-lyrics-btn" on:click="{handleSaveLyrics}" on:keypress>
@@ -50,5 +78,8 @@
   .cover {
     --uno: 'w-8 h-8 rounded mr-2';
     object-fit: cover;
+  }
+  .label {
+    --uno: 'mb-2';
   }
 </style>

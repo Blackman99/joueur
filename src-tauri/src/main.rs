@@ -78,6 +78,21 @@ fn update_lyrics(path: &str, lyrics: &str) -> Result<String, String> {
     }
 }
 
+#[tauri::command]
+fn update_album(path: &str, album_title: &str) -> Result<String, String> {
+    let tag = Tag::read_from_path(path);
+    match tag {
+        Ok(mut t) => {
+            t.set_album(album_title);
+            match t.write_to_path(path, Version::Id3v24) {
+                Err(e) => Err(e.description),
+                Ok(_o) => Ok("Success".to_owned())
+            }
+        },
+        Err(e) => Err(e.description)
+    }
+}
+
 fn unwrap_str(var: Option<&str>) -> Option<String> {
     match var {
         None => Some(String::from("Unknown")),
@@ -87,7 +102,11 @@ fn unwrap_str(var: Option<&str>) -> Option<String> {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_metadata, update_lyrics])
+        .invoke_handler(tauri::generate_handler![
+            get_metadata, 
+            update_lyrics, 
+            update_album
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
