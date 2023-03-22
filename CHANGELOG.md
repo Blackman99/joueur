@@ -8,6 +8,7 @@
 
 * Resize observe use debounce
 * Title bar and player control bottom bar auto hide in full screen mode
+* Volume control dark mode style
 
 ### 🐛 Fixes
 
