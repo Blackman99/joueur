@@ -81,7 +81,7 @@
     --uno: 'w-48px left-[-8px] flex justify-center absolute bottom-[100%] pb-[2px] pt-[20px]';
   }
   .volume-bar {
-    --uno: 'flex flex-col items-center bg-white box-border w-[6px] h-[60px] z-2 rounded-[8px] bg-white relative z-4';
+    --uno: 'flex flex-col items-center bg-white dark:bg-zinc-8 box-border w-[6px] h-[60px] z-2 rounded-[8px] bg-white relative z-4';
     box-shadow: rgb(50 50 93 / 100%) 0px 13px 27px -5px,
       rgb(0 0 0 / 30%) 0px 8px 16px -8px;
   }
