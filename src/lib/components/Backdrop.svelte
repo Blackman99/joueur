@@ -11,6 +11,6 @@
 
 <style>
   .backdrop {
-    --uno: 'fixed top-0 left-0 right-0 bottom-0 z-104 bg-black bg-opacity-70 dark:bg-white dark:bg-opacity-20';
+    --uno: 'fixed top-0 left-0 right-0 bottom-0 z-107 bg-black bg-opacity-70 dark:bg-white dark:bg-opacity-20';
   }
 </style>
