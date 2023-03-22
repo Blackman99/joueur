@@ -1,5 +1,9 @@
 ## 0.1.0 (Not release)
 
+### 💡 Added
+
+* Popup editor for album title in album dialog and lyrics editor dialog
+
 ### 💪 Optimized
 
 * Resize observe use debounce
