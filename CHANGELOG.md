@@ -4,6 +4,7 @@
 
 * Add close button on album dialog
 * Mode subscription changed to svelte auto by $
+* Sidebar top logo can now dragging window
 
 ### 🐛 Fixes
 

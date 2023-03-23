@@ -14,6 +14,7 @@
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
   import GlobalSearch from './GlobalSearch.svelte'
   import { fullscreen, quittingFullscreen } from './lyrics/store'
+  import { appWindow } from '@tauri-apps/api/window'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -63,11 +64,12 @@
 </script>
 
 <aside class="j-side" id="sidebar">
-  <div>
+  <div class="logo-container" on:mousedown="{() => appWindow.startDragging()}">
     <img
       src="{$isDark ? '/logo-dark.svg' : '/logo.svg'}"
       alt="Joueur"
       class="logo"
+      draggable="false"
     />
     <GlobalSearch />
   </div>
@@ -138,6 +140,9 @@
   }
   .menus {
     --uno: 'p-4';
+  }
+  .logo-container {
+    --uno: 'pt-4';
   }
   .logo {
     --uno: 'w-[10vw] max-w-[120px] min-w-[80px] block mx-a';
