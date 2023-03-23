@@ -179,7 +179,8 @@
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
   }
   .result-category {
-    --uno: 'max-h-[50vh] overflow-y-auto relative pb-2 flex-grow';
+    --uno: 'max-h-[50vh] overflow-y-auto relative pb-2 flex-shrink-0';
+    width: 33.333%;
   }
   .result-category:not(:first-child) .category-title {
     --uno: 'pt-2';

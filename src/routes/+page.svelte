@@ -11,6 +11,7 @@
   import Playlists from '$lib/components/Playlists.svelte'
   import { db } from '$lib/db'
   import { message, ask } from '@tauri-apps/api/dialog'
+  import { fullscreen } from '$lib/components/lyrics/store'
 
   let draggingSongId: number | null
   let draggingSongIds: number[] = []
@@ -162,11 +163,9 @@
     draggingSongId="{draggingSongId}"
     draggingSongIds="{draggingSongIds}"
   />
-  {#await $currentPlaylistSongs}
-    <div class="loading">Just a sec...</div>
-  {:then songs}
+  {#if !$fullscreen}
     <Songs
-      songs="{songs}"
+      songs="{$currentPlaylistSongs}"
       draggable
       canSelectedMultiple
       contextMenus="{menus}"
@@ -182,14 +181,11 @@
       on:delete-all-selected-songs-from-play-list="{handleRemoveAllSelectedSongsFromList}"
       on:delete-from-application="{handleDeleteFromApplication}"
     />
-  {/await}
+  {/if}
 </div>
 
 <style>
   .start {
     --uno: 'flex-grow flex items-stretch overflow-y-hidden justify-center relative';
-  }
-  .loading {
-    --uno: 'text-gray-6 py-3 px-2';
   }
 </style>

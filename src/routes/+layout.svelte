@@ -64,7 +64,6 @@
   let unsubscribePlayedSeconds: () => void
   let unsubscribeCurrentSongs: () => void
   let unsubscribeVolume: () => void
-  let unsubscribeMode: () => void
   let unsubscribePaused: () => void
   let playlistSubscriber: Subscription
 
@@ -116,10 +115,6 @@
             showDropLoading = false
           }
       }
-    })
-
-    unsubscribeMode = mode.subscribe(m => {
-      localStorage.setItem(MODE_KEY, m)
     })
 
     unsubscribeCurrentSongs = currentPlayingSongIds.subscribe(
@@ -197,13 +192,16 @@
     resetPlaylistSongs()
   }
 
+  $: {
+    localStorage.setItem(MODE_KEY, $mode)
+  }
+
   onDestroy(() => {
     cleanupDropListener?.()
     unsubscribePlayingSongId?.()
     unsubscribePlayedSeconds?.()
     unsubscribeCurrentSongs?.()
     unsubscribeVolume?.()
-    unsubscribeMode?.()
     unsubscribePaused?.()
     playlistSubscriber?.unsubscribe()
     localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
