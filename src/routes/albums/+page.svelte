@@ -226,7 +226,7 @@
     --uno: 'text-8';
   }
   .selected-album-artist {
-    --uno: 'text-4 text-gray-3';
+    --uno: 'text-4 text-gray-3 mt-2';
   }
   .selected-album-songs {
     --uno: 'text-gray-2 text-[14px]';
