@@ -7,6 +7,7 @@
 ### 🐛 Fixes
 
 * Title bar z-index should be less than backdrop
+* Current playing song list styles
 
 ## 0.1.0
 
