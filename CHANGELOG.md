@@ -3,11 +3,14 @@
 ### 💪 Optimized
 
 * Add close button on album dialog
+* Mode subscription changed to svelte auto by $
 
 ### 🐛 Fixes
 
 * Title bar z-index should be less than backdrop
 * Current playing song list styles
+* Global search result width changed due to different results
+* Playlist songs disappeared when full screen toggle back
 
 ## 0.1.0
 
