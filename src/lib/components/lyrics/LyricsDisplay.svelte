@@ -46,7 +46,7 @@
       )
     })
     activeIndex = newActiveIndex
-  })
+  }, 100)
 
   const computedScrollPosition = debounce(() => {
     const lineDom = lyricsContainer?.querySelector(

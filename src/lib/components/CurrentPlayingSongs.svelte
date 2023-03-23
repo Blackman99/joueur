@@ -60,13 +60,10 @@
 
 <style>
   .current-songs {
-    --uno: 'fixed z-106 left-[100%] bg-white dark:bg-dark-9 top-0 bottom-0 overflow-y-auto w-[40vw] min-w-[320px] transition-transform transition-300';
+    --uno: 'fixed z-108 left-[100%] bg-white dark:bg-dark-9 top-0 bottom-0 overflow-y-auto w-[40vw] min-w-[320px] transition-transform transition-300';
   }
   .fullscreen {
     --uno: 'w-[80vw] sm:w-[60vw] text-gray-2 bg-black';
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    transform: translateZ(0);
   }
   .show {
     transform: translateX(-100%);

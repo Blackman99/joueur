@@ -55,7 +55,6 @@
   }, 50)
 
   const handleScroll = (e: any) => {
-    if ($fullscreen) return
     const st = e.target.scrollTop
     skeletonOffset = -(st % itemHeight)
     setOffset(st)
