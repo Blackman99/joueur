@@ -57,7 +57,10 @@
     </div>
   </div>
   <div class="label">Lyrics</div>
-  <textarea class="lyrics-editor" bind:value="{$editLyricsContent}"></textarea>
+  <textarea
+    class="lyrics-editor"
+    bind:value="{$editLyricsContent}"
+    on:keyup|stopPropagation></textarea>
   <div class="footer-actions">
     <div class="save-lyrics-btn" on:click="{handleSaveLyrics}" on:keypress>
       Save

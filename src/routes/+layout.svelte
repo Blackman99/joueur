@@ -62,8 +62,6 @@
   let cleanupDropListener: () => void
   let unsubscribePlayingSongId: () => void
   let unsubscribePlayedSeconds: () => void
-  let unsubscribeCurrentSongs: () => void
-  let unsubscribeVolume: () => void
   let unsubscribePaused: () => void
   let playlistSubscriber: Subscription
 
@@ -117,12 +115,6 @@
       }
     })
 
-    unsubscribeCurrentSongs = currentPlayingSongIds.subscribe(
-      async (songIds: number[]) => {
-        localStorage.setItem(CURRENT_SONGS_KEY, JSON.stringify(songIds))
-      }
-    )
-
     unsubscribePlayingSongId = playingSongId.subscribe(async newSongId => {
       localStorage.setItem(PLAYING_SONG_ID_KEY, newSongId.toString())
       playingSong.set(await db.songs.where('id').equals(newSongId).first())
@@ -136,10 +128,6 @@
 
     await appWindow.onCloseRequested(async _evt => {
       localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
-    })
-
-    unsubscribeVolume = volume.subscribe(v => {
-      localStorage.setItem(VOLUME_KEY, v.toString())
     })
 
     window.addEventListener('keyup', handleSpaceKeyboard)
@@ -200,28 +188,42 @@
     cleanupDropListener?.()
     unsubscribePlayingSongId?.()
     unsubscribePlayedSeconds?.()
-    unsubscribeCurrentSongs?.()
-    unsubscribeVolume?.()
     unsubscribePaused?.()
     playlistSubscriber?.unsubscribe()
     localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
     window.removeEventListener('keyup', handleSpaceKeyboard)
   })
+
+  const setVolume = () => {
+    localStorage.setItem(VOLUME_KEY, $volume.toString())
+    if ($audioDom) {
+      $audioDom.volume = $volume
+    }
+  }
+
+  $: {
+    $volume
+    setVolume()
+  }
+
+  const handleTimeUpdate = () => {
+    $playedSeconds = $audioDom.currentTime
+  }
 </script>
 
 {#if $playingSong}
   <audio
     bind:this="{$audioDom}"
-    bind:volume="{$volume}"
-    bind:currentTime="{$playedSeconds}"
-    bind:paused="{$paused}"
     bind:duration="{$duration}"
     src="{convertFileSrc($playingSong.path)}"
     style="display: none;"
     title="{$playingSong.title} - {$playingSong.artist}"
     crossorigin="anonymous"
     on:ended="{playNext}"
+    on:timeupdate="{handleTimeUpdate}"
+    on:play="{() => ($paused = false)}"
     on:loadedmetadata="{handleLoadedMetadata}"
+    on:pause="{() => ($paused = true)}"
   >
   </audio>
 {/if}

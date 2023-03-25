@@ -114,6 +114,12 @@
     selectionMode = false
     selectedSongIds = []
   }
+
+  let virtualScroller: VirtualScroll
+
+  export const reset = () => {
+    virtualScroller?.reset()
+  }
 </script>
 
 <div
@@ -145,6 +151,7 @@
     <Actions />
   {:else}
     <VirtualScroll
+      bind:this="{virtualScroller}"
       bind:offset="{offset}"
       bind:limit="{limit}"
       total="{total}"
@@ -219,7 +226,7 @@
               {/if}
             </div>
             <div class="meta">
-              <div>
+              <div class="artist-album">
                 {song.artist} - {song.album || 'Unknown'}
               </div>
               <div class="duration">
@@ -284,6 +291,9 @@
   }
   .title {
     --uno: 'flex items-center h-6';
+  }
+  .artist-album {
+    --uno: 'h-5';
   }
   .playing-icon-wrapper {
     --uno: 'text-primary ml-1';

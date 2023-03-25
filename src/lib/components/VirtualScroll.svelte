@@ -1,7 +1,6 @@
 <script lang="ts">
   import debounce from '$lib/utils/debounce'
-  import { onMount } from 'svelte'
-  import { fullscreen } from './lyrics/store'
+  import { onMount, tick } from 'svelte'
 
   export let gapX = '0'
   export let gapY = '0'
@@ -16,7 +15,7 @@
   let vScrollContainer: HTMLDivElement
   let itemHeight = 0
   let scrollTop = 0
-  let itemOffset = 0
+  let itemsOffsetY = 0
   let cols = 1
   let skeletonOffset = 0
 
@@ -30,7 +29,7 @@
     itemHeight = firstItem.offsetHeight
     cols = Math.floor(vScrollContainer.offsetWidth / firstItem.offsetWidth)
 
-    limit = Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols
+    limit = Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
   }, 50)
 
   onMount(() => {
@@ -43,21 +42,23 @@
     }
   })
 
-  $: {
-    items
-    recomputeInitialData()
-  }
-
   const setOffset = debounce((st: number) => {
-    itemOffset = -(st % itemHeight)
-    scrollTop = st
     offset = Math.floor(st / itemHeight) * cols
+    scrollTop = st
+    itemsOffsetY = -(st % itemHeight)
   }, 50)
 
-  const handleScroll = (e: any) => {
-    const st = e.target.scrollTop
+  const handleScroll = () => {
+    const st = vScrollContainer.scrollTop
     skeletonOffset = -(st % itemHeight)
     setOffset(st)
+  }
+
+  export const reset = () => {
+    offset = 0
+    limit = 10
+    vScrollContainer.scrollTop = 0
+    screenTop = 0
   }
 </script>
 
@@ -72,7 +73,7 @@
     class="v-scroll-grid {customClass}"
     class:mode-list="{mode === 'list'}"
     class:mode-grid="{mode === 'grid'}"
-    style="--j-v-scroll-top: {scrollTop}px;--j-v-scroll-item-offset:{itemOffset}px;{customStyle}"
+    style="--j-v-scroll-top:{scrollTop + itemsOffsetY}px;{customStyle}"
   >
     {#each items as item (item.id)}
       <div class="v-scroll-item">

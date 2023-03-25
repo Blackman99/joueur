@@ -38,8 +38,8 @@
 
   const handleBarClick = (e: any) => {
     const newPercentage = e.offsetX / barDom.offsetWidth
-    if ($playingSong) {
-      $playedSeconds = $duration * newPercentage
+    if ($audioDom) {
+      $audioDom.currentTime = $duration * newPercentage
     }
   }
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { db } from '$lib/db'
-  import { currentPlayingSongIds } from '$lib/store'
+  import { currentPlayingSongIds, CURRENT_SONGS_KEY } from '$lib/store'
   import type { Song } from '$lib/types'
   import Backdrop from './Backdrop.svelte'
   import { fullscreen } from './lyrics/store'
@@ -25,13 +25,32 @@
   let limit = 10
 
   const doPaginateSongs = async () => {
-    paginatedSongs = await db.songs.offset(offset).limit(limit).toArray()
+    paginatedSongs = await db.songs
+      .where('id')
+      .anyOf($currentPlayingSongIds)
+      .offset(offset)
+      .limit(limit)
+      .toArray()
   }
 
   $: {
     offset
     limit
     doPaginateSongs()
+  }
+
+  const resetCurrentList = () => {
+    localStorage.setItem(
+      CURRENT_SONGS_KEY,
+      JSON.stringify($currentPlayingSongIds)
+    )
+    offset = 0
+    doPaginateSongs()
+  }
+
+  $: {
+    $currentPlayingSongIds
+    resetCurrentList()
   }
 </script>
 
