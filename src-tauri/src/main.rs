@@ -1,15 +1,14 @@
+#![cfg_attr(
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
+)]
+
 use base64::{Engine as _, engine::general_purpose};
 use song::{Song, LyricsItem};
 use id3::{Tag, TagLike, Frame, Version};
 use id3::frame::{Content, Lyrics};
 use mp3_duration;
 mod song;
-
-#[cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
-)]
-
 
 #[tauri::command]
 fn get_metadata(path: &str) -> Option<Song> {

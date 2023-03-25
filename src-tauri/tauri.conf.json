@@ -76,7 +76,7 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; img-src 'self' data: tauri:; media-src 'self' asset://*; style-src 'unsafe-inline' tauri:"
+      "csp": "default-src 'self'; img-src 'self' data: tauri:; media-src 'self' asset://* https://asset.localhost; style-src 'unsafe-inline' tauri: https://tauri.localhost "
 
     },
     "updater": {
