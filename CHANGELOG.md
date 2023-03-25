@@ -12,6 +12,8 @@
 * Current playing song list styles
 * Global search result width changed due to different results
 * Playlist songs disappeared when full screen toggle back
+* Add missing windows media and style csp 
+* Command line prompt should not open in windows production
 
 ## 0.1.0
 
