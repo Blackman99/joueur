@@ -14,6 +14,7 @@
 * Playlist songs disappeared when full screen toggle back
 * Add missing windows media and style csp 
 * Command line prompt should not open in windows production
+* Drop loading mask should have a larger z index than title bar
 
 ## 0.1.0
 
