@@ -33,6 +33,7 @@
   export let offset: number
   export let limit: number
   export let total: number
+  export let scrollTop: number = 0
   export let showActionsOnEmpty = true
   export let resetCurrentSongsOnClick = true
   export let draggable = false
@@ -154,6 +155,7 @@
       bind:this="{virtualScroller}"
       bind:offset="{offset}"
       bind:limit="{limit}"
+      bind:scrollTop="{scrollTop}"
       total="{total}"
       items="{songs}"
       customClass="{transparentBg ? 'bg-black' : 'j-song-bg'}"

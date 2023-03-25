@@ -11,10 +11,10 @@
   export let limit = 10
   export let offset = 0
   export let total = 0
+  export let scrollTop = 0
 
   let vScrollContainer: HTMLDivElement
   let itemHeight = 0
-  let scrollTop = 0
   let itemsOffsetY = 0
   let cols = 1
   let skeletonOffset = 0
@@ -28,7 +28,6 @@
     if (!firstItem) return
     itemHeight = firstItem.offsetHeight
     cols = Math.floor(vScrollContainer.offsetWidth / firstItem.offsetWidth)
-
     limit = Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
   }, 50)
 
@@ -44,8 +43,10 @@
 
   const setOffset = debounce((st: number) => {
     offset = Math.floor(st / itemHeight) * cols
-    scrollTop = st
-    itemsOffsetY = -(st % itemHeight)
+    tick().then(() => {
+      scrollTop = st
+      itemsOffsetY = -(st % itemHeight)
+    })
   }, 50)
 
   const handleScroll = () => {

@@ -19,7 +19,7 @@
     SELECTED_PLAYLIST_ID_KEY,
     PLAYING_SONG_ID_KEY,
     MODE_KEY,
-    refreshCurrentSongs,
+    paginateSelectedPlaylistSongs,
     playlists,
     paused,
     playingSongId,
@@ -39,7 +39,8 @@
     COLOR_MODE_KEY,
     isDark,
     inWindow,
-    selectedPlaylistOffset,
+    selectedPlaylistSongsOffset,
+    selectedPlaylistSongsScrollTop,
   } from '$lib/store'
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
@@ -123,7 +124,7 @@
     // The subscriptions below can only put here cause would cause unexpected errors like:
     // can not reach variable before initialized
     playlistSubscriber = playlists.subscribe(
-      async () => await refreshCurrentSongs()
+      async () => await paginateSelectedPlaylistSongs()
     ) as any
 
     await appWindow.onCloseRequested(async _evt => {
@@ -171,8 +172,9 @@
       SELECTED_PLAYLIST_ID_KEY,
       $selectedPlaylistId.toString()
     )
-    $selectedPlaylistOffset = 0
-    refreshCurrentSongs()
+    $selectedPlaylistSongsOffset = 0
+    $selectedPlaylistSongsScrollTop = 0
+    paginateSelectedPlaylistSongs()
   }
 
   $: {

@@ -3,10 +3,11 @@
   import {
     currentPlaylistSongs,
     selectedPlaylistId,
-    selectedPlaylistLimit,
+    selectedPlaylistSongsLimit,
     selectedPlaylistSongNumber,
-    selectedPlaylistOffset,
-    refreshCurrentSongs,
+    selectedPlaylistSongsOffset,
+    paginateSelectedPlaylistSongs,
+    selectedPlaylistSongsScrollTop,
   } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import { db } from '$lib/db'
@@ -151,9 +152,9 @@
   }
 
   $: {
-    $selectedPlaylistLimit
-    $selectedPlaylistOffset
-    refreshCurrentSongs()
+    $selectedPlaylistSongsLimit
+    $selectedPlaylistSongsOffset
+    paginateSelectedPlaylistSongs()
   }
 </script>
 
@@ -171,8 +172,9 @@
       contextMenus="{menus}"
       inSelectionContextMenus="{menusOnSelected}"
       total="{$selectedPlaylistSongNumber}"
-      bind:offset="{$selectedPlaylistOffset}"
-      bind:limit="{$selectedPlaylistLimit}"
+      bind:offset="{$selectedPlaylistSongsOffset}"
+      bind:limit="{$selectedPlaylistSongsLimit}"
+      bind:scrollTop="{$selectedPlaylistSongsScrollTop}"
       bind:draggingSongId="{draggingSongId}"
       bind:draggingSongIds="{draggingSongIds}"
       bind:selectedSongIds="{selectedSongIds}"

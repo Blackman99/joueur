@@ -23,8 +23,9 @@ export const playedSeconds = writable(Number(localStorage.getItem(CURRENT_TIME_K
 export const selectedPlaylistId = writable(Number(localStorage.getItem(SELECTED_PLAYLIST_ID_KEY) || -1))
 export const selectedPlaylistSongNumber = writable(0)
 export const currentPlaylistSongs = writable<Song[]>([])
-export const selectedPlaylistOffset = writable(0)
-export const selectedPlaylistLimit = writable(10)
+export const selectedPlaylistSongsOffset = writable(0)
+export const selectedPlaylistSongsLimit = writable(10)
+export const selectedPlaylistSongsScrollTop = writable(0)
 
 export const currentPlayingSongIds = writable<number[]>([])
 const storeVolume = localStorage.getItem(VOLUME_KEY)
@@ -53,14 +54,12 @@ export const playlists = liveQuery(() =>
   db.playlists.toArray(),
 ) as unknown as Readable<Playlist[]>
 
-export async function refreshCurrentSongs() {
+export async function paginateSelectedPlaylistSongs() {
   const selectedPlayList = await db.playlists.where('id').equals(get(selectedPlaylistId)).first()
   if (selectedPlayList) {
     selectedPlaylistSongNumber.set(selectedPlayList.songIds.length)
-    return currentPlaylistSongs.set(await db.songs.where('id').anyOf(selectedPlayList.songIds || []).offset(get(selectedPlaylistOffset)).limit(get(selectedPlaylistLimit)).toArray())
+    currentPlaylistSongs.set(await db.songs.where('id').anyOf(selectedPlayList.songIds || []).offset(get(selectedPlaylistSongsOffset)).limit(get(selectedPlaylistSongsLimit)).toArray())
   }
-
-  return []
 }
 
 export const playNext = () => {
@@ -113,4 +112,4 @@ export const togglePlayOrPause = () => {
   }
 }
 
-totalSongsNumber.subscribe(() => refreshCurrentSongs())
+totalSongsNumber.subscribe(() => paginateSelectedPlaylistSongs())
