@@ -45,6 +45,7 @@
   export let selectedSongIds: number[] = []
   export let draggingSongIds: number[] = []
 
+  let virtualScroller: VirtualScroll
   let selectionMode = false
 
   const dispatch = createEventDispatcher()
@@ -116,10 +117,8 @@
     selectedSongIds = []
   }
 
-  let virtualScroller: VirtualScroll
-
-  export const reset = () => {
-    virtualScroller?.reset()
+  export const resetVirtualScroller = () => {
+    virtualScroller?.recomputeInitialData()
   }
 </script>
 

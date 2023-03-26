@@ -8,6 +8,8 @@
 
   export let show = false
 
+  let songs: Songs
+
   const handleRemoveFromList = (e: CustomEvent<number>) => {
     const songIdToRemove = e.detail
     const idx = $currentPlayingSongIds.findIndex(id => id === songIdToRemove)
@@ -23,6 +25,7 @@
 
   let offset = 0
   let limit = 10
+  let scrollTop = 0
 
   const doPaginateSongs = async () => {
     paginatedSongs = await db.songs
@@ -31,6 +34,7 @@
       .offset(offset)
       .limit(limit)
       .toArray()
+    songs.resetVirtualScroller()
   }
 
   $: {
@@ -56,8 +60,10 @@
 
 <div class="current-songs" class:show="{show}" class:fullscreen="{$fullscreen}">
   <Songs
+    bind:this="{songs}"
     bind:limit="{limit}"
     bind:offset="{offset}"
+    bind:scrollTop="{scrollTop}"
     songs="{paginatedSongs}"
     transparentBg="{$fullscreen}"
     total="{$currentPlayingSongIds.length}"

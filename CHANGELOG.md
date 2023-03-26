@@ -3,6 +3,7 @@
 ### 🐛 Fixes
 
 * Current playing songs style in fullscreen mode
+* Current playing songs virtual scroll should reset when songs changed
 
 ## 0.1.1
 

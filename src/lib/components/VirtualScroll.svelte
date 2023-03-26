@@ -21,7 +21,7 @@
 
   $: totalHeight = itemHeight * (total / cols)
 
-  const recomputeInitialData = debounce(() => {
+  export const recomputeInitialData = debounce(() => {
     if (!vScrollContainer) return
     const firstItem =
       vScrollContainer.querySelector<HTMLDivElement>('.v-scroll-item')
