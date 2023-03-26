@@ -173,10 +173,11 @@
     --uno: 'border-none outline-none text-[14px] w-full pl-1 bg-transparent dark:text-gray-4';
   }
   .search-result {
-    --uno: 'absolute min-w-[320px] w-[70vw] left-0 bg-white dark:bg-black b-1 rounded b-gray-2 dark:b-gray-7 b-solid p-2 text-[14px] flex text-secondary dark:text-gray-3 z-3';
+    --uno: 'absolute min-w-[320px] w-[70vw] left-[50%] bg-white dark:bg-black b-1 rounded b-gray-2 dark:b-gray-7 b-solid p-2 text-[14px] flex text-secondary dark:text-gray-3 z-3';
     top: calc(100% + 12px);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
+    transform: translateX(-50%);
   }
   .result-category {
     --uno: 'max-h-[50vh] overflow-y-auto relative pb-2 flex-shrink-0';

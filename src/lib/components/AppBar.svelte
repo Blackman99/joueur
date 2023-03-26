@@ -3,18 +3,16 @@
   import QuitFullscreen from '$lib/icons/QuitFullscreen.svelte'
   import WindowMaximize from '$lib/icons/WindowMaximize.svelte'
   import WindowMinimize from '$lib/icons/WindowMinimize.svelte'
-  import { inWindow } from '$lib/store'
+  import { inWindow, isDark } from '$lib/store'
   import { ask } from '@tauri-apps/api/dialog'
   import { appWindow } from '@tauri-apps/api/window'
-  import { onMount } from 'svelte'
+  import GlobalSearch from './GlobalSearch.svelte'
   import IconButton from './IconButton.svelte'
   import { fullscreen, quittingFullscreen } from './lyrics/store'
 
   const handleMousedown = async () => {
     appWindow.startDragging()
   }
-
-  let left = 0
 
   const askClose = async () => {
     const yes = await ask('Confirm to quit Joueur?', {
@@ -30,17 +28,7 @@
     $quittingFullscreen = true
     $fullscreen = false
   }
-
-  const handleResize = () => {
-    left = document.getElementById('sidebar')?.offsetWidth || 0
-  }
-
-  onMount(() => {
-    handleResize()
-  })
 </script>
-
-<svelte:window on:resize="{handleResize}" />
 
 <div
   class="titlebar"
@@ -48,28 +36,46 @@
   class:fullscreen-show="{$fullscreen && $inWindow}"
   on:mousedown="{handleMousedown}"
   on:dblclick="{async () => appWindow.toggleMaximize()}"
-  style="--j-app-bar-left: {left}px;"
 >
-  <IconButton smallPadding on:click="{() => appWindow.minimize()}">
-    <WindowMinimize />
-  </IconButton>
-  <IconButton smallPadding on:click="{async () => appWindow.toggleMaximize()}">
-    <WindowMaximize />
-  </IconButton>
-  <IconButton smallPadding on:click="{askClose}">
-    <DialogClose />
-  </IconButton>
-  {#if $fullscreen}
-    <IconButton smallPadding on:click="{quitFullscreen}">
-      <QuitFullscreen />
+  <div class="window-buttons">
+    <IconButton smallPadding on:click="{askClose}">
+      <DialogClose />
     </IconButton>
+    <IconButton
+      smallPadding
+      on:click="{async () => appWindow.toggleMaximize()}"
+    >
+      <WindowMaximize />
+    </IconButton>
+    <IconButton smallPadding on:click="{() => appWindow.minimize()}">
+      <WindowMinimize />
+    </IconButton>
+    {#if $fullscreen}
+      <IconButton smallPadding on:click="{quitFullscreen}">
+        <QuitFullscreen />
+      </IconButton>
+    {/if}
+  </div>
+  {#if !$fullscreen}
+    <GlobalSearch />
   {/if}
+  <img
+    src="{$isDark ? '/logo-dark.svg' : '/logo.svg'}"
+    alt="Joueur"
+    class="logo"
+    draggable="false"
+  />
 </div>
 
 <style>
   .titlebar {
-    --uno: 'fixed bg-white dark:bg-black top-0 right-0 z-106 h-[30px] flex items-center justify-end gap-1 px-2';
-    left: var(--j-app-bar-left);
+    --uno: 'fixed bg-white dark:bg-black left-0 top-0 right-0 z-106 h-[42px] flex items-center justify-between px-2 py-[2px] rounded-t-lg';
+  }
+  .logo {
+    --uno: 'h-full';
+  }
+  .window-buttons {
+    --uno: 'flex gap-1';
   }
   .titlebar:not(.fullscreen) {
     --uno: 'b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-8';

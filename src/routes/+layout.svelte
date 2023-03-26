@@ -285,9 +285,9 @@
     color-scheme: dark;
   }
   .j-main {
-    --uno: 'flex h-[100vh] items-stretch box-border';
+    --uno: 'flex h-[100vh] items-stretch box-border pt-[42px]';
   }
   .j-content {
-    --uno: 'flex-grow flex flex-col relative pt-[30px]';
+    --uno: 'flex-grow flex flex-col relative';
   }
 </style>

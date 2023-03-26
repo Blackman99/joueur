@@ -27,7 +27,7 @@ export const selectedPlaylistSongsOffset = writable(0)
 export const selectedPlaylistSongsLimit = writable(10)
 export const selectedPlaylistSongsScrollTop = writable(0)
 
-export const currentPlayingSongIds = writable<number[]>([])
+export const currentPlayingSongIds = writable<number[]>(JSON.parse(localStorage.getItem(CURRENT_SONGS_KEY) || '[]'))
 const storeVolume = localStorage.getItem(VOLUME_KEY)
 export const volume = writable(storeVolume === null ? 1 : Number(storeVolume))
 export const mode = writable<Mode>(localStorage.getItem(MODE_KEY) as Mode || 'repeat-list')
