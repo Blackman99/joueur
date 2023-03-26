@@ -3,11 +3,13 @@
 ### 💪 Optimized
 
 * Move logo and global search to top title bar
+* Window control buttons' position go along with system behavior
 
 ### 🐛 Fixes
 
 * Current playing songs style in fullscreen mode
 * Current playing songs virtual scroll should reset when songs changed
+* Album dialog popup editor text color
 
 ## 0.1.1
 
