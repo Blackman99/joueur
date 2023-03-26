@@ -1,5 +1,9 @@
 ## Next
 
+### 💪 Optimized
+
+* Move logo and global search to top title bar
+
 ### 🐛 Fixes
 
 * Current playing songs style in fullscreen mode

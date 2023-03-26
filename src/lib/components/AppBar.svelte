@@ -4,11 +4,18 @@
   import WindowMaximize from '$lib/icons/WindowMaximize.svelte'
   import WindowMinimize from '$lib/icons/WindowMinimize.svelte'
   import { inWindow, isDark } from '$lib/store'
+  import { platform, type Platform } from '@tauri-apps/api/os'
   import { ask } from '@tauri-apps/api/dialog'
   import { appWindow } from '@tauri-apps/api/window'
   import GlobalSearch from './GlobalSearch.svelte'
   import IconButton from './IconButton.svelte'
   import { fullscreen, quittingFullscreen } from './lyrics/store'
+
+  let platformName: Platform
+
+  platform().then(name => {
+    platformName = name
+  })
 
   const handleMousedown = async () => {
     appWindow.startDragging()
@@ -32,6 +39,7 @@
 
 <div
   class="titlebar"
+  class:not-mac="{platformName !== 'darwin'}"
   class:fullscreen="{$fullscreen}"
   class:fullscreen-show="{$fullscreen && $inWindow}"
   on:mousedown="{handleMousedown}"
@@ -70,6 +78,9 @@
 <style>
   .titlebar {
     --uno: 'fixed bg-white dark:bg-black left-0 top-0 right-0 z-106 h-[42px] flex items-center justify-between px-2 py-[2px] rounded-t-lg';
+  }
+  .not-mac {
+    --uno: 'flex-row-reverse';
   }
   .logo {
     --uno: 'h-full';
