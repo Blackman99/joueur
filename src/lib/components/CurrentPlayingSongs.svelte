@@ -59,6 +59,7 @@
     bind:limit="{limit}"
     bind:offset="{offset}"
     songs="{paginatedSongs}"
+    transparentBg="{$fullscreen}"
     total="{$currentPlayingSongIds.length}"
     resetCurrentSongsOnClick="{false}"
     showActionsOnEmpty="{false}"

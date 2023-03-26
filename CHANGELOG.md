@@ -1,4 +1,10 @@
-## 0.1.1 (Not released)
+## Next
+
+### 🐛 Fixes
+
+* Current playing songs style in fullscreen mode
+
+## 0.1.1
 
 ### 💪 Optimized
 
