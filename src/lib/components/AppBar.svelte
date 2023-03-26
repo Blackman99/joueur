@@ -45,7 +45,7 @@
   on:mousedown="{handleMousedown}"
   on:dblclick="{async () => appWindow.toggleMaximize()}"
 >
-  <div class="window-buttons">
+  <div class="window-buttons" class:not-mac="{platformName !== 'darwin'}">
     <IconButton smallPadding on:click="{askClose}">
       <DialogClose />
     </IconButton>
