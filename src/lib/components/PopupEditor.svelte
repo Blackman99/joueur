@@ -64,7 +64,7 @@
 
 <style>
   .wrapper {
-    --uno: 'relative inline-block';
+    --uno: 'relative inline-block text-secondary dark:text-gray-2';
   }
   .popup-editor {
     --uno: 'flex py-1 pr-2 rounded gap-2 items-center absolute top-0 left-0 z-10 bg-white dark:bg-black';
