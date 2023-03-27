@@ -9,6 +9,7 @@
   import { selectedArtist } from '../../routes/artists/store'
   import { selectedAlbum } from '../../routes/albums/store'
   import clickOutside from '../actions/outside-click'
+  import Loading from './Loading.svelte'
 
   let focused = false
   let keyword = ''
@@ -17,25 +18,47 @@
   let artists: Artist[] = []
   let albums: Album[] = []
 
+  let songsLoading = false
+  let artistsLoading = false
+  let albumsLoading = false
+
   const getSongs = async () => {
-    songs = await db.songs
-      .filter(song => song.title.indexOf(keyword) !== -1)
-      .limit(10)
-      .toArray()
+    try {
+      songsLoading = true
+      songs = await db.songs
+        .filter(song => song.title.indexOf(keyword) !== -1)
+        .limit(10)
+        .toArray()
+    } catch (error) {
+    } finally {
+      songsLoading = false
+    }
   }
 
   const getArtists = async () => {
-    artists = await db.artists
-      .filter(ar => ar.title.indexOf(keyword) !== -1)
-      .limit(10)
-      .toArray()
+    try {
+      artistsLoading = true
+      artists = await db.artists
+        .filter(ar => ar.title.indexOf(keyword) !== -1)
+        .limit(10)
+        .toArray()
+    } catch (error) {
+    } finally {
+      artistsLoading = false
+    }
   }
 
   const getAlbums = async () => {
-    albums = await db.albums
-      .filter(al => al.title.indexOf(keyword) !== -1)
-      .limit(10)
-      .toArray()
+    try {
+      albumsLoading = true
+      albums = await db.albums
+        .filter(al => al.title.indexOf(keyword) !== -1)
+        .limit(10)
+        .toArray()
+    } catch (error) {
+    } finally {
+      albumsLoading = false
+    }
   }
 
   const researchAll = debounce(() => {
@@ -100,56 +123,71 @@
     <div class="search-result" transition:slide="{{ duration: 200 }}">
       <div class="result-category">
         <div class="category-title">Tracks</div>
-        {#each songs as song (song.id)}
-          <div
-            class="result-item"
-            on:click="{() => handlePlay(song)}"
-            on:keypress
-          >
-            {@html `${song.title.replace(
-              new RegExp(keyword),
-              m => `<span class="text-primary">${m}</span>`
-            )}`}
+        {#if songsLoading}
+          <div class="loading">
+            <Loading />
           </div>
-        {/each}
-        {#if !songs.length}
+        {:else if !songs.length}
           <div class="no-data">No data</div>
+        {:else}
+          {#each songs as song (song.id)}
+            <div
+              class="result-item"
+              on:click="{() => handlePlay(song)}"
+              on:keypress
+            >
+              {@html `${song.title.replace(
+                new RegExp(keyword),
+                m => `<span class="text-primary">${m}</span>`
+              )}`}
+            </div>
+          {/each}
         {/if}
       </div>
       <div class="result-category">
         <div class="category-title">Artists</div>
-        {#each artists as ar (ar.id)}
-          <div
-            class="result-item"
-            on:click="{() => handleToArtist(ar)}"
-            on:keypress
-          >
-            {@html `${ar.title.replace(
-              new RegExp(keyword),
-              m => `<span class="text-primary">${m}</span>`
-            )}`} · <small>{ar.songIds.length} tracks</small>
+        {#if artistsLoading}
+          <div class="loading">
+            <Loading />
           </div>
-        {/each}
-        {#if !artists.length}
+        {:else if !artists.length}
           <div class="no-data">No data</div>
+        {:else}
+          {#each artists as ar (ar.id)}
+            <div
+              class="result-item"
+              on:click="{() => handleToArtist(ar)}"
+              on:keypress
+            >
+              {@html `${ar.title.replace(
+                new RegExp(keyword),
+                m => `<span class="text-primary">${m}</span>`
+              )}`} · <small>{ar.songIds.length} tracks</small>
+            </div>
+          {/each}
         {/if}
       </div>
       <div class="result-category">
         <div class="category-title">Albums</div>
-        {#each albums as al (al.id)}
-          <div
-            class="result-item"
-            on:click="{() => handleToAlbum(al)}"
-            on:keypress
-          >
-            {@html `${al.title.replace(
-              new RegExp(keyword),
-              m => `<span class="text-primary">${m}</span>`
-            )}`} · <small>{al.songIds.length} tracks</small>
+        {#if albumsLoading}
+          <div class="loading">
+            <Loading />
           </div>
-        {/each}
-        {#if !albums.length}
+        {:else if !albums.length}
           <div class="no-data">No data</div>
+        {:else}
+          {#each albums as al (al.id)}
+            <div
+              class="result-item"
+              on:click="{() => handleToAlbum(al)}"
+              on:keypress
+            >
+              {@html `${al.title.replace(
+                new RegExp(keyword),
+                m => `<span class="text-primary">${m}</span>`
+              )}`} · <small>{al.songIds.length} tracks</small>
+            </div>
+          {/each}
         {/if}
       </div>
     </div>
@@ -196,5 +234,8 @@
   }
   .no-data {
     --uno: 'text-gray-4 text-center pt-2';
+  }
+  .loading {
+    --uno: 'flex justify-center text-5 py-2';
   }
 </style>
