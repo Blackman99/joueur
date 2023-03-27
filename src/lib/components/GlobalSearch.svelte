@@ -127,7 +127,7 @@
             {@html `${ar.title.replace(
               new RegExp(keyword),
               m => `<span class="text-primary">${m}</span>`
-            )}`}
+            )}`} · <small>{ar.songIds.length} tracks</small>
           </div>
         {/each}
         {#if !artists.length}
@@ -145,7 +145,7 @@
             {@html `${al.title.replace(
               new RegExp(keyword),
               m => `<span class="text-primary">${m}</span>`
-            )}`}
+            )}`} · <small>{al.songIds.length} tracks</small>
           </div>
         {/each}
         {#if !albums.length}
