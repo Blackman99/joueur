@@ -185,7 +185,7 @@ class JoueurDB extends Dexie {
             artists.push(newArtist)
           }
 
-          const al = albums.find(al => al.title === newSong.title && al.artist === newSong.artist)
+          const al = albums.find(al => al.title === newSong.album && al.artist === newSong.artist)
 
           if (al) {
             if (!al.songIds.includes(newSong.id))
