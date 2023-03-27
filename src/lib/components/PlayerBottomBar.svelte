@@ -41,8 +41,6 @@
   $: percentage = ($playedSeconds / ($duration || 0)) * 100
 
   const handleBarClick = (e: any) => {
-    console.log(e)
-
     const newPercentage = e.offsetX / barDom.offsetWidth
     if ($audioDom) {
       $audioDom.currentTime = $duration * newPercentage
@@ -114,7 +112,12 @@
           </div>
         </div>
       </div>
-      <div class="play-controls">
+      <div class="controls">
+        <VolumeControl />
+        <ModeSwitcher />
+        <IconButton on:click="{() => dispatch('show-current-songs')}">
+          <ControlCurrentList />
+        </IconButton>
         <IconButton on:click="{playPrev}">
           <ControlPrev />
         </IconButton>
@@ -129,13 +132,6 @@
           <ControlNext />
         </IconButton>
       </div>
-      <div class="controls">
-        <VolumeControl />
-        <ModeSwitcher />
-        <IconButton on:click="{() => dispatch('show-current-songs')}">
-          <ControlCurrentList />
-        </IconButton>
-      </div>
     </div>
   </div>
 {/if}
@@ -143,7 +139,7 @@
 <style>
   .player-bottom-bar {
     --uno: 'shrink-0 bg-white dark:bg-black shadow-t-lg text-[14px] relative';
-    transition: all cubic-bezier(0, 0.55, 0.45, 1) 0.3s;
+    transition: transform cubic-bezier(0, 0.55, 0.45, 1) 0.2s;
   }
   .fullscreen {
     --uno: 'fixed bottom-0 left-0 right-0 z-104 bg-opacity-20 bg-black text-gray-2';
@@ -161,14 +157,11 @@
   .title {
     --uno: 'flex items-baseline pointer-events-none';
   }
-  .play-controls {
-    --uno: 'flex gap-1 items-center bg-inherit mr-2';
-  }
   .fullscreen .meta {
     --uno: 'display-none sm:flex';
   }
   .controls {
-    --uno: 'flex items-center ml-2';
+    --uno: 'flex items-center ml-2 gap-1';
   }
   .seconds {
     --uno: 'text-gray-4 text-3 mx-2';

@@ -5,6 +5,7 @@ import clickOutside from './outside-click'
 export interface ContextMenuItem {
   title: string
   name: string
+  children?: ContextMenuItem[]
 }
 
 export type ContextHandler = (e: any, menu: ContextMenuItem) => any

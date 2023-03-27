@@ -93,7 +93,7 @@
   }
   .fullscreen {
     --uno: 'text-gray-1 bg-transparent dark:bg-transparent';
-    transition: transform linear 0.3s;
+    transition: transform cubic-bezier(0, 0.55, 0.45, 1) 0.2s;
     transform: translateY(-100%);
   }
   .fullscreen-show {
