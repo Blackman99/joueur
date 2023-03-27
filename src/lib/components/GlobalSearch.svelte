@@ -186,16 +186,15 @@
   .result-category:not(:first-child) .category-title {
     --uno: 'pt-2';
   }
-  .result-category:not(:last-child) {
-    --uno: 'b-r-1 b-r-solid b-r-gray-2 dark:b-r-gray-7';
-  }
   .category-title {
-    --uno: 'font-700 py-2 pl-2 sticky top-0 bg-inherit';
+    --uno: 'font-700 py-2 pl-2 sticky top-0 b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-8 text-center';
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
   }
   .result-item {
     --uno: 'py-2 px-2 j-clickable-item text-gray-6 dark:text-gray-4';
   }
   .no-data {
-    --uno: 'text-gray-4 text-center';
+    --uno: 'text-gray-4 text-center pt-2';
   }
 </style>
