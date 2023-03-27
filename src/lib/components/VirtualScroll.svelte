@@ -49,8 +49,6 @@
 
   const handleScroll = () => {
     if (!scrollPositionInitialized) return
-    console.log('handle scroll')
-
     const st = vScrollContainer.scrollTop
     skeletonOffset = -(st % itemHeight)
     setOffset(st)

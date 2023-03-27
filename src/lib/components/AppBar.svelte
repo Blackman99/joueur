@@ -77,7 +77,7 @@
 
 <style>
   .titlebar {
-    --uno: 'fixed bg-white dark:bg-black left-0 top-0 right-0 z-106 h-[42px] flex items-center justify-between px-2 py-[2px] rounded-t-lg';
+    --uno: 'fixed bg-white dark:bg-black left-0 top-0 right-0 z-106 h-[32px] flex items-center justify-between px-2 py-[2px] rounded-t-lg';
   }
   .not-mac {
     --uno: 'flex-row-reverse';

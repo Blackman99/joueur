@@ -158,7 +158,7 @@
 
 <style>
   .global-search {
-    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 dark:b-gray-7 rounded-[16px] mx-3 h-[32px] px-2 text-gray-4 relative z-10';
+    --uno: 'flex transition-colors transition-200 items-center b-1 b-solid b-gray-3 dark:b-gray-7 rounded-[16px] mx-3 h-[28px] px-2 text-gray-4 relative z-10 ';
   }
   .focused {
     --uno: 'b-primary';
@@ -170,7 +170,7 @@
     --uno: 'text-5 flex items-center';
   }
   input {
-    --uno: 'border-none outline-none text-[14px] w-full pl-1 bg-transparent dark:text-gray-4';
+    --uno: 'border-none outline-none text-3 w-full pl-1 bg-transparent dark:text-gray-4';
   }
   .search-result {
     --uno: 'absolute min-w-[320px] w-[70vw] left-[50%] bg-white dark:bg-black b-1 rounded b-gray-2 dark:b-gray-7 b-solid p-2 text-[14px] flex text-secondary dark:text-gray-3 z-3';
