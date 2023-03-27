@@ -16,6 +16,8 @@
     artists,
   } from './store'
 
+  let songs: Songs
+
   $: hasArtist = !!$artists.length
 
   const handleArtistClick = (artist: Artist) => {
@@ -34,6 +36,7 @@
     if ($selectedArtist) {
       getArtistSongs()
       localStorage.setItem(SELECTED_ARTIST_KEY, $selectedArtist.id.toString())
+      songs?.resetVirtualScroller()
     }
   }
 
@@ -97,6 +100,7 @@
     {/if}
   </div>
   <Songs
+    bind:this="{songs}"
     total="{$selectedArtistSongs.length}"
     songs="{$selectedArtistSongs.slice(songsOffset, songsOffset + songsLimit)}"
     showActionsOnEmpty="{false}"

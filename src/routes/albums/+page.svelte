@@ -112,12 +112,18 @@
         {/if}
         <div class="info">
           <div class="title">
-            <div>
+            <div class="truncate">
               {album.title}
             </div>
-            <span class="meta">
-              {album.artist} · {album.songIds.length} tracks
-            </span>
+            <div class="meta">
+              <div class="text-right">
+                {album.artist}
+              </div>
+              &nbsp;·&nbsp;
+              <div class="text-left">
+                {album.songIds.length} tracks
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -211,7 +217,11 @@
     --uno: 'ml-2 text-[14px] mt-2 text-center';
   }
   .meta {
-    --uno: 'text-warm-gray-5 text-[12px]';
+    --uno: 'text-warm-gray-5 text-[12px] truncate flex justify-center';
+  }
+  .meta > div {
+    --uno: 'truncate';
+    width: 50%;
   }
   .selected-album {
     --uno: 'fixed w-[80vw] h-[80vh] top-[10vh] left-[10vw] z-101 flex flex-col rounded-lg p-4 bg-white bg-opacity-20 dark:bg-black dark:bg-opacity-70 z-108';
