@@ -6,8 +6,8 @@
   let canvas: HTMLCanvasElement
 
   onMount(() => {
-    const { draw } = visualizer(canvas, $audioDom)
-    draw()
+    const { draw, drawWave } = visualizer(canvas, $audioDom)
+    drawWave()
   })
 </script>
 

@@ -6,7 +6,7 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
   const analyser = audioCtx.createAnalyser()
   audioSource.connect(analyser)
   analyser.connect(audioCtx.destination)
-  analyser.fftSize = 1024
+  analyser.fftSize = 256
   const bufferLength = analyser.frequencyBinCount
   const dataArray = new Uint8Array(bufferLength)
   const barWidth = (canvas.width / bufferLength)
@@ -25,14 +25,14 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
   function draw() {
     x = 0
     ctx?.clearRect(0, 0, canvas.width, canvas.height)
-    analyser.getByteFrequencyData(dataArray)
+    analyser.getByteTimeDomainData(dataArray)
 
     ctx.beginPath()
     ctx.moveTo(0, canvas.height)
     for (let i = 0; i < bufferLength; i++) {
       const barHeight = dataArray[i]
       ctx.fillStyle = 'rgba(0, 0, 0, .3)'
-      ctx.lineTo(x, canvas.height - barHeight + 20)
+      ctx.lineTo(x, canvas.height - barHeight)
       x += barWidth
     }
 
@@ -43,8 +43,37 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
     requestAnimationFrame(draw)
   }
 
+  function drawWave() {
+    const sliceWidth = canvas.width / bufferLength
+    x = 0
+    ctx?.clearRect(0, 0, canvas.width, canvas.height)
+    analyser.getByteTimeDomainData(dataArray)
+
+    ctx.beginPath()
+
+    for (let i = 0; i < bufferLength; i++) {
+      const v = dataArray[i] / 128.0
+      const y = v * (canvas.height / 2)
+
+      if (i === 0)
+        ctx.moveTo(x, y)
+      else
+        ctx.lineTo(x, y)
+
+      x += sliceWidth
+    }
+    ctx.strokeStyle = gradient
+    ctx.globalAlpha = 0.8
+    ctx.stroke()
+    ctx.lineTo(canvas.width, canvas.height / 2)
+    ctx.stroke()
+    ctx.closePath()
+    requestAnimationFrame(drawWave)
+  }
+
   return {
     draw,
+    drawWave,
   }
 }
 
