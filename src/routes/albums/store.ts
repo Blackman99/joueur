@@ -12,5 +12,6 @@ export const selectedAlbumSongs = writable<Song[]>([])
 export const albums = writable<Album[]>([])
 export const offset = writable(0)
 export const limit = writable(10)
+export const scrollTop = writable(0)
 
 export const totalAlbumNumber = liveQuery(() => db.albums.count()) as unknown as Readable<number>

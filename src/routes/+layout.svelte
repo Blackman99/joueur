@@ -119,12 +119,6 @@
       playingSong.set(await db.songs.where('id').equals(newSongId).first())
     })
 
-    // The subscriptions below can only put here cause would cause unexpected errors like:
-    // can not reach variable before initialized
-    playlistSubscriber = playlists.subscribe(
-      async () => await paginateSelectedPlaylistSongs()
-    ) as any
-
     await appWindow.onCloseRequested(async _evt => {
       localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
     })
@@ -172,6 +166,11 @@
     )
     $selectedPlaylistSongsOffset = 0
     $selectedPlaylistSongsScrollTop = 0
+    paginateSelectedPlaylistSongs()
+  }
+
+  $: {
+    $playlists
     paginateSelectedPlaylistSongs()
   }
 

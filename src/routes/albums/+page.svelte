@@ -8,6 +8,7 @@
     offset,
     limit,
     totalAlbumNumber,
+    scrollTop,
   } from './store'
   import Backdrop from '$lib/components/Backdrop.svelte'
   import PlayingIcon from '$lib/components/PlayingIcon.svelte'
@@ -90,6 +91,7 @@
     <VirtualScroll
       bind:offset="{$offset}"
       bind:limit="{$limit}"
+      bind:scrollTop="{$scrollTop}"
       total="{$totalAlbumNumber}"
       items="{$albums}"
       gapX="20px"

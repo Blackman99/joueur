@@ -61,6 +61,7 @@
         .first()
       $currentPlayingSongIds = playlist?.songIds || []
     }
+    dispatch('play', song)
   }
   const handleDragstart = (song: Song) => {
     if (selectedSongIds.length && selectedSongIds.includes(song.id)) {

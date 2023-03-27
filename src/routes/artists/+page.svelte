@@ -3,7 +3,8 @@
   import VirtualScroll from '$lib/components/VirtualScroll.svelte'
   import { db } from '$lib/db'
   import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
-  import type { Artist } from '$lib/types'
+  import { currentPlayingSongIds } from '$lib/store'
+  import type { Artist, Song } from '$lib/types'
   import { onMount } from 'svelte'
   import {
     SELECTED_ARTIST_KEY,
@@ -56,6 +57,10 @@
     $offset
     paginateArtists()
   }
+
+  const handlePlay = async (e: CustomEvent<Song>) => {
+    $currentPlayingSongIds = $selectedArtistSongs.map(s => s.id)
+  }
 </script>
 
 <div class="artists">
@@ -95,8 +100,10 @@
     total="{$selectedArtistSongs.length}"
     songs="{$selectedArtistSongs.slice(songsOffset, songsOffset + songsLimit)}"
     showActionsOnEmpty="{false}"
+    resetCurrentSongsOnClick="{false}"
     bind:offset="{songsOffset}"
     bind:limit="{songsLimit}"
+    on:play="{handlePlay}"
   />
 </div>
 

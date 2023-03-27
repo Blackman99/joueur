@@ -45,9 +45,12 @@
     offset = Math.floor(st / itemHeight) * cols
     scrollTop = st
     itemsOffsetY = -(st % itemHeight)
-  }, 50)
+  }, 200)
 
   const handleScroll = () => {
+    if (!scrollPositionInitialized) return
+    console.log('handle scroll')
+
     const st = vScrollContainer.scrollTop
     skeletonOffset = -(st % itemHeight)
     setOffset(st)
@@ -59,6 +62,15 @@
     vScrollContainer.scrollTop = 0
     screenTop = 0
   }
+
+  let scrollPositionInitialized = false
+
+  onMount(() => {
+    vScrollContainer.scrollTop = scrollTop
+    tick().then(() => {
+      scrollPositionInitialized = true
+    })
+  })
 </script>
 
 <div

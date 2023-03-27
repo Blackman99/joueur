@@ -13,6 +13,7 @@
   import { db } from '$lib/db'
   import { message, ask } from '@tauri-apps/api/dialog'
   import { fullscreen } from '$lib/components/lyrics/store'
+  import { onMount } from 'svelte'
 
   let draggingSongId: number | null
   let draggingSongIds: number[] = []
