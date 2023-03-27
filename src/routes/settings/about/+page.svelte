@@ -7,7 +7,7 @@
 
 <div class="top">
   <img class="logo" src="/logo.svg" alt="Joueur" />
-  <div class="desc">A tiny and logical music player you've always wanted</div>
+  <div class="desc">A tiny and playful music player</div>
 </div>
 
 <div>
