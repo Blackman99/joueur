@@ -58,13 +58,15 @@ class JoueurDB extends Dexie {
    * @param song the new added song
    */
   async addOrUpdateArtistBySong(song: Song) {
-    const existingArtist = await this.artists.where('title').equals(song.artist).and(ar => ar.songIds.includes(song.id)).first()
+    let existingArtist = await this.artists.where('title').equals(song.artist).and(ar => ar.songIds.includes(song.id)).first()
     if (!existingArtist) {
-      await this.artists.put({ title: song.artist, songIds: [song.id], addTime: new Date() } as unknown as Artist)
+      existingArtist = { title: song.artist, songIds: [song.id], addTime: new Date() } as Artist
+      await this.artists.put(existingArtist)
     } else {
       existingArtist.songIds.push(song.id)
       await this.artists.update(existingArtist.id, existingArtist)
     }
+    return existingArtist
   }
 
   /**
@@ -169,14 +171,41 @@ class JoueurDB extends Dexie {
         })
 
         songIdsWillAddToPlaylist = songIdsWillAddToPlaylist.concat(newSongIds)
-
+        const artists: Artist[] = await this.artists.toArray()
+        const albums: Album[] = await this.albums.toArray()
         for (let i = 0; i < newSongs.length; i++) {
           const newSong = newSongs[i]
           newSong.id = newSongIds[i]
-          await this.addOrUpdateArtistBySong(newSong)
-          await this.addOrUpdateAlbumBySong(newSong)
+          const ar = artists.find(ar => ar.title === newSong.artist)
+          if (ar) {
+            if (!ar.songIds.includes(newSong.id))
+              ar.songIds.push(newSong.id)
+          } else {
+            const newArtist = { title: newSong.artist, songIds: [newSong.id], addTime: new Date() } as Artist
+            artists.push(newArtist)
+          }
+
+          const al = albums.find(al => al.title === newSong.title && al.artist === newSong.artist)
+
+          if (al) {
+            if (!al.songIds.includes(newSong.id))
+              al.songIds.push(newSong.id)
+          } else {
+            const newAlbum = {
+              title: newSong.album,
+              songIds: [newSong.id],
+              artist: newSong.artist,
+              cover: newSong.cover,
+              addTime: new Date(),
+            } as Album
+            albums.push(newAlbum)
+          }
+
           progressCb?.(i + 1)
         }
+
+        await this.artists.bulkPut(artists)
+        await this.albums.bulkPut(albums)
 
         // Add new song to default `'all'` list
         const allList = await this.getAllList()
