@@ -43,10 +43,8 @@
 
   const setOffset = debounce((st: number) => {
     offset = Math.floor(st / itemHeight) * cols
-    tick().then(() => {
-      scrollTop = st
-      itemsOffsetY = -(st % itemHeight)
-    })
+    scrollTop = st
+    itemsOffsetY = -(st % itemHeight)
   }, 50)
 
   const handleScroll = () => {

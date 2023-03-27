@@ -6,7 +6,7 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
   const analyser = audioCtx.createAnalyser()
   audioSource.connect(analyser)
   analyser.connect(audioCtx.destination)
-  analyser.fftSize = 512
+  analyser.fftSize = 1024
   const bufferLength = analyser.frequencyBinCount
   const dataArray = new Uint8Array(bufferLength)
   const barWidth = (canvas.width / bufferLength)
@@ -32,13 +32,12 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
     for (let i = 0; i < bufferLength; i++) {
       const barHeight = dataArray[i]
       ctx.fillStyle = 'rgba(0, 0, 0, .3)'
-      // ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight)
       ctx.lineTo(x, canvas.height - barHeight + 20)
       x += barWidth
     }
 
     ctx.strokeStyle = gradient
-    ctx.globalAlpha = 0.5
+    ctx.globalAlpha = 0.8
     ctx.stroke()
     ctx.closePath()
     requestAnimationFrame(draw)

@@ -4,6 +4,7 @@
 
 * Move logo and global search to top title bar
 * Window control buttons' position go along with system behavior
+* Layouts and player control optimize
 
 ### 🐛 Fixes
 

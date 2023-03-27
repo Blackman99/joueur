@@ -11,6 +11,8 @@
     displayDuration,
     audioDom,
     inWindow,
+    paused,
+    togglePlayOrPause,
   } from '$lib/store'
   import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
   import ControlPrev from '$lib/icons/ControlPrev.svelte'
@@ -21,6 +23,8 @@
   import ModeSwitcher from './ModeSwitcher.svelte'
   import AudioVisualizer from './AudioVisualizer.svelte'
   import { fullscreen } from './lyrics/store'
+  import ControlPlay from '$lib/icons/ControlPlay.svelte'
+  import ControlPause from '$lib/icons/ControlPause.svelte'
 
   const pointerX = spring(0, {
     stiffness: 0.1,
@@ -37,6 +41,8 @@
   $: percentage = ($playedSeconds / ($duration || 0)) * 100
 
   const handleBarClick = (e: any) => {
+    console.log(e)
+
     const newPercentage = e.offsetX / barDom.offsetWidth
     if ($audioDom) {
       $audioDom.currentTime = $duration * newPercentage
@@ -44,7 +50,7 @@
   }
 
   const handlePointerMove = (e: any) => {
-    if (e.target !== barDom.querySelector('.inner')) return
+    if (e.target !== barDom) return
     if (mouseTabbing) {
       isHolding = true
     }
@@ -66,51 +72,38 @@
 
 {#if $playingSong}
   <div
-    bind:this="{barDom}"
     class="player-bottom-bar"
     class:fullscreen="{$fullscreen}"
     class:fullscreen-show="{$fullscreen && $inWindow}"
     transition:slide
-    on:mouseup="{handleMouseup}"
-    on:mousedown="{() => (mouseTabbing = true)}"
-    on:mousemove="{handlePointerMove}"
-    on:mouseenter="{() => (showPointer = true)}"
-    on:mouseleave="{() => (showPointer = false)}"
-    on:keypress
   >
-    <div
-      class="progress-bg"
-      style="--joueur-played-percentage: -{100 - percentage}%;"
-    ></div>
-
     {#if $audioDom}
       <AudioVisualizer />
     {/if}
 
-    {#if showPointer}
-      <div
-        class="pointer"
-        style="--joueur-progress-pointer-x:{$pointerX}px;"
-      ></div>
-    {/if}
-
     <div class="inner">
-      <IconButton size="20px" on:click="{playPrev}">
-        <ControlPrev />
-      </IconButton>
-
-      <div class="middle">
+      <div
+        class="middle"
+        bind:this="{barDom}"
+        on:mouseup="{handleMouseup}"
+        on:mousedown="{() => (mouseTabbing = true)}"
+        on:mousemove="{handlePointerMove}"
+        on:mouseenter="{() => (showPointer = true)}"
+        on:mouseleave="{() => (showPointer = false)}"
+        on:keypress
+      >
+        <div
+          class="progress-bg"
+          style="--joueur-played-percentage: -{100 - percentage}%;"
+        ></div>
+        {#if showPointer}
+          <div
+            class="pointer"
+            style="--joueur-progress-pointer-x:{$pointerX}px;"
+          ></div>
+        {/if}
         <div class="title">
-          <div class="h-[24px] leading-[24px]">
-            {$playingSong.title}
-          </div>
-          <div class="controls">
-            <VolumeControl />
-            <ModeSwitcher />
-            <IconButton on:click="{() => dispatch('show-current-songs')}">
-              <ControlCurrentList />
-            </IconButton>
-          </div>
+          {$playingSong.title}
         </div>
         <div class="meta">
           <div>
@@ -121,10 +114,28 @@
           </div>
         </div>
       </div>
-
-      <IconButton size="20px" on:click="{playNext}">
-        <ControlNext />
-      </IconButton>
+      <div class="play-controls">
+        <IconButton on:click="{playPrev}">
+          <ControlPrev />
+        </IconButton>
+        <IconButton on:click="{togglePlayOrPause}" size="18px">
+          {#if $paused}
+            <ControlPlay />
+          {:else}
+            <ControlPause />
+          {/if}
+        </IconButton>
+        <IconButton on:click="{playNext}">
+          <ControlNext />
+        </IconButton>
+      </div>
+      <div class="controls">
+        <VolumeControl />
+        <ModeSwitcher />
+        <IconButton on:click="{() => dispatch('show-current-songs')}">
+          <ControlCurrentList />
+        </IconButton>
+      </div>
     </div>
   </div>
 {/if}
@@ -142,34 +153,35 @@
     transform: translateY(0);
   }
   .inner {
-    --uno: 'flex items-center relative z-3 px-4 pb-2 pt-1';
+    --uno: 'flex items-stretch justify-between pr-4 bg-inherit';
   }
   .meta {
-    --uno: 'text-gray-4 text-3 flex justify-between h-[20px] leading-[20px]';
+    --uno: 'text-gray-4 text-3 flex justify-between flex-grow h-[20px] leading-[20px] ml-2 pointer-events-none';
+  }
+  .title {
+    --uno: 'flex items-baseline pointer-events-none';
+  }
+  .play-controls {
+    --uno: 'flex gap-1 items-center bg-inherit mr-2';
   }
   .fullscreen .meta {
     --uno: 'display-none sm:flex';
   }
   .controls {
-    --uno: 'flex items-center pointer-events-auto';
+    --uno: 'flex items-center ml-2';
   }
   .seconds {
     --uno: 'text-gray-4 text-3 mx-2';
   }
   .middle {
-    --uno: 'flex-grow mx-2 pointer-events-none';
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .title {
-    --uno: 'flex items-center justify-between';
+    --uno: 'flex items-baseline p-2 flex-grow relative overflow-hidden';
   }
   .progress-bg {
-    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 bg-opacity-8 dark:bg-opacity-15';
+    --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 pointer-events-none bg-opacity-8 dark:bg-opacity-15';
     transform: translateX(var(--joueur-played-percentage));
   }
   .pointer {
-    --uno: 'absolute left-0 top-0 bottom-0 w-[1px] bg-primary bg-opacity-70 z-3';
+    --uno: 'absolute left-0 top-0 bottom-0 w-[1px] bg-primary bg-opacity-70 z-3 pointer-events-none';
     transform: translateX(var(--joueur-progress-pointer-x));
   }
 </style>

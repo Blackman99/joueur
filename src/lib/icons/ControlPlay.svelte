@@ -2,9 +2,12 @@
   xmlns="http://www.w3.org/2000/svg"
   width="1em"
   height="1em"
-  viewBox="0 0 16 16"
+  viewBox="0 0 512 512"
   ><path
-    fill="currentColor"
-    d="M6.235 2.192A1.5 1.5 0 0 0 4 3.499v9a1.5 1.5 0 0 0 2.235 1.308l8-4.5a1.5 1.5 0 0 0 0-2.615l-8-4.5Z"
+    fill="none"
+    stroke="currentColor"
+    stroke-miterlimit="10"
+    stroke-width="32"
+    d="M112 111v290c0 17.44 17 28.52 31 20.16l247.9-148.37c12.12-7.25 12.12-26.33 0-33.58L143 90.84c-14-8.36-31 2.72-31 20.16Z"
   ></path></svg
 >

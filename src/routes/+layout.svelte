@@ -45,7 +45,6 @@
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
   import CurrentPlayingSongs from '$lib/components/CurrentPlayingSongs.svelte'
-  import FloatPlayOrPause from '$lib/components/FloatPlayOrPause.svelte'
   import EditLyrics from '$lib/components/lyrics/EditLyrics.svelte'
   import AppBar from '$lib/components/AppBar.svelte'
 
@@ -54,7 +53,6 @@
 
   let showDropZone = false
   let showDropLoading = false
-  let ready = false
   let showCurrentList = false
   let percentage = '0'
 
@@ -253,8 +251,6 @@
     <slot />
     <PlayerBottomBar on:show-current-songs="{() => (showCurrentList = true)}" />
     <CurrentPlayingSongs bind:show="{showCurrentList}" />
-
-    <FloatPlayOrPause />
   </div>
 </main>
 
