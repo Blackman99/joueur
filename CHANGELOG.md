@@ -11,6 +11,7 @@
 * Current playing songs style in fullscreen mode
 * Current playing songs virtual scroll should reset when songs changed
 * Album dialog popup editor text color
+* Album and artist analyzing during songs add should be synchronized
 
 ## 0.1.1
 
