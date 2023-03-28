@@ -6,6 +6,7 @@
 * Window control buttons' position go along with system behavior
 * Layouts and player control optimize
 * Remember scroll pos when page toggled
+* Virtual scroll more smooth
 
 ### 🐛 Fixes
 
