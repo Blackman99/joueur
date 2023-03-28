@@ -94,10 +94,9 @@
       bind:scrollTop="{$scrollTop}"
       total="{$totalAlbumNumber}"
       items="{$albums}"
-      gapX="20px"
-      gapY="20px"
+      gapX="{20}"
+      gapY="{20}"
       mode="grid"
-      customStyle="padding: 24px;"
       customClass="j-song-bg"
     >
       <div

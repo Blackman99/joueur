@@ -169,6 +169,10 @@
   .middle {
     --uno: 'flex items-baseline p-2 flex-grow relative overflow-hidden';
   }
+  .middle::after {
+    --uno: 'absolute right-0 top-[30%] bottom-[30%] w-[1px] bg-gray-8';
+    content: ' ';
+  }
   .progress-bg {
     --uno: 'absolute bg-primary left-0 top-0 right-0 bottom-0 z-2 pointer-events-none bg-opacity-8 dark:bg-opacity-20';
     transform: translateX(var(--joueur-played-percentage));

@@ -17,7 +17,7 @@ export default defineConfig({
       },
       shortcuts: {
         'j-clickable-item': 'hover:bg-light-7 dark:hover:bg-dark-8 dark:active:bg-dark-7 active:bg-light-9 cursor-pointer transition-colors transition-100',
-        'j-active-item': 'text-primary hover:bg-primary hover:bg-opacity-8 cursor-default',
+        'j-active-item': 'text-primary hover:bg-primary hover:bg-opacity-8 dark:hover:bg-primary dark:hover:bg-opacity-15 cursor-default',
       },
       safelist: ['bg-light-4'],
     }),

@@ -2,8 +2,8 @@
   import debounce from '$lib/utils/debounce'
   import { onMount, tick } from 'svelte'
 
-  export let gapX = '0'
-  export let gapY = '0'
+  export let gapX: number = 0
+  export let gapY: number = 0
   export let items: any[]
   export let customStyle = ''
   export let customClass = ''
@@ -13,11 +13,13 @@
   export let total = 0
   export let scrollTop = 0
 
+  let itemsOffsetY = 0
   let vScrollContainer: HTMLDivElement
   let itemHeight = 0
-  let itemsOffsetY = 0
   let cols = 1
   let skeletonOffset = 0
+
+  let st = 0
 
   $: totalHeight = itemHeight * (total / cols)
 
@@ -32,24 +34,18 @@
   }, 50)
 
   onMount(() => {
+    vScrollContainer.scrollTop = scrollTop
+    scrollPositionInitialized = true
     recomputeInitialData()
-    const resizeObserver = new ResizeObserver(recomputeInitialData)
-    resizeObserver.observe(vScrollContainer)
-    return () => {
-      resizeObserver.unobserve(vScrollContainer)
-      resizeObserver.disconnect()
-    }
   })
 
   const setOffset = debounce((st: number) => {
-    offset = Math.floor(st / itemHeight) * cols
-    scrollTop = st
-    itemsOffsetY = -(st % itemHeight)
+    offset = Math.floor(st / (itemHeight + gapY)) * cols
   }, 200)
 
   const handleScroll = () => {
     if (!scrollPositionInitialized) return
-    const st = vScrollContainer.scrollTop
+    st = vScrollContainer.scrollTop
     skeletonOffset = -(st % itemHeight)
     setOffset(st)
   }
@@ -63,18 +59,26 @@
 
   let scrollPositionInitialized = false
 
-  onMount(() => {
-    vScrollContainer.scrollTop = scrollTop
+  const setScrollTop = () => {
+    if (!scrollPositionInitialized) return
     tick().then(() => {
-      scrollPositionInitialized = true
+      scrollTop = st
+      itemsOffsetY = -(st % (itemHeight + gapY))
     })
-  })
+  }
+
+  $: {
+    items
+    setScrollTop()
+  }
 </script>
+
+<svelte:window on:resize="{recomputeInitialData}" />
 
 <div
   bind:this="{vScrollContainer}"
   class="v-scroll"
-  style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-total-height:{totalHeight}px;"
+  style="--j-v-scroll-gap-x:{gapX}px;--j-v-scroll-gap-y:{gapY}px;--j-v-scroll-total-height:{totalHeight}px;--j-v-scroll-list-items-offset:{itemsOffsetY}px;"
   on:scroll="{handleScroll}"
 >
   <div class="v-scroller"></div>
@@ -82,7 +86,7 @@
     class="v-scroll-grid {customClass}"
     class:mode-list="{mode === 'list'}"
     class:mode-grid="{mode === 'grid'}"
-    style="--j-v-scroll-top:{scrollTop + itemsOffsetY}px;{customStyle}"
+    style="--j-v-scroll-top:{scrollTop}px;{customStyle}"
   >
     {#each items as item (item.id)}
       <div class="v-scroll-item">
@@ -96,7 +100,7 @@
     class="v-skeletons {customClass}"
     class:mode-list="{mode === 'list'}"
     class:mode-grid="{mode === 'grid'}"
-    style="--j-v-scroll-gap-x:{gapX};--j-v-scroll-gap-y:{gapY};--j-v-scroll-cols:{cols};--j-v-scroll-skeleton-offset:{skeletonOffset}px;{customStyle}"
+    style="--j-v-scroll-gap-x:{gapX}px;--j-v-scroll-gap-y:{gapY}px;--j-v-scroll-cols:{cols};--j-v-scroll-skeleton-offset:{skeletonOffset}px;{customStyle}"
   >
     {#each Array.from({ length: limit }) as _, i (i)}
       <div class="v-skeleton-item" style="--j-skeleton-item-h: {itemHeight}px;">
@@ -123,10 +127,12 @@
   }
   .mode-grid {
     --uno: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
+    padding: var(--j-v-scroll-gap-y) var(--j-v-scroll-gap-x);
   }
 
   .v-scroll-item {
-    transform: translateY(var(--j-v-scroll-item-offset));
+    --uno: 'w-full';
+    transform: translateY(var(--j-v-scroll-list-items-offset));
   }
   .v-skeletons {
     --uno: 'grid absolute overflow-hidden top-0 bottom-0 z-2 left-0 right-0';

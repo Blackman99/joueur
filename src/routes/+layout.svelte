@@ -280,7 +280,7 @@
     color-scheme: dark;
   }
   .j-main {
-    --uno: 'flex h-[100vh] items-stretch box-border pt-[42px]';
+    --uno: 'flex h-[100vh] items-stretch box-border pt-[36px]';
   }
   .j-content {
     --uno: 'flex-grow flex flex-col relative';

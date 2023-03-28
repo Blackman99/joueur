@@ -2,7 +2,6 @@
   import Songs from '$lib/components/Songs.svelte'
   import VirtualScroll from '$lib/components/VirtualScroll.svelte'
   import { db } from '$lib/db'
-  import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
   import { currentPlayingSongIds } from '$lib/store'
   import type { Artist, Song } from '$lib/types'
   import { onMount } from 'svelte'
@@ -14,6 +13,7 @@
     totalArtistNumber,
     limit,
     artists,
+    scrollTop,
   } from './store'
 
   let songs: Songs
@@ -70,10 +70,12 @@
   <div class="artist-list">
     {#if hasArtist}
       <VirtualScroll
-        items="{$artists}"
-        total="{$totalArtistNumber}"
         bind:limit="{$limit}"
         bind:offset="{$offset}"
+        bind:scrollTop="{$scrollTop}"
+        items="{$artists}"
+        total="{$totalArtistNumber}"
+        customClass="j-song-bg"
       >
         <svelte:fragment slot="item" let:item="{artist}">
           {@const active = artist.id === $selectedArtist?.id}
@@ -85,17 +87,16 @@
           >
             <div class="title">
               {artist.title}
-              <div class="meta">
-                ({artist.songIds.length})
-              </div>
             </div>
-            <div class="active-icon">
-              {#if active}
-                <PlaylistActive />
-              {/if}
+            <div class="tracks">
+              {artist.songIds.length} tracks
             </div>
           </div>
         </svelte:fragment>
+        <div slot="skeleton-item" class="artist-item artist-item-skeleton">
+          <div class="title-skeleton"></div>
+          <div class="tracks-skeleton"></div>
+        </div>
       </VirtualScroll>
     {/if}
   </div>
@@ -113,24 +114,30 @@
 
 <style>
   .artists {
-    --uno: 'flex-grow overflow-y-hidden flex items-stretch';
+    --uno: 'flex-grow flex overflow-y-hidden items-stretch';
   }
   .artist-list {
-    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] overflow-y-auto';
-  }
-  .title {
-    --uno: 'flex items-center';
-  }
-  .meta {
-    --uno: 'text-gray-4 text-[12px] ml-2';
+    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] relative overflow-y-hidden';
   }
   .artist-item {
-    --uno: 'flex items-center justify-between text-[14px] leading-6 py-2 px-4 j-clickable-item';
+    --uno: 'text-[14px] h-10 w-full flex items-center leading-10 j-clickable-item box-border';
   }
   .active {
     --uno: 'j-active-item';
   }
-  .active-icon {
-    --uno: 'text-4 ml-2';
+  .title {
+    --uno: 'max-w-[50%] flex-grow truncate indent-[8px]';
+  }
+  .tracks {
+    --uno: 'max-w-[50%] text-3 flex-grow truncate text-gray-5 text-right pr-2';
+  }
+  .title-skeleton {
+    --uno: 'dark:bg-gray-8 h-[14px] ml-2 w-[40%]';
+  }
+  .tracks-skeleton {
+    --uno: 'dark:bg-gray-8 h-[12px] mr-6 w-[20%]';
+  }
+  .artist-item-skeleton {
+    --uno: 'justify-between';
   }
 </style>
