@@ -170,7 +170,7 @@
     --uno: 'flex items-baseline p-2 flex-grow relative overflow-hidden';
   }
   .middle::after {
-    --uno: 'absolute right-0 top-[30%] bottom-[30%] w-[1px] bg-gray-8';
+    --uno: 'absolute right-0 top-[30%] bottom-[30%] w-[1px] bg-gray-2 dark:bg-gray-8';
     content: ' ';
   }
   .progress-bg {
