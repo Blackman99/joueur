@@ -132,10 +132,10 @@
     --uno: 'max-w-[50%] text-3 flex-grow truncate text-gray-5 text-right pr-2';
   }
   .title-skeleton {
-    --uno: 'dark:bg-gray-8 h-[14px] ml-2 w-[40%]';
+    --uno: 'bg-gray-3 dark:bg-gray-8 h-[14px] ml-2 w-[40%]';
   }
   .tracks-skeleton {
-    --uno: 'dark:bg-gray-8 h-[12px] mr-6 w-[20%]';
+    --uno: 'bg-gray-3 dark:bg-gray-8 h-[12px] mr-6 w-[20%]';
   }
   .artist-item-skeleton {
     --uno: 'justify-between';
