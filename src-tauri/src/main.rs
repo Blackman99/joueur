@@ -8,6 +8,8 @@ use song::{Song, LyricsItem};
 use id3::{Tag, TagLike, Frame, Version};
 use id3::frame::{Content, Lyrics};
 use mp3_duration;
+use tauri::Manager;
+use window_shadows::set_shadow;
 mod song;
 
 #[tauri::command]
@@ -101,6 +103,11 @@ fn unwrap_str(var: Option<&str>) -> Option<String> {
 
 fn main() {
     tauri::Builder::default()
+        .setup(|app| {
+            let window = app.get_window("main").unwrap();
+            set_shadow(&window, true).expect("Unsupported platform!");
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             get_metadata, 
             update_lyrics, 

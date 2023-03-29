@@ -3,6 +3,7 @@
 ### 💪 Optimized
 
 * Add min width and min height for window size
+* Add window shadow
 
 ### 🐛 Fixes
 
