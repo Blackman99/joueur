@@ -6,10 +6,10 @@
   import {
     editLyricsContent,
     fullscreen,
+    quittingFullscreen,
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './store'
-  import { onMount } from 'svelte'
   import debounce from '$lib/utils/debounce'
   import throttle from '$lib/utils/throttle'
 
@@ -79,49 +79,46 @@
     if (lyricsContainer) lyricsContainer.scrollTop = $scrollTop
   }
 
-  onMount(() => {
-    const observer = new ResizeObserver(() => {
-      computedScrollPosition()
-    })
-    observer.observe(lyricsContainer)
-
-    return () => {
-      observer.unobserve(lyricsContainer)
-      observer.disconnect()
-    }
-  })
+  let windowWidth: number
 </script>
+
+<svelte:window
+  bind:innerWidth="{windowWidth}"
+  on:resize="{computedScrollPosition}"
+/>
 
 <div
   class="lyrics-wrapper"
   bind:clientHeight="{totalHeight}"
   class:fullscreen="{$fullscreen}"
 >
-  <div
-    class="lyrics-display"
-    class:no-lyrics="{noLyrics}"
-    bind:this="{lyricsContainer}"
-    on:click="{handleOpenLyricsEdit}"
-    on:keypress
-  >
-    {#if !noLyrics}
-      {#each lyricsLines as line, i}
-        {@const active = i === activeIndex}
-        <div
-          class="lyrics-line"
-          class:active="{active}"
-          style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
-        >
-          {line.replace(/^\[\d{2}:\d{2}\.\d{2,}\]/, '')}
+  {#if windowWidth > 800 || $fullscreen || $quittingFullscreen}
+    <div
+      class="lyrics-display"
+      class:no-lyrics="{noLyrics}"
+      bind:this="{lyricsContainer}"
+      on:click="{handleOpenLyricsEdit}"
+      on:keypress
+    >
+      {#if !noLyrics}
+        {#each lyricsLines as line, i}
+          {@const active = i === activeIndex}
+          <div
+            class="lyrics-line"
+            class:active="{active}"
+            style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
+          >
+            {line.replace(/^\[\d{2}:\d{2}\.\d{2,}\]/, '')}
+          </div>
+        {/each}
+      {:else}
+        <div class="lyfics-line active pr-6 flex items-center justify-center">
+          <LyricsEdit />
+          <div class="ml-1">No lyrics</div>
         </div>
-      {/each}
-    {:else}
-      <div class="lyfics-line active pr-6 flex items-center justify-center">
-        <LyricsEdit />
-        <div class="ml-1">No lyrics</div>
-      </div>
-    {/if}
-  </div>
+      {/if}
+    </div>
+  {/if}
 
   {#if !$fullscreen}
     <div
@@ -136,7 +133,7 @@
 
 <style>
   .lyrics-wrapper {
-    --uno: 'absolute left-0 right-0 top-0 bottom-0 overflow-x-hidden z-3';
+    --uno: 'absolute left-0 right-0 top-0 bottom-0 overflow-hidden z-3';
   }
   .fullscreen {
     --uno: '';

@@ -125,7 +125,7 @@
     }
   }
   .j-side {
-    --uno: 'flex flex-col shrink-0 justify-between bg-white dark:bg-black w-[18vw] min-w-180px max-w-[240px] box-border';
+    --uno: 'flex flex-col shrink-0 justify-between bg-white dark:bg-black w-[18vw] max-w-[240px] box-border';
   }
   .menus {
     --uno: 'p-4';
