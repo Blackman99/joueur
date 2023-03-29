@@ -11,6 +11,7 @@
   import ListUnfold from '$lib/icons/ListUnfold.svelte'
   import ListFold from '$lib/icons/ListFold.svelte'
   import { fullscreen } from './lyrics/store'
+  import ExpandableButton from './ExpandableButton.svelte'
 
   export let draggingSongId: number | null
   export let waitForDroppingPlaylistId: number | null = null
@@ -117,15 +118,7 @@
       {/if}
     </div>
   </div>
-  <div class="playlist-expandable-button">
-    <IconButton on:click="{() => (expanded = !expanded)}">
-      {#if expanded}
-        <ListFold />
-      {:else}
-        <ListUnfold />
-      {/if}
-    </IconButton>
-  </div>
+  <ExpandableButton bind:expanded="{expanded}" />
 </div>
 
 <style>
@@ -148,10 +141,6 @@
   }
   .playlist-inner {
     transition: opacity ease-in-out 0.3s;
-  }
-  .playlist-expandable-button {
-    --uno: 'sm:display-none absolute top-[50%] right-0 z-999';
-    transform: translate(50%, -50%);
   }
   .fullscreen {
     --uno: 'display-none';

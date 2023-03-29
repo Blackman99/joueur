@@ -1,0 +1,24 @@
+<script lang="ts">
+  import IconButton from './IconButton.svelte'
+  import ListUnfold from '../icons/ListUnfold.svelte'
+  import ListFold from '../icons/ListFold.svelte'
+
+  export let expanded = false
+</script>
+
+<div class="playlist-expandable-button">
+  <IconButton on:click="{() => (expanded = !expanded)}">
+    {#if expanded}
+      <ListFold />
+    {:else}
+      <ListUnfold />
+    {/if}
+  </IconButton>
+</div>
+
+<style>
+  .playlist-expandable-button {
+    --uno: 'sm:display-none absolute top-[50%] right-0 z-999';
+    transform: translate(50%, -50%);
+  }
+</style>

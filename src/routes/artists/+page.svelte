@@ -1,10 +1,12 @@
 <script lang="ts">
+  import ExpandableButton from '$lib/components/ExpandableButton.svelte'
   import Songs from '$lib/components/Songs.svelte'
   import VirtualScroll from '$lib/components/VirtualScroll.svelte'
   import { db } from '$lib/db'
+  import { isSm } from '$lib/layout'
   import { currentPlayingSongIds } from '$lib/store'
   import type { Artist, Song } from '$lib/types'
-  import { onMount } from 'svelte'
+  import { onMount, tick } from 'svelte'
   import {
     SELECTED_ARTIST_KEY,
     selectedArtist,
@@ -64,12 +66,32 @@
   const handlePlay = async (e: CustomEvent<Song>) => {
     $currentPlayingSongIds = $selectedArtistSongs.map(s => s.id)
   }
+
+  let expanded = true
+
+  let artistVirtualScroller: VirtualScroll
+
+  const resetVScroller = () => {
+    console.log('reset vscroller')
+
+    if (expanded || !$isSm) {
+      $limit = 10
+      tick().then(() => {
+        artistVirtualScroller?.recomputeInitialData()
+      })
+    }
+  }
 </script>
 
 <div class="artists">
-  <div class="artist-list">
+  <div
+    class="artist-list"
+    class:expanded="{expanded}"
+    on:transitionend|self="{resetVScroller}"
+  >
     {#if hasArtist}
       <VirtualScroll
+        bind:this="{artistVirtualScroller}"
         bind:limit="{$limit}"
         bind:offset="{$offset}"
         bind:scrollTop="{$scrollTop}"
@@ -99,6 +121,7 @@
         </div>
       </VirtualScroll>
     {/if}
+    <ExpandableButton bind:expanded="{expanded}" />
   </div>
   <Songs
     bind:this="{songs}"
@@ -117,7 +140,12 @@
     --uno: 'flex-grow flex overflow-y-hidden items-stretch';
   }
   .artist-list {
-    --uno: 'w-[240px] relative overflow-y-hidden';
+    --uno: 'w-[240px] max-w-0 sm:max-w-[240px] relative';
+    overflow: visible;
+    transition: max-width ease-in-out 0.3s;
+  }
+  .expanded {
+    --uno: 'max-w-[240px]';
   }
   .artist-item {
     --uno: 'w-[225px] text-[14px] max-w-[100%] h-10 leading-10 j-clickable-item box-border';
