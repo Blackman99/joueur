@@ -2,6 +2,7 @@
   import IconButton from './IconButton.svelte'
   import ListUnfold from '../icons/ListUnfold.svelte'
   import ListFold from '../icons/ListFold.svelte'
+  import { fullscreen } from './lyrics/store'
 
   export let expanded = false
 </script>
@@ -18,7 +19,7 @@
 
 <style>
   .playlist-expandable-button {
-    --uno: 'sm:display-none absolute top-[50%] right-0 z-999';
+    --uno: 'sm:display-none absolute top-[50%] right-0 z-10';
     transform: translate(50%, -50%);
   }
 </style>

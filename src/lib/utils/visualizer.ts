@@ -37,7 +37,7 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
     }
 
     ctx.strokeStyle = gradient
-    ctx.globalAlpha = 0.8
+    ctx.globalAlpha = 1
     ctx.stroke()
     ctx.closePath()
     requestAnimationFrame(draw)
@@ -64,12 +64,12 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
     }
     ctx.strokeStyle = gradient
     ctx.globalAlpha = 0.8
-    ctx.stroke()
     ctx.lineTo(canvas.width, canvas.height / 2)
     ctx.stroke()
     ctx.closePath()
     requestAnimationFrame(drawWave)
   }
+  
 
   return {
     draw,

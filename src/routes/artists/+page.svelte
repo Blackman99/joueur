@@ -72,8 +72,6 @@
   let artistVirtualScroller: VirtualScroll
 
   const resetVScroller = () => {
-    console.log('reset vscroller')
-
     if (expanded || !$isSm) {
       $limit = 10
       tick().then(() => {

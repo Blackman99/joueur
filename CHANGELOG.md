@@ -1,4 +1,4 @@
-## Next
+## 0.3.0
 
 ### 💪 Optimized
 
@@ -7,6 +7,8 @@
 * Optimize small size window layouts
 
 ### 🐛 Fixes
+
+* Artists list got disappeared when artists number is huge
 
 ## 0.2.0
 
