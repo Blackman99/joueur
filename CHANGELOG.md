@@ -1,3 +1,11 @@
+## Next
+
+### 💪 Optimized
+
+* Add min width and min height for window size
+
+### 🐛 Fixes
+
 ## 0.2.0
 
 ### 💪 Optimized
