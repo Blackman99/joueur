@@ -104,7 +104,7 @@
           {$playingSong.title}
         </div>
         <div class="meta">
-          <div>
+          <div class="artist-album">
             {$playingSong.artist} - {$playingSong.album || 'Unknown'}
           </div>
           <div class="seconds">
@@ -152,13 +152,13 @@
     --uno: 'flex items-stretch justify-between pr-4 bg-inherit';
   }
   .meta {
-    --uno: 'text-gray-4 text-3 flex justify-between flex-grow h-[20px] leading-[20px] ml-2 pointer-events-none';
+    --uno: 'text-gray-4 text-3 flex sm:justify-between justify-end flex-grow h-[20px] leading-[20px] ml-2 pointer-events-none';
+  }
+  .artist-album {
+    --uno: 'display-none sm:block';
   }
   .title {
     --uno: 'flex items-baseline pointer-events-none';
-  }
-  .fullscreen .meta {
-    --uno: 'display-none sm:flex';
   }
   .controls {
     --uno: 'flex items-center ml-2 gap-1';

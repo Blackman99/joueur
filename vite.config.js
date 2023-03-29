@@ -14,6 +14,9 @@ export default defineConfig({
           primary: '#37A6CA',
           secondary: '#0F2C4D',
         },
+        breakpoints: {
+          sm: '800px',
+        },
       },
       shortcuts: {
         'j-clickable-item': 'hover:bg-light-7 dark:hover:bg-dark-8 dark:active:bg-dark-7 active:bg-light-9 cursor-pointer transition-colors transition-100',
