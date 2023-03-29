@@ -6,7 +6,7 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
   const analyser = audioCtx.createAnalyser()
   audioSource.connect(analyser)
   analyser.connect(audioCtx.destination)
-  analyser.fftSize = 256
+  analyser.fftSize = 1024
   const bufferLength = analyser.frequencyBinCount
   const dataArray = new Uint8Array(bufferLength)
   const barWidth = (canvas.width / bufferLength)
@@ -50,9 +50,10 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
     analyser.getByteTimeDomainData(dataArray)
 
     ctx.beginPath()
+    ctx.lineWidth = 3
 
     for (let i = 0; i < bufferLength; i++) {
-      const v = dataArray[i] / 128.0
+      const v = dataArray[i] / 128
       const y = v * (canvas.height / 2)
 
       if (i === 0)
