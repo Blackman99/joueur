@@ -93,6 +93,7 @@
         "title": "Joueur",
         "width": 800,
         "minWidth": 600,
+        "minHeight": 400,
         "decorations": false
       }
     ]
