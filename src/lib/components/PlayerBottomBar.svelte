@@ -165,6 +165,7 @@
   }
   .seconds {
     --uno: 'text-gray-4 text-3 mx-2';
+    white-space: nowrap;
   }
   .middle {
     --uno: 'flex items-baseline p-2 flex-grow relative overflow-hidden';

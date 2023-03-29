@@ -6,10 +6,17 @@
   import CreatePlaylistInput from './CreatePlaylistInput.svelte'
   import { ask, message } from '@tauri-apps/api/dialog'
   import { db } from '$lib/db'
+  import { isSm } from '$lib/layout'
+  import IconButton from './IconButton.svelte'
+  import ListUnfold from '$lib/icons/ListUnfold.svelte'
+  import ListFold from '$lib/icons/ListFold.svelte'
+  import { fullscreen } from './lyrics/store'
 
   export let draggingSongId: number | null
   export let waitForDroppingPlaylistId: number | null = null
   export let draggingSongIds: number[] = []
+
+  let expanded = true
 
   const handlePlaylistClick = (id: number) => {
     $selectedPlaylistId = id
@@ -58,58 +65,96 @@
   }
 </script>
 
-<div class="playlist">
-  <CreatePlaylistInput />
-  <div class="lists">
-    {#if $playlists}
-      {#each $playlists as playlist (playlist.id)}
-        {@const active = playlist.id === $selectedPlaylistId}
-        <div
-          class="playlist-item"
-          class:active="{active}"
-          data-playlist-id="{playlist.id}"
-          on:click="{() => handlePlaylistClick(playlist.id)}"
-          on:keyup="{() => handlePlaylistClick(playlist.id)}"
-          on:dragenter="{handleDragenter}"
-          on:dragleave="{handleDragleave}"
-          use:contextMenu="{{
-            menus:
-              playlist.id === -1
-                ? []
-                : [
-                    {
-                      title: 'Delete playlist',
-                      name: 'delete-playlist',
-                    },
-                  ],
-            actionHandler: (e, m) => contextMenuHandler(m.name, playlist.id),
-          }}"
-        >
-          {#if (draggingSongId || draggingSongIds.length) && waitForDroppingPlaylistId === playlist.id}
-            <div class="drop-hint"></div>
-          {/if}
-          <div>
-            {playlist.title}
-            <span class="num">
-              ({playlist.songIds.length})
-            </span>
-          </div>
-          {#if active}
-            <div class="active-icon">
-              <PlaylistActive />
+<div
+  class="playlist"
+  class:fullscreen="{$fullscreen}"
+  class:sm="{$isSm}"
+  class:expanded="{$isSm && expanded}"
+>
+  <div class:hide="{$isSm && !expanded}" class="playlist-inner">
+    <CreatePlaylistInput />
+    <div class="lists">
+      {#if $playlists}
+        {#each $playlists as playlist (playlist.id)}
+          {@const active = playlist.id === $selectedPlaylistId}
+          <div
+            class="playlist-item"
+            class:active="{active}"
+            data-playlist-id="{playlist.id}"
+            on:click="{() => handlePlaylistClick(playlist.id)}"
+            on:keyup="{() => handlePlaylistClick(playlist.id)}"
+            on:dragenter="{handleDragenter}"
+            on:dragleave="{handleDragleave}"
+            use:contextMenu="{{
+              menus:
+                playlist.id === -1
+                  ? []
+                  : [
+                      {
+                        title: 'Delete playlist',
+                        name: 'delete-playlist',
+                      },
+                    ],
+              actionHandler: (e, m) => contextMenuHandler(m.name, playlist.id),
+            }}"
+          >
+            {#if (draggingSongId || draggingSongIds.length) && waitForDroppingPlaylistId === playlist.id}
+              <div class="drop-hint"></div>
+            {/if}
+            <div>
+              {playlist.title}
+              <span class="num">
+                ({playlist.songIds.length})
+              </span>
             </div>
-          {/if}
-        </div>
-      {/each}
-    {/if}
+            {#if active}
+              <div class="active-icon">
+                <PlaylistActive />
+              </div>
+            {/if}
+          </div>
+        {/each}
+      {/if}
+    </div>
+  </div>
+  <div class="playlist-expandable-button">
+    <IconButton on:click="{() => (expanded = !expanded)}">
+      {#if expanded}
+        <ListFold />
+      {:else}
+        <ListUnfold />
+      {/if}
+    </IconButton>
   </div>
 </div>
 
 <style>
   .playlist {
-    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] flex flex-col text-[14px] overflow-y-auto b-r-solid b-r-1 dark:b-r-gray-8 b-r-light-5';
+    --uno: 'w-[18vw] min-w-[240px] max-w-[280px] flex-shrink-0 flex flex-col text-[14px] b-r-solid b-r-1 dark:b-r-gray-8 b-r-light-5 bg-light-1 dark:bg-dark-9 sm:bg-unset relative';
     user-select: none;
     -webkit-user-select: none;
+    overflow-y: auto;
+  }
+  .sm {
+    --uno: 'min-w-unset max-w-0 w-[240px]';
+    overflow: visible;
+    transition: max-width ease-in-out 0.3s;
+  }
+  .sm.expanded {
+    --uno: 'max-w-[240px]';
+  }
+  .hide {
+    --uno: 'opacity-0';
+  }
+  .playlist-inner {
+    transition: opacity ease-in-out 0.3s;
+  }
+  .playlist-expandable-button {
+    --uno: 'sm:display-none absolute top-[50%] right-0 z-999';
+    transform: translate(50%, -50%);
+  }
+  .fullscreen {
+    --uno: 'display-none';
   }
   .playlist-item {
     --uno: 'leading-10 px-4 flex items-center justify-between j-clickable-item relative';

@@ -12,6 +12,7 @@
   } from './store'
   import debounce from '$lib/utils/debounce'
   import throttle from '$lib/utils/throttle'
+  import { isSm } from '$lib/layout'
 
   $: lyricsLines = $playingSong?.lyrics?.[0]?.text?.split('\n') || []
   $: noLyrics = !lyricsLines || !lyricsLines.length
@@ -78,27 +79,18 @@
   $: {
     if (lyricsContainer) lyricsContainer.scrollTop = $scrollTop
   }
-
-  let windowWidth: number
 </script>
-
-<svelte:window
-  bind:innerWidth="{windowWidth}"
-  on:resize="{computedScrollPosition}"
-/>
 
 <div
   class="lyrics-wrapper"
-  class:lyrics-wrapper-sm="{windowWidth < 800}"
+  class:lyrics-wrapper-sm="{$isSm}"
   bind:clientHeight="{totalHeight}"
   class:fullscreen="{$fullscreen}"
 >
   <div
     class="lyrics-display"
     class:no-lyrics="{noLyrics}"
-    class:hide-lyrics="{windowWidth < 800 &&
-      !$fullscreen &&
-      !$quittingFullscreen}"
+    class:hide-lyrics="{$isSm && !$fullscreen && !$quittingFullscreen}"
     bind:this="{lyricsContainer}"
     on:click="{handleOpenLyricsEdit}"
     on:keypress
@@ -125,7 +117,7 @@
   {#if !$fullscreen}
     <div
       class="fullscreen-toggle"
-      class:fullscreen-toggle-sm="{windowWidth < 800}"
+      class:fullscreen-toggle-sm="{$isSm}"
       on:click="{() => ($fullscreen = true)}"
       on:keypress
     >
@@ -158,6 +150,9 @@
     transition: all linear 0.2s;
     overflow-y: auto;
     transform: translateZ(0);
+  }
+  .fullscreen .lyrics-display {
+    --uno: 'py-[20vh]';
   }
   .no-lyrics {
     --uno: 'flex items-center justify-center';

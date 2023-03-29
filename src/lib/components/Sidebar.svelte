@@ -4,7 +4,7 @@
   import Menu from './Menu.svelte'
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
-  import { playingSongId, isDark } from '$lib/store'
+  import { playingSongId } from '$lib/store'
   import MenuMusics from '$lib/icons/MenuMusics.svelte'
   import MenuArtists from '$lib/icons/MenuArtists.svelte'
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
@@ -13,6 +13,7 @@
   import LyricsDisplay from './lyrics/LyricsDisplay.svelte'
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
   import { fullscreen, quittingFullscreen } from './lyrics/store'
+  import { appWindow } from '@tauri-apps/api/window'
 
   $: playingSong = liveQuery(() =>
     db.songs.where('id').equals($playingSongId).first()
@@ -84,7 +85,11 @@
   ]
 </script>
 
-<aside class="j-side" id="sidebar">
+<aside
+  class="j-side"
+  id="sidebar"
+  on:mousedown="{() => appWindow.startDragging()}"
+>
   <div class="menus">
     {#each sidebarMenus as sMenu}
       <Menu label="{sMenu.label}" to="{sMenu.to}" rounded onlyIconOnSm>

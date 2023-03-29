@@ -47,6 +47,7 @@
   import CurrentPlayingSongs from '$lib/components/CurrentPlayingSongs.svelte'
   import EditLyrics from '$lib/components/lyrics/EditLyrics.svelte'
   import AppBar from '$lib/components/AppBar.svelte'
+  import { windowInnerWidth } from '$lib/layout'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -242,6 +243,8 @@
   on:mouseenter="{() => ($inWindow = true)}"
   on:mouseleave="{() => ($inWindow = false)}"
 />
+
+<svelte:window bind:innerWidth="{$windowInnerWidth}" />
 
 <AppBar />
 <main class="j-main" on:contextmenu="{handleContextMenu}">
