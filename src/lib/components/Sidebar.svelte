@@ -59,22 +59,38 @@
         )};`,
     }
   }
+
+  const sidebarMenus = [
+    {
+      to: '/',
+      label: 'Musics',
+      icon: MenuMusics,
+    },
+    {
+      to: '/artists',
+      label: 'Artists',
+      icon: MenuArtists,
+    },
+    {
+      to: '/albums',
+      label: 'Albums',
+      icon: MenuAlbums,
+    },
+    {
+      to: '/settings',
+      label: 'Settings',
+      icon: MenuSettings,
+    },
+  ]
 </script>
 
 <aside class="j-side" id="sidebar">
   <div class="menus">
-    <Menu label="Musics" to="/" rounded>
-      <MenuMusics slot="icon" />
-    </Menu>
-    <Menu label="Artists" to="/artists" rounded>
-      <MenuArtists slot="icon" />
-    </Menu>
-    <Menu label="Albums" to="/albums" rounded>
-      <MenuAlbums slot="icon" />
-    </Menu>
-    <Menu label="Settings" to="/settings" rounded>
-      <MenuSettings slot="icon" />
-    </Menu>
+    {#each sidebarMenus as sMenu}
+      <Menu label="{sMenu.label}" to="{sMenu.to}" rounded onlyIconOnSm>
+        <svelte:component this="{sMenu.icon}" slot="icon" />
+      </Menu>
+    {/each}
   </div>
   <div
     class="cover-wrapper"
@@ -125,10 +141,10 @@
     }
   }
   .j-side {
-    --uno: 'flex flex-col shrink-0 justify-between bg-white dark:bg-black w-[18vw] max-w-[240px] box-border';
+    --uno: 'flex flex-col shrink-0 justify-between bg-white dark:bg-black w-[80px] sm:w-[18vw] max-w-[240px] box-border';
   }
   .menus {
-    --uno: 'p-4';
+    --uno: 'p-4 flex flex-col items-center';
   }
   .cover {
     --uno: 'w-full aspect-1 object-cover block';

@@ -89,40 +89,43 @@
 
 <div
   class="lyrics-wrapper"
+  class:lyrics-wrapper-sm="{windowWidth < 800}"
   bind:clientHeight="{totalHeight}"
   class:fullscreen="{$fullscreen}"
 >
-  {#if windowWidth > 800 || $fullscreen || $quittingFullscreen}
-    <div
-      class="lyrics-display"
-      class:no-lyrics="{noLyrics}"
-      bind:this="{lyricsContainer}"
-      on:click="{handleOpenLyricsEdit}"
-      on:keypress
-    >
-      {#if !noLyrics}
-        {#each lyricsLines as line, i}
-          {@const active = i === activeIndex}
-          <div
-            class="lyrics-line"
-            class:active="{active}"
-            style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
-          >
-            {line.replace(/^\[\d{2}:\d{2}\.\d{2,}\]/, '')}
-          </div>
-        {/each}
-      {:else}
-        <div class="lyfics-line active pr-6 flex items-center justify-center">
-          <LyricsEdit />
-          <div class="ml-1">No lyrics</div>
+  <div
+    class="lyrics-display"
+    class:no-lyrics="{noLyrics}"
+    class:hide-lyrics="{windowWidth < 800 &&
+      !$fullscreen &&
+      !$quittingFullscreen}"
+    bind:this="{lyricsContainer}"
+    on:click="{handleOpenLyricsEdit}"
+    on:keypress
+  >
+    {#if !noLyrics}
+      {#each lyricsLines as line, i}
+        {@const active = i === activeIndex}
+        <div
+          class="lyrics-line"
+          class:active="{active}"
+          style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
+        >
+          {line.replace(/^\[\d{2}:\d{2}\.\d{2,}\]/, '')}
         </div>
-      {/if}
-    </div>
-  {/if}
+      {/each}
+    {:else}
+      <div class="lyfics-line active pr-6 flex items-center justify-center">
+        <LyricsEdit />
+        <div class="ml-1">No lyrics</div>
+      </div>
+    {/if}
+  </div>
 
   {#if !$fullscreen}
     <div
       class="fullscreen-toggle"
+      class:fullscreen-toggle-sm="{windowWidth < 800}"
       on:click="{() => ($fullscreen = true)}"
       on:keypress
     >
@@ -139,7 +142,14 @@
     --uno: '';
   }
   .fullscreen-toggle {
-    --uno: 'absolute top-[4px] right-[4px] z-2 text-white text-5 cursor-pointer';
+    --uno: 'absolute sm:top-[4px] sm:right-[4px] sm:left-unset sm:bottom-unset z-2 text-white text-5 cursor-pointer top-0 right-0 left-0 bottom-0 bg-black px-2 py-1 bg-opacity-40 sm:bg-opacity-0';
+  }
+  .fullscreen-toggle-sm {
+    --uno: 'flex items-center justify-center opacity-0';
+    transition: opacity linear 0.2s;
+  }
+  .lyrics-wrapper-sm .fullscreen-toggle-sm {
+    --uno: 'hover:opacity-100';
   }
   .lyrics-display {
     --uno: 'text-center absolute left-0 right-[-16px] top-0 bottom-0 py-[80px] text-warm-gray-3 z-2 bg-black bg-opacity-40 dark:bg-opacity-50 hover:bg-opacity-20 dark:hover:bg-opacity-20';
@@ -151,6 +161,9 @@
   }
   .no-lyrics {
     --uno: 'flex items-center justify-center';
+  }
+  .hide-lyrics {
+    --uno: 'display-none';
   }
   .lyrics-display:hover {
     backdrop-filter: none;

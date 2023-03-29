@@ -42,7 +42,4 @@ export default defineConfig({
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     sourcemap: !!process.env.TAURI_DEBUG,
   },
-  optimizeDeps: {
-    // exclude: ['music-metadata-browser'],
-  },
 })

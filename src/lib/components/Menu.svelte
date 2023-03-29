@@ -4,6 +4,7 @@
   export let label: string
   export let to: string | undefined = undefined
   export let rounded: boolean = false
+  export let onlyIconOnSm = false
 
   $: active = $page.route.id?.replace(/\([\s\S]*\)\/?/g, '') === to
 </script>
@@ -12,6 +13,7 @@
   <a
     class="menu-item"
     class:active="{active}"
+    class:only-icon-on-sm="{onlyIconOnSm}"
     href="{to}"
     draggable="false"
     class:menu-rounded="{rounded}"
@@ -21,7 +23,7 @@
       <div class="menu-icon">
         <slot name="icon" />
       </div>
-      <div>
+      <div class="label">
         {label}
       </div>
     </div>
@@ -61,7 +63,7 @@
     --uno: 'rounded-lg';
   }
   .menu-icon {
-    --uno: 'text-5 flex items-center mr-2';
+    --uno: 'text-5 flex items-center sm:mr-2';
   }
   .active {
     --uno: 'j-active-item';
@@ -72,5 +74,8 @@
   }
   .prepend {
     --uno: 'flex-grow';
+  }
+  .only-icon-on-sm .label {
+    --uno: 'display-none sm:display-block';
   }
 </style>
