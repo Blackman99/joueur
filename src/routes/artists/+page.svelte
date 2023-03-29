@@ -117,27 +117,27 @@
     --uno: 'flex-grow flex overflow-y-hidden items-stretch';
   }
   .artist-list {
-    --uno: 'w-[18vw] min-w-[220px] max-w-[240px] relative overflow-y-hidden';
+    --uno: 'w-[240px] relative overflow-y-hidden';
   }
   .artist-item {
-    --uno: 'text-[14px] h-10 w-full flex items-center leading-10 j-clickable-item box-border';
+    --uno: 'w-[225px] text-[14px] max-w-[100%] h-10 leading-10 j-clickable-item box-border';
   }
   .active {
     --uno: 'j-active-item';
   }
   .title {
-    --uno: 'max-w-[50%] flex-grow truncate indent-[8px]';
+    --uno: 'indent-[8px] w-65% inline-block truncate';
   }
   .tracks {
-    --uno: 'max-w-[50%] text-3 flex-grow truncate text-gray-5 text-right pr-2';
+    --uno: 'text-3 text-gray-5 w-30% inline-block text-right truncate box-border';
   }
   .title-skeleton {
     --uno: 'bg-gray-3 dark:bg-gray-8 h-[14px] ml-2 w-[40%]';
   }
   .tracks-skeleton {
-    --uno: 'bg-gray-3 dark:bg-gray-8 h-[12px] mr-6 w-[20%]';
+    --uno: 'bg-gray-3 dark:bg-gray-8 h-[12px] mr-2 w-[20%]';
   }
   .artist-item-skeleton {
-    --uno: 'justify-between';
+    --uno: 'justify-between flex items-center';
   }
 </style>

@@ -4,6 +4,7 @@
 
 * Add min width and min height for window size
 * Add window shadow
+* Optimize small size window layouts
 
 ### 🐛 Fixes
 
