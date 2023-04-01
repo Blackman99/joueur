@@ -149,7 +149,7 @@
     --uno: 'flex flex-col shrink-0 justify-between bg-white dark:bg-black w-[80px] sm:w-[18vw] max-w-[240px] box-border';
   }
   .menus {
-    --uno: 'p-4 flex flex-col items-center';
+    --uno: 'p-4 flex flex-col items-center sm:items-start';
   }
   .cover {
     --uno: 'w-full aspect-1 object-cover block';

@@ -7,7 +7,7 @@
   export let expanded = false
 </script>
 
-<div class="playlist-expandable-button">
+<div class="playlist-expandable-button" class:expanded="{expanded}">
   <IconButton on:click="{() => (expanded = !expanded)}">
     {#if expanded}
       <ListFold />
@@ -20,6 +20,10 @@
 <style>
   .playlist-expandable-button {
     --uno: 'sm:display-none absolute top-[50%] right-0 z-10';
-    transform: translate(50%, -50%);
+    transition: transform linear 0.2s;
+    transform: translate(70%, -50%);
+  }
+  .expanded {
+    transform: translate(20%, -50%);
   }
 </style>
