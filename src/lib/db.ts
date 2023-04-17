@@ -238,6 +238,18 @@ class JoueurDB extends Dexie {
     } as unknown as Playlist
     await this.playlists.put(newPlayList)
   }
+
+  /**
+   * Add song to playlist.
+   * @param playlistId playlist ID
+   * @param songId song ID
+   */
+  async addSongToPlaylist(playlistId: number, songId: number) {
+    const playlist = await this.playlists.where('id').equals(playlistId).filter(pl => !pl.songIds.includes(songId)).first()
+    if (!playlist) return
+    playlist.songIds.push(songId)
+    await this.playlists.update(playlistId, playlist)
+  }
 }
 
 export const db = new JoueurDB()

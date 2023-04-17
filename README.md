@@ -37,7 +37,7 @@ A tiny and playful music player
       * [x] By dragging from file system
       * [x] By dragging single song from inside lists
       * [x] By dragging multi-selected songs from inside lists
-      * [ ] By context menu single
+      * [x] By context menu single
       * [ ] By context menu multi-selected songs
     * [x] Remove Song
       * [x] Remove single by context menu
@@ -56,7 +56,7 @@ A tiny and playful music player
   * [x] Spectrum
 * [x] Search
   * [x] Global search song/artist/album
-* [ ] Lyrics
+* [x] Lyrics
   * [x] Basic display
   * [x] Auto scroll
   * [x] Edit

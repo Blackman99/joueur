@@ -1,3 +1,10 @@
+## Next
+
+### 💡 Added
+
+* Context menu support children menus
+* Add to playlist by context menu
+
 ## 0.3.0
 
 ### 💪 Optimized

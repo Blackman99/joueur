@@ -109,8 +109,11 @@
       case 'edit-lyrics':
         handleEditLyrics(song)
         break
+      case 'add-to-playlist':
+        db.addSongToPlaylist(menu.pId, song.id)
+        break
       default:
-        dispatch(name, song.id)
+        dispatch(menu.name, song.id)
     }
   }
 
@@ -178,40 +181,42 @@
           on:dragstart="{() => handleDragstart(song)}"
           on:dragend="{onDragend}"
           use:contextMenu="{{
-            actionHandler: (_e, m) => handleContextMenuClick(m.name, song),
-            menus: canSelectedMultiple
-              ? [
-                  ...(isInSelection
-                    ? [
-                        {
-                          title: 'Unselect',
-                          name: 'uncheck-song',
-                        },
-                        ...inSelectionContextMenus,
-                      ]
-                    : [
-                        {
-                          title: 'Select',
-                          name: 'check-song',
-                        },
-                      ]),
-                  ...($playlists && $playlists.length
-                    ? {
-                        title: 'Add to playlist',
-                        children: $playlists.map(pl => ({
-                          title: pl.title,
-                          name: 'add-to-playlist',
-                          pId: pl.id,
-                        })),
-                      }
-                    : []),
-                  {
-                    title: 'Edit metadata',
-                    name: 'edit-lyrics',
-                  },
-                  ...contextMenus,
-                ]
-              : contextMenus,
+            actionHandler: (_e, m) => handleContextMenuClick(m, song),
+            menus: [
+              ...(canSelectedMultiple
+                ? isInSelection
+                  ? [
+                      {
+                        title: 'Unselect',
+                        name: 'uncheck-song',
+                      },
+                      ...inSelectionContextMenus,
+                    ]
+                  : [
+                      {
+                        title: 'Select',
+                        name: 'check-song',
+                      },
+                    ]
+                : []),
+              ...($playlists && $playlists.length
+                ? [
+                    {
+                      title: 'Add to playlist',
+                      children: $playlists.map(pl => ({
+                        title: pl.title,
+                        name: 'add-to-playlist',
+                        pId: pl.id,
+                      })),
+                    },
+                  ]
+                : []),
+              {
+                title: 'Edit metadata',
+                name: 'edit-lyrics',
+              },
+              ...contextMenus,
+            ],
           }}"
         >
           {#if selectionMode}
