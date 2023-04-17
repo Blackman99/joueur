@@ -9,6 +9,7 @@
     currentPlaylistSongs,
     playedSeconds,
     selectedPlaylistId,
+    playlists,
   } from '$lib/store'
   import type { Song } from '$lib/types'
   import { createEventDispatcher } from 'svelte'
@@ -95,8 +96,8 @@
     $updateLyricsDialogOpen = true
   }
 
-  const handleContextMenuClick = (name: string, song: Song) => {
-    switch (name) {
+  const handleContextMenuClick = (menu: ContextMenuItem, song: Song) => {
+    switch (menu.name) {
       case 'check-song':
         selectedSongIds.push(song.id)
         selectionMode = true
@@ -194,8 +195,18 @@
                           name: 'check-song',
                         },
                       ]),
+                  ...($playlists && $playlists.length
+                    ? {
+                        title: 'Add to playlist',
+                        children: $playlists.map(pl => ({
+                          title: pl.title,
+                          name: 'add-to-playlist',
+                          pId: pl.id,
+                        })),
+                      }
+                    : []),
                   {
-                    title: 'Edit lyrics',
+                    title: 'Edit metadata',
                     name: 'edit-lyrics',
                   },
                   ...contextMenus,

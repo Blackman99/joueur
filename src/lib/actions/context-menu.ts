@@ -3,6 +3,7 @@ import ContextMenu__SvelteComponent_ from '../components/ContextMenu.svelte'
 import clickOutside from './outside-click'
 
 export interface ContextMenuItem {
+  [key: string]: any
   title: string
   name: string
   children?: ContextMenuItem[]
