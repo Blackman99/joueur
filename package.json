@@ -23,7 +23,7 @@
     "@casual-ui/eslint-config-svelte": "^0.1.0",
     "@iconify/json": "^2.2.28",
     "@sveltejs/adapter-static": "^2.0.1",
-    "@sveltejs/kit": "^1.11.0",
+    "@sveltejs/kit": "^1.15.5",
     "@tauri-apps/cli": "^1.2.3",
     "eslint": "^8.35.0",
     "prettier": "^2.8.4",
@@ -33,6 +33,6 @@
     "tslib": "^2.5.0",
     "typescript": "^4.9.5",
     "unocss": "^0.50.1",
-    "vite": "^4.1.1"
+    "vite": "^4.2.1"
   }
 }
