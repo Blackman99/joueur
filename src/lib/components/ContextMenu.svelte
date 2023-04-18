@@ -17,6 +17,7 @@
   let contextMenu: HTMLDivElement
 
   let childrenAliasX = 'left'
+  let childrenAliasY = 'top'
 
   $: aliasX = x < window.innerWidth / 2 ? 'left' : 'right'
   $: offsetX = aliasX === 'left' ? x : window.innerWidth - x
@@ -25,8 +26,10 @@
 
   const recomputeContextMenuWidth = () => {
     tick().then(() => {
-      const { x, width } = contextMenu?.getBoundingClientRect()
+      const { x, width, y, height } = contextMenu?.getBoundingClientRect()
       childrenAliasX = x + width / 2 < window.innerWidth / 2 ? 'left' : 'right'
+      childrenAliasY =
+        y + height / 2 < window.innerHeight / 2 ? 'top' : 'bottom'
     })
   }
 
@@ -58,7 +61,7 @@
           </div>
           <div
             class="children context-menu-box"
-            style="{childrenAliasX}: 100%;"
+            style="{childrenAliasX}: 100%;{childrenAliasY}: 0;"
           >
             {#each menu.children as c}
               <div
@@ -95,7 +98,6 @@
   }
   .children {
     --uno: 'z-202 absolute';
-    top: 0;
     opacity: 0;
     visibility: none;
   }

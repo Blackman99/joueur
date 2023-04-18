@@ -64,7 +64,7 @@
   const sidebarMenus = [
     {
       to: '/',
-      label: 'Musics',
+      label: 'Tracks',
       icon: MenuMusics,
     },
     {
