@@ -88,7 +88,6 @@
 <aside
   class="j-side"
   id="sidebar"
-  on:mousedown="{() => appWindow.startDragging()}"
 >
   <div class="menus">
     {#each sidebarMenus as sMenu}
@@ -97,6 +96,7 @@
       </Menu>
     {/each}
   </div>
+  <div class="flex-grow" on:mousedown="{() => appWindow.startDragging()}"></div>
   <div
     class="cover-wrapper"
     class:fullscreen="{$fullscreen}"
