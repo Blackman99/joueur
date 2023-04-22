@@ -5,6 +5,10 @@
 * Context menu support children menus
 * Add to playlist by context menu
 
+### 🐛 Fixes
+
+* Sidebar click event block by `appWindow.startDragging`
+
 ## 0.3.0
 
 ### 💪 Optimized
