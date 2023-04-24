@@ -1227,7 +1227,7 @@ checksum = "8eaf4bc02d17cbdd7ff4c7438cafcdf7fb9a4613313ad11b4f8fefe7d3fa0130"
 
 [[package]]
 name = "joueur"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "base64 0.21.0",
  "id3",
