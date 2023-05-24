@@ -1,12 +1,24 @@
 <script>
-  import { updateAlbumBySong, updateSongLyrics } from '$lib/utils/audio'
+  import {
+    updateAlbumBySong,
+    updateCover,
+    updateSongLyrics,
+  } from '$lib/utils/audio'
+  import { open } from '@tauri-apps/api/dialog'
   import Dialog from '../Dialog.svelte'
   import PopupEditor from '../PopupEditor.svelte'
+  import UploadImage from '../UploadImage.svelte'
   import {
     updateLyricsDialogOpen,
     songToUpdateLyrics,
     editLyricsContent,
   } from './store'
+  import { convertFileSrc } from '@tauri-apps/api/tauri'
+
+  /**
+   * @type {HTMLInputElement}
+   */
+  let uploader
 
   const handleSaveLyrics = async () => {
     await updateSongLyrics($songToUpdateLyrics, $editLyricsContent)
@@ -28,15 +40,37 @@
     $songToUpdateLyrics = $songToUpdateLyrics
     showAlbumEditor = false
   }
+
+  const openCoverPicker = async () => {
+    const selected = await open({
+      multiple: false,
+      filters: [
+        {
+          name: 'image',
+          extensions: ['png', 'jpg', 'jpeg'],
+        },
+      ],
+    })
+    if (!selected || Array.isArray(selected)) return
+    await updateCover($songToUpdateLyrics, selected)
+    $songToUpdateLyrics = $songToUpdateLyrics
+  }
 </script>
 
 <Dialog title="Update lyrics" bind:open="{$updateLyricsDialogOpen}">
   <div class="flex items-center mb-2" slot="title">
-    <img
-      class="cover"
-      src="{$songToUpdateLyrics?.cover}"
-      alt="{$songToUpdateLyrics?.title}"
-    />
+    <div class="cover-wrapper">
+      <img
+        class="cover"
+        src="{$songToUpdateLyrics?.cover}"
+        alt="{$songToUpdateLyrics?.title}"
+      />
+      <div class="upload-cover" on:keypress on:click="{openCoverPicker}">
+        <div class="upload-icon-wrapper">
+          <UploadImage />
+        </div>
+      </div>
+    </div>
     <div class="flex items-end">
       <span>
         {$songToUpdateLyrics?.title}
@@ -78,10 +112,21 @@
   .save-lyrics-btn {
     --uno: 'py-2 px-3 bg-primary bg-opacity-80 rounded text-[14px] text-white cursor-pointer hover:bg-opacity-90 active:bg-opacity-100';
   }
+  .cover-wrapper {
+    --uno: 'relative mr-2 cursor-pointer';
+  }
   .cover {
-    --uno: 'w-8 h-8 rounded mr-2';
+    --uno: 'w-15 h-15 rounded';
     object-fit: cover;
   }
+  .upload-cover {
+    --uno: 'absolute z-3 top-0 left-0 right-0 bottom-0 visibility-none opacity-0 bg-black bg-opacity-70 dark:bg-white dark:bg-opacity-50 rounded flex items-center justify-center text-secondary text-5';
+    transition: opacity ease-in-out 0.2s;
+  }
+  .cover-wrapper:hover .upload-cover {
+    --uno: 'visibility-unset opacity-100';
+  }
+
   .label {
     --uno: 'mb-2';
   }

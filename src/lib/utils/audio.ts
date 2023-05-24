@@ -68,3 +68,14 @@ export const updateAlbumBySong = async (song: Song, albumTitle: string) => {
   if (album)
     await updateAlbum(album, albumTitle)
 }
+
+export const updateCover = async (song: Song, imagePath: string) => {
+  const imageBase64 = await invoke('update_cover', {
+    songPath: song.path,
+    imagePath,
+  }) as string
+  console.log({ imageBase64 });
+  
+  song.cover = imageBase64
+  await db.songs.update(song.id, song)
+}

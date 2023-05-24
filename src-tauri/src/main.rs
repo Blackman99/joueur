@@ -6,11 +6,14 @@
 use base64::{Engine as _, engine::general_purpose};
 use song::{Song, LyricsItem};
 use id3::{Tag, TagLike, Frame, Version};
-use id3::frame::{Content, Lyrics};
+use id3::frame::{Content, Lyrics, Picture, PictureType};
 use mp3_duration;
 use tauri::Manager;
 use window_shadows::set_shadow;
 mod song;
+use std::io::Read;
+use std::io::BufReader;
+use std::fs::File;
 
 #[tauri::command]
 fn get_metadata(path: &str) -> Option<Song> {
@@ -56,7 +59,7 @@ fn get_metadata(path: &str) -> Option<Song> {
                 }
             })
         },
-        Err(_e) => None
+        Err(_e) => None,
     }
 }
 
@@ -73,6 +76,35 @@ fn update_lyrics(path: &str, lyrics: &str) -> Result<String, String> {
             match t.write_to_path(path, Version::Id3v24) {
                 Err(e) => Err(e.description),
                 Ok(_o) => Ok("Success".to_owned())
+            }
+        },
+        Err(e) => Err(e.description)
+    }
+}
+
+#[tauri::command]
+fn update_cover(song_path: &str, image_path: &str) -> Result<String, String> {
+    let tag = Tag::read_from_path(song_path);
+    let f = File::open(image_path).unwrap();
+    let mut reader = BufReader::new(f);
+    let mut buffer = Vec::new();
+    let _size = reader.read_to_end(&mut buffer);
+
+    let mut base64_str = "data:image/jpeg;base64, ".to_owned();
+    base64_str.push_str(&general_purpose::STANDARD_NO_PAD.encode(buffer.clone()));
+
+    match tag {
+        Ok(mut t) => {
+            t.remove_all_pictures();
+            t.add_frame(Frame::with_content("APIC", Content::Picture(Picture {
+                mime_type: "image/jpeg".to_owned(),
+                picture_type: PictureType::CoverFront,
+                description: "".to_owned(),
+                data: buffer,
+            })));
+            match t.write_to_path(song_path, Version::Id3v24) {
+                Err(e) => Err(e.description),
+                Ok(_o) => Ok(base64_str)
             }
         },
         Err(e) => Err(e.description)
@@ -111,7 +143,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_metadata, 
             update_lyrics, 
-            update_album
+            update_album,
+            update_cover
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

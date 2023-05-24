@@ -1,3 +1,9 @@
+## Next
+
+### 💡 Added
+
+* Support for upload custom song cover image with file tag override
+
 ## 0.3.1
 
 ### 💡 Added
