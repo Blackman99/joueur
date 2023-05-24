@@ -1,6 +1,6 @@
 [package]
 name = "joueur"
-version = "0.3.1"
+version = "0.4.0"
 description = "A beautiful music player you've always wanted"
 authors = ["Dongsheng Zhao"]
 license = "MIT"
