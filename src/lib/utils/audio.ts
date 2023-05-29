@@ -96,8 +96,10 @@ export const updateArtist = async (song: Song, newArtistName: string) => {
     }
     const existingArtist = await db.artists.filter(ar => ar.title === newArtistName).first()
     if (existingArtist) {
-      existingArtist.songIds.push(song.id)
-      await db.artists.update(existingArtist.id, existingArtist)
+      if (!existingArtist.songIds.includes(song.id)) {
+        existingArtist.songIds.push(song.id)
+        await db.artists.update(existingArtist.id, existingArtist)
+      }
     } else {
       const newArtist = {
         title: newArtistName,

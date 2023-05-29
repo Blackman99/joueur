@@ -3,6 +3,7 @@
 ### 💡 Added
 
 * Support for update song title
+* Support for update song Artists
 
 ## 0.4.0
 
