@@ -63,7 +63,10 @@
     --uno: 'rounded-lg';
   }
   .menu-icon {
-    --uno: 'text-5 flex items-center sm:mr-2';
+    --uno: 'text-5 flex items-center';
+  }
+  .label {
+    --uno: 'ml-2';
   }
   .active {
     --uno: 'j-active-item';
