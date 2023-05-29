@@ -1,7 +1,7 @@
 import type { FileEntry } from '@tauri-apps/api/fs'
 import { invoke } from '@tauri-apps/api'
 import { get } from 'svelte/store'
-import type { Album, Song } from '../types'
+import type { Album, Artist, Song } from '../types'
 import { playingSong } from '../store'
 import { AUDIO_EXTENSIONS } from '$lib/constants'
 import { db } from '$lib/db'
@@ -85,4 +85,33 @@ export const updateTitle = async (song: Song, newTitle: string) => {
   })
   song.title = newTitle
   await db.songs.update(song.id, song)
+}
+
+export const updateArtist = async (song: Song, newArtistName: string) => {
+  await db.transaction('rw', db.artists, db.songs, async () => {
+    const oldArtist = await db.artists.filter(ar => ar.title === song.artist && ar.songIds.includes(song.id)).first()
+    if (oldArtist) {
+      oldArtist.albumIds = oldArtist.songIds.filter(s => s !== song.id)
+      await db.artists.update(oldArtist.id, oldArtist)
+    }
+    const existingArtist = await db.artists.filter(ar => ar.title === newArtistName).first()
+    if (existingArtist) {
+      existingArtist.songIds.push(song.id)
+      await db.artists.update(existingArtist.id, existingArtist)
+    } else {
+      const newArtist = {
+        title: newArtistName,
+        songIds: [song.id],
+        addTime: new Date(),
+      } as Artist
+      await db.artists.put(newArtist)
+    }
+    song.artist = newArtistName
+    await db.songs.update(song.id, song)
+  })
+
+  await invoke('update_artist', {
+    path: song.path,
+    artist: newArtistName,
+  })
 }

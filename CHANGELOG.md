@@ -2,6 +2,12 @@
 
 ### 💡 Added
 
+* Support for update song title
+
+## 0.4.0
+
+### 💡 Added
+
 * Support for upload custom song cover image with file tag override
 
 ## 0.3.1

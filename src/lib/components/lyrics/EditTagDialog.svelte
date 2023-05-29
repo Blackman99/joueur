@@ -1,6 +1,7 @@
 <script>
   import {
     updateAlbumBySong,
+    updateArtist,
     updateCover,
     updateSongLyrics,
     updateTitle,
@@ -33,6 +34,9 @@
   let editingSongTitle = ''
   let showSongTitleEditor = false
 
+  let editingArtist = ''
+  let showArtistEditor = false
+
   const handleEditAlbum = () => {
     editingAlbumTitle = $songToUpdateTags?.album
     showAlbumEditor = true
@@ -41,6 +45,11 @@
   const handleEditTitle = () => {
     editingSongTitle = $songToUpdateTags.title
     showSongTitleEditor = true
+  }
+
+  const handleEditArtist = () => {
+    editingArtist = $songToUpdateTags.artist
+    showArtistEditor = true
   }
 
   const handleSaveAlbum = async () => {
@@ -54,6 +63,12 @@
     await updateTitle($songToUpdateTags, editingSongTitle)
     $songToUpdateTags = $songToUpdateTags
     showSongTitleEditor = false
+  }
+
+  const handleSaveArtist = async () => {
+    await updateArtist($songToUpdateTags, editingArtist)
+    $songToUpdateTags = $songToUpdateTags
+    showArtistEditor = false
   }
 
   const openCoverPicker = async () => {
@@ -97,7 +112,15 @@
         </div>
       </PopupEditor>
       <div class="text-3 mt-2">
-        {$songToUpdateTags?.artist}
+        <PopupEditor
+          bind:value="{editingArtist}"
+          bind:show="{showArtistEditor}"
+          on:done="{handleSaveArtist}"
+        >
+          <span on:click="{handleEditArtist}" on:keypress>
+            {$songToUpdateTags?.artist}
+          </span>
+        </PopupEditor>
         -
         <PopupEditor
           bind:value="{editingAlbumTitle}"
@@ -118,7 +141,7 @@
     on:keyup|stopPropagation></textarea>
   <div class="footer-actions">
     <div class="save-lyrics-btn" on:click="{handleSaveLyrics}" on:keypress>
-      Save
+      Close
     </div>
   </div>
 </Dialog>

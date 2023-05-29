@@ -20,7 +20,6 @@ id3 = "1.6.0"
 base64 = "0.21.0"
 mp3-duration = "0.1.10"
 window-shadows = "0.2.1"
-image = "0.24.6"
 
 [features]
 # by default Tauri runs in production mode
