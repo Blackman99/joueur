@@ -5,6 +5,15 @@
 * Support for update song title
 * Support for update song Artists
 
+### 💪 Optimized
+
+* Edit tag dialog layout
+* Popup editor cancel when outside click
+
+### 🐛 Fixes
+
+* Space between label and menu icon should laid on label instead of icon
+
 ## 0.4.0
 
 ### 💡 Added

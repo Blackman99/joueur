@@ -3,6 +3,7 @@
   import Done from '$lib/icons/Done.svelte'
   import { createEventDispatcher, tick } from 'svelte'
   import IconButton from './IconButton.svelte'
+  import clickOutside from '$lib/actions/outside-click'
 
   export let value: string
   export let show = false
@@ -42,7 +43,14 @@
   }
 </script>
 
-<div class="wrapper">
+<div
+  class="wrapper"
+  use:clickOutside="{{
+    cbOutside: () => {
+      show = false
+    },
+  }}"
+>
   {#if show}
     <div class="popup-editor" style="--j-popup-editor-offset:{editorOffset}px;">
       <input
