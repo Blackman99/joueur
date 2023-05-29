@@ -3,6 +3,7 @@
     updateAlbumBySong,
     updateCover,
     updateSongLyrics,
+    updateTitle,
   } from '$lib/utils/audio'
   import { open } from '@tauri-apps/api/dialog'
   import Dialog from '../shared/Dialog.svelte'
@@ -10,7 +11,7 @@
   import UploadImage from '../../icons/UploadImage.svelte'
   import {
     updateLyricsDialogOpen,
-    songToUpdateLyrics,
+    songToUpdateTags,
     editLyricsContent,
   } from './store'
   import { convertFileSrc } from '@tauri-apps/api/tauri'
@@ -21,7 +22,7 @@
   let uploader
 
   const handleSaveLyrics = async () => {
-    await updateSongLyrics($songToUpdateLyrics, $editLyricsContent)
+    await updateSongLyrics($songToUpdateTags, $editLyricsContent)
     $updateLyricsDialogOpen = false
     $editLyricsContent = ''
   }
@@ -29,16 +30,30 @@
   let editingAlbumTitle = ''
   let showAlbumEditor = false
 
+  let editingSongTitle = ''
+  let showSongTitleEditor = false
+
   const handleEditAlbum = () => {
-    editingAlbumTitle = $songToUpdateLyrics?.album
+    editingAlbumTitle = $songToUpdateTags?.album
     showAlbumEditor = true
   }
 
+  const handleEditTitle = () => {
+    editingSongTitle = $songToUpdateTags.title
+    showSongTitleEditor = true
+  }
+
   const handleSaveAlbum = async () => {
-    await updateAlbumBySong($songToUpdateLyrics, editingAlbumTitle)
-    $songToUpdateLyrics.title = editingAlbumTitle
-    $songToUpdateLyrics = $songToUpdateLyrics
+    await updateAlbumBySong($songToUpdateTags, editingAlbumTitle)
+    $songToUpdateTags.title = editingAlbumTitle
+    $songToUpdateTags = $songToUpdateTags
     showAlbumEditor = false
+  }
+
+  const handleSaveTitle = async () => {
+    await updateTitle($songToUpdateTags, editingSongTitle)
+    $songToUpdateTags = $songToUpdateTags
+    showSongTitleEditor = false
   }
 
   const openCoverPicker = async () => {
@@ -52,8 +67,8 @@
       ],
     })
     if (!selected || Array.isArray(selected)) return
-    await updateCover($songToUpdateLyrics, selected)
-    $songToUpdateLyrics = $songToUpdateLyrics
+    await updateCover($songToUpdateTags, selected)
+    $songToUpdateTags = $songToUpdateTags
   }
 </script>
 
@@ -62,8 +77,8 @@
     <div class="cover-wrapper">
       <img
         class="cover"
-        src="{$songToUpdateLyrics?.cover}"
-        alt="{$songToUpdateLyrics?.title}"
+        src="{$songToUpdateTags?.cover}"
+        alt="{$songToUpdateTags?.title}"
       />
       <div class="upload-cover" on:keypress on:click="{openCoverPicker}">
         <div class="upload-icon-wrapper">
@@ -72,11 +87,17 @@
       </div>
     </div>
     <div class="flex-grow">
-      <div>
-        {$songToUpdateLyrics?.title}
-      </div>
+      <PopupEditor
+        bind:value="{editingSongTitle}"
+        bind:show="{showSongTitleEditor}"
+        on:done="{handleSaveTitle}"
+      >
+        <div on:click="{handleEditTitle}" on:keypress>
+          {$songToUpdateTags?.title}
+        </div>
+      </PopupEditor>
       <div class="text-3 mt-2">
-        {$songToUpdateLyrics?.artist}
+        {$songToUpdateTags?.artist}
         -
         <PopupEditor
           bind:value="{editingAlbumTitle}"
@@ -84,7 +105,7 @@
           on:done="{handleSaveAlbum}"
         >
           <span on:click="{handleEditAlbum}" on:keypress
-            >{$songToUpdateLyrics?.album}
+            >{$songToUpdateTags?.album}
           </span>
         </PopupEditor>
       </div>

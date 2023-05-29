@@ -7,7 +7,7 @@
     editLyricsContent,
     fullscreen,
     quittingFullscreen,
-    songToUpdateLyrics,
+    songToUpdateTags,
     updateLyricsDialogOpen,
   } from './store'
   import debounce from '$lib/utils/debounce'
@@ -60,7 +60,7 @@
 
   const handleOpenLyricsEdit = () => {
     if ($playingSong) {
-      $songToUpdateLyrics = $playingSong
+      $songToUpdateTags = $playingSong
       $editLyricsContent = $playingSong?.lyrics?.[0]?.text || ''
       $updateLyricsDialogOpen = true
     }

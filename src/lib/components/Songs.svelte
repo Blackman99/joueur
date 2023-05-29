@@ -23,7 +23,7 @@
   import {
     editLyricsContent,
     fullscreen,
-    songToUpdateLyrics,
+    songToUpdateTags,
     updateLyricsDialogOpen,
   } from './lyrics/store'
   import VirtualScroll from './shared/VirtualScroll.svelte'
@@ -91,7 +91,7 @@
   }
 
   const handleEditLyrics = (song: Song) => {
-    $songToUpdateLyrics = song
+    $songToUpdateTags = song
     $editLyricsContent = song.lyrics?.[0]?.text || ''
     $updateLyricsDialogOpen = true
   }
