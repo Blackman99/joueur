@@ -7,11 +7,8 @@
   import { ask, message } from '@tauri-apps/api/dialog'
   import { db } from '$lib/db'
   import { isSm } from '$lib/layout'
-  import IconButton from './IconButton.svelte'
-  import ListUnfold from '$lib/icons/ListUnfold.svelte'
-  import ListFold from '$lib/icons/ListFold.svelte'
   import { fullscreen } from './lyrics/store'
-  import ExpandableButton from './ExpandableButton.svelte'
+  import ExpandableButton from './shared/ExpandableButton.svelte'
 
   export let draggingSongId: number | null
   export let waitForDroppingPlaylistId: number | null = null

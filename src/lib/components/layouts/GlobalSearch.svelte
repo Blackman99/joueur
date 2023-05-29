@@ -6,10 +6,10 @@
   import type { Album, Artist, Song } from '$lib/types'
   import debounce from '$lib/utils/debounce'
   import { slide } from 'svelte/transition'
-  import { selectedArtist } from '../../routes/artists/store'
-  import { selectedAlbum } from '../../routes/albums/store'
-  import clickOutside from '../actions/outside-click'
-  import Loading from './Loading.svelte'
+  import { selectedArtist } from '../../../routes/artists/store'
+  import { selectedAlbum } from '../../../routes/albums/store'
+  import clickOutside from '../../actions/outside-click'
+  import Loading from '../shared/Loading.svelte'
 
   let focused = false
   let keyword = ''

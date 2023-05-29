@@ -8,8 +8,8 @@
   import { ask } from '@tauri-apps/api/dialog'
   import { appWindow } from '@tauri-apps/api/window'
   import GlobalSearch from './GlobalSearch.svelte'
-  import IconButton from './IconButton.svelte'
-  import { fullscreen, quittingFullscreen } from './lyrics/store'
+  import IconButton from '../shared/IconButton.svelte'
+  import { fullscreen, quittingFullscreen } from '../lyrics/store'
 
   let platformName: Platform
 

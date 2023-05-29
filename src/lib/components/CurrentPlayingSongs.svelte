@@ -2,7 +2,7 @@
   import { db } from '$lib/db'
   import { currentPlayingSongIds, CURRENT_SONGS_KEY } from '$lib/store'
   import type { Song } from '$lib/types'
-  import Backdrop from './Backdrop.svelte'
+  import Backdrop from './shared/Backdrop.svelte'
   import { fullscreen } from './lyrics/store'
   import Songs from './Songs.svelte'
 

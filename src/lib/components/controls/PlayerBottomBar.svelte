@@ -1,6 +1,6 @@
 <script lang="ts">
   import { slide } from 'svelte/transition'
-  import IconButton from './IconButton.svelte'
+  import IconButton from '../shared/IconButton.svelte'
   import {
     playingSong,
     displayPlayedSeconds,
@@ -22,7 +22,7 @@
   import VolumeControl from './VolumeControl.svelte'
   import ModeSwitcher from './ModeSwitcher.svelte'
   import AudioVisualizer from './AudioVisualizer.svelte'
-  import { fullscreen } from './lyrics/store'
+  import { fullscreen } from '../lyrics/store'
   import ControlPlay from '$lib/icons/ControlPlay.svelte'
   import ControlPause from '$lib/icons/ControlPause.svelte'
 

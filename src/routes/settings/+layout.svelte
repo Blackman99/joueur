@@ -1,5 +1,5 @@
 <script>
-  import Menu from '$lib/components/Menu.svelte'
+  import Menu from '$lib/components/shared/Menu.svelte'
   import ArrowRight from '$lib/icons/ArrowRight.svelte'
   import SettingsAbout from '$lib/icons/SettingsAbout.svelte'
   import SettingsPreference from '$lib/icons/SettingsPreference.svelte'

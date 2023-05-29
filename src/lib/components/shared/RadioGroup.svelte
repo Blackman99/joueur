@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Selection } from '../types'
+  import type { Selection } from '../../types'
 
   export let items: Selection[]
   export let selected: any

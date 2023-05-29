@@ -3,16 +3,16 @@
   import { appWindow } from '@tauri-apps/api/window'
   import { readDir } from '@tauri-apps/api/fs'
   import { onDestroy, onMount } from 'svelte'
-  import DropZone from '$lib/components/DropZone.svelte'
+  import DropZone from '$lib/components/layouts/DropZone.svelte'
   import {
     getSongInfoFromFile,
     isAudio,
     parseSongsFromFileEntries,
   } from '$lib/utils/audio'
-  import DropLoading from '$lib/components/DropLoading.svelte'
+  import DropLoading from '$lib/components/layouts/DropLoading.svelte'
   import { db } from '$lib/db'
-  import PlayerBottomBar from '$lib/components/PlayerBottomBar.svelte'
-  import Sidebar from '$lib/components/Sidebar.svelte'
+  import PlayerBottomBar from '$lib/components/controls/PlayerBottomBar.svelte'
+  import Sidebar from '$lib/components/layouts/Sidebar.svelte'
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import {
     selectedPlaylistId,
@@ -45,9 +45,10 @@
   import { get } from 'svelte/store'
   import type { Subscription } from 'dexie'
   import CurrentPlayingSongs from '$lib/components/CurrentPlayingSongs.svelte'
-  import EditLyrics from '$lib/components/lyrics/EditLyrics.svelte'
-  import AppBar from '$lib/components/AppBar.svelte'
+  import EditTagDialog from '$lib/components/lyrics/EditTagDialog.svelte'
+  import AppBar from '$lib/components/layouts/AppBar.svelte'
   import { windowInnerWidth } from '$lib/layout'
+  import pageTransition from '$lib/page-transition'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -266,7 +267,7 @@
   </DropLoading>
 {/if}
 
-<EditLyrics />
+<EditTagDialog />
 
 <style uno:preflights uno:safelist global>
   :global(body) {

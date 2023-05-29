@@ -2,7 +2,7 @@
   import SoundFull from '$lib/icons/SoundFull.svelte'
   import SoundLow from '$lib/icons/SoundLow.svelte'
   import { volume } from '$lib/store'
-  import IconButton from './IconButton.svelte'
+  import IconButton from '../shared/IconButton.svelte'
 
   let showBar = false
 

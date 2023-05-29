@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Menu from '$lib/components/Menu.svelte'
+  import Menu from '$lib/components/shared/Menu.svelte'
   import ExternalLink from '$lib/icons/ExternalLink.svelte'
   import LogoDiscord from '$lib/icons/LogoDiscord.svelte'
   import LogoGithub from '$lib/icons/LogoGithub.svelte'

@@ -10,7 +10,7 @@
     totalAlbumNumber,
     scrollTop,
   } from './store'
-  import Backdrop from '$lib/components/Backdrop.svelte'
+  import Backdrop from '$lib/components/shared/Backdrop.svelte'
   import PlayingIcon from '$lib/components/PlayingIcon.svelte'
   import {
     currentPlayingSongIds,
@@ -19,10 +19,10 @@
   } from '$lib/store'
   import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
-  import VirtualScroll from '$lib/components/VirtualScroll.svelte'
-  import PopupEditor from '$lib/components/PopupEditor.svelte'
+  import VirtualScroll from '$lib/components/shared/VirtualScroll.svelte'
+  import PopupEditor from '$lib/components/shared/PopupEditor.svelte'
   import { updateAlbum } from '$lib/utils/audio'
-  import IconButton from '$lib/components/IconButton.svelte'
+  import IconButton from '$lib/components/shared/IconButton.svelte'
   import DialogClose from '$lib/icons/DialogClose.svelte'
 
   $: hasAlbum = !!$albums.length

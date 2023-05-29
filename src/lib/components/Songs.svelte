@@ -18,7 +18,7 @@
   import contextMenu, { type ContextMenuItem } from '../actions/context-menu'
   import Checked from '$lib/icons/Checked.svelte'
   import Uncheck from '$lib/icons/Uncheck.svelte'
-  import Menu from './Menu.svelte'
+  import Menu from './shared/Menu.svelte'
   import DialogClose from '$lib/icons/DialogClose.svelte'
   import {
     editLyricsContent,
@@ -26,7 +26,7 @@
     songToUpdateLyrics,
     updateLyricsDialogOpen,
   } from './lyrics/store'
-  import VirtualScroll from './VirtualScroll.svelte'
+  import VirtualScroll from './shared/VirtualScroll.svelte'
   import { db } from '$lib/db'
 
   export let transparentBg: boolean = false

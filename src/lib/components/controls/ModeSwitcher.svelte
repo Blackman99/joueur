@@ -4,8 +4,7 @@
   import ModeShuffle from '$lib/icons/ModeShuffle.svelte'
   import { mode } from '$lib/store'
   import { modes } from '$lib/types'
-  import { scale } from 'svelte/transition'
-  import IconButton from './IconButton.svelte'
+  import IconButton from '../shared/IconButton.svelte'
 
   const handleModeSwitch = () => {
     const index = modes.findIndex(m => m === $mode)

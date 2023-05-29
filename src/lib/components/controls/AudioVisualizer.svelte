@@ -1,7 +1,7 @@
 <script lang="ts">
   import { audioDom } from '$lib/store'
   import { onMount } from 'svelte'
-  import visualizer from '../utils/visualizer'
+  import visualizer from '../../utils/visualizer'
 
   let canvas: HTMLCanvasElement
 

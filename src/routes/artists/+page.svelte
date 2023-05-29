@@ -1,7 +1,7 @@
 <script lang="ts">
-  import ExpandableButton from '$lib/components/ExpandableButton.svelte'
+  import ExpandableButton from '$lib/components/shared/ExpandableButton.svelte'
   import Songs from '$lib/components/Songs.svelte'
-  import VirtualScroll from '$lib/components/VirtualScroll.svelte'
+  import VirtualScroll from '$lib/components/shared/VirtualScroll.svelte'
   import { db } from '$lib/db'
   import { isSm } from '$lib/layout'
   import { currentPlayingSongIds } from '$lib/store'

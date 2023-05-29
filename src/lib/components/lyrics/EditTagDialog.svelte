@@ -5,9 +5,9 @@
     updateSongLyrics,
   } from '$lib/utils/audio'
   import { open } from '@tauri-apps/api/dialog'
-  import Dialog from '../Dialog.svelte'
-  import PopupEditor from '../PopupEditor.svelte'
-  import UploadImage from '../UploadImage.svelte'
+  import Dialog from '../shared/Dialog.svelte'
+  import PopupEditor from '../shared/PopupEditor.svelte'
+  import UploadImage from '../../icons/UploadImage.svelte'
   import {
     updateLyricsDialogOpen,
     songToUpdateLyrics,
@@ -71,11 +71,11 @@
         </div>
       </div>
     </div>
-    <div class="flex items-end">
-      <span>
+    <div class="flex-grow">
+      <div>
         {$songToUpdateLyrics?.title}
-      </span>
-      <div class="text-gray-4 text-3 ml-2">
+      </div>
+      <div class="text-3 mt-2">
         {$songToUpdateLyrics?.artist}
         -
         <PopupEditor
@@ -120,7 +120,7 @@
     object-fit: cover;
   }
   .upload-cover {
-    --uno: 'absolute z-3 top-0 left-0 right-0 bottom-0 visibility-none opacity-0 bg-black bg-opacity-70 dark:bg-white dark:bg-opacity-50 rounded flex items-center justify-center text-secondary text-5';
+    --uno: 'absolute z-3 top-0 left-0 right-0 bottom-0 visibility-none opacity-0 bg-black bg-opacity-70 dark:bg-white dark:bg-opacity-50 rounded flex items-center justify-center text-primary dark:text-secondary text-5';
     transition: opacity ease-in-out 0.2s;
   }
   .cover-wrapper:hover .upload-cover {

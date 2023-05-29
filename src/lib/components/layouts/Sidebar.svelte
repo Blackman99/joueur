@@ -1,7 +1,7 @@
 <script lang="ts">
   import { liveQuery } from 'dexie'
   import type { Readable } from 'svelte/store'
-  import Menu from './Menu.svelte'
+  import Menu from '../shared/Menu.svelte'
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
   import { playingSongId } from '$lib/store'
@@ -10,9 +10,9 @@
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
   import MenuSettings from '$lib/icons/MenuSettings.svelte'
   import { cubicInOut } from 'svelte/easing'
-  import LyricsDisplay from './lyrics/LyricsDisplay.svelte'
+  import LyricsDisplay from '../lyrics/LyricsDisplay.svelte'
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
-  import { fullscreen, quittingFullscreen } from './lyrics/store'
+  import { fullscreen, quittingFullscreen } from '../lyrics/store'
   import { appWindow } from '@tauri-apps/api/window'
 
   $: playingSong = liveQuery(() =>
@@ -85,10 +85,7 @@
   ]
 </script>
 
-<aside
-  class="j-side"
-  id="sidebar"
->
+<aside class="j-side" id="sidebar">
   <div class="menus">
     {#each sidebarMenus as sMenu}
       <Menu label="{sMenu.label}" to="{sMenu.to}" rounded onlyIconOnSm>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import Loading from './Loading.svelte'
+  import Loading from './shared/Loading.svelte'
 
   export let label: string
   export let loading = false

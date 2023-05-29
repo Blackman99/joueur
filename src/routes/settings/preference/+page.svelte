@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Toggle from '$lib/components/Toggle.svelte'
+  import Toggle from '$lib/components/shared/Toggle.svelte'
   import { isDark } from '$lib/store'
   const toggle = () => {
     $isDark = !$isDark

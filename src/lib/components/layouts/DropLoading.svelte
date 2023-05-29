@@ -1,6 +1,6 @@
 <script>
   import { fade } from 'svelte/transition'
-  import Loading from './Loading.svelte'
+  import Loading from '../shared/Loading.svelte'
 </script>
 
 <div transition:fade="{{ delay: 0, duration: 100 }}" class="drop-loading">

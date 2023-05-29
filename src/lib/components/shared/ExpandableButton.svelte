@@ -1,8 +1,8 @@
 <script lang="ts">
   import IconButton from './IconButton.svelte'
-  import ListUnfold from '../icons/ListUnfold.svelte'
-  import ListFold from '../icons/ListFold.svelte'
-  import { fullscreen } from './lyrics/store'
+  import ListUnfold from '../../icons/ListUnfold.svelte'
+  import ListFold from '../../icons/ListFold.svelte'
+  import { fullscreen } from '../lyrics/store'
 
   export let expanded = false
 </script>

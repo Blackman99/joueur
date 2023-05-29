@@ -83,6 +83,21 @@ fn update_lyrics(path: &str, lyrics: &str) -> Result<String, String> {
 }
 
 #[tauri::command]
+fn update_title(path: &str, title: &str) -> Result<String, String> {
+    let tag = Tag::read_from_path(path);
+    match tag {
+        Ok(mut t) => {
+            t.set_title(title);
+            match t.write_to_path(path, Version::Id3v24) {
+                Err(e) => Err(e.description),
+                Ok(_o) => Ok("Success".to_owned())
+            }
+        },
+        Err(e) => Err(e.description)
+    }
+}
+
+#[tauri::command]
 fn update_cover(song_path: &str, image_path: &str) -> Result<String, String> {
     let tag = Tag::read_from_path(song_path);
     let f = File::open(image_path).unwrap();
@@ -144,7 +159,8 @@ fn main() {
             get_metadata, 
             update_lyrics, 
             update_album,
-            update_cover
+            update_cover,
+            update_title
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

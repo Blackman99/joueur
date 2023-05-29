@@ -1,5 +1,5 @@
 import type { Action } from 'svelte/types/runtime/action'
-import ContextMenu__SvelteComponent_ from '../components/ContextMenu.svelte'
+import ContextMenu__SvelteComponent_ from '../components/shared/ContextMenu.svelte'
 import clickOutside from './outside-click'
 
 export interface ContextMenuItem {
