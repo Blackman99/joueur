@@ -1,17 +1,17 @@
 <script lang="ts">
+  import { ask, message } from '@tauri-apps/api/dialog'
   import Songs from '$lib/components/Songs.svelte'
   import {
     currentPlaylistSongs,
-    selectedPlaylistId,
-    selectedPlaylistSongsLimit,
-    selectedPlaylistSongNumber,
-    selectedPlaylistSongsOffset,
     paginateSelectedPlaylistSongs,
+    selectedPlaylistId,
+    selectedPlaylistSongNumber,
+    selectedPlaylistSongsLimit,
+    selectedPlaylistSongsOffset,
     selectedPlaylistSongsScrollTop,
   } from '$lib/store'
   import Playlists from '$lib/components/Playlists.svelte'
   import { db } from '$lib/db'
-  import { message, ask } from '@tauri-apps/api/dialog'
   import { fullscreen } from '$lib/components/lyrics/store'
 
   let draggingSongId: number | null
@@ -29,14 +29,11 @@
       if (playlist) {
         if (draggingSongIds.length) {
           draggingSongIds.forEach(id => {
-            if (!playlist.songIds.includes(id)) {
-              playlist.songIds.push(id)
-            }
+            if (!playlist.songIds.includes(id)) playlist.songIds.push(id)
           })
         } else if (draggingSongId) {
-          if (!playlist.songIds.includes(draggingSongId)) {
+          if (!playlist.songIds.includes(draggingSongId))
             playlist.songIds.push(draggingSongId)
-          }
         }
         await db.playlists.update(playlist.id, playlist)
       }

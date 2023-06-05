@@ -25,7 +25,7 @@
       },
       "fs": {
         "scope": [
-          "/**/*"
+          "**"
         ],
         "all": true
       },
@@ -38,7 +38,7 @@
       "protocol": {
         "asset": true,
         "assetScope": [
-          "/**/*"
+          "**"
         ]
       },
       "notification": {

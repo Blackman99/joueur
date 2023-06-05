@@ -6,7 +6,7 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
   const analyser = audioCtx.createAnalyser()
   audioSource.connect(analyser)
   analyser.connect(audioCtx.destination)
-  analyser.fftSize = 1024
+  analyser.fftSize = 128
   const bufferLength = analyser.frequencyBinCount
   const dataArray = new Uint8Array(bufferLength)
   const barWidth = (canvas.width / bufferLength)
@@ -70,7 +70,6 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
     ctx.closePath()
     requestAnimationFrame(drawWave)
   }
-  
 
   return {
     draw,

@@ -1,6 +1,7 @@
 import { liveQuery } from 'dexie'
 import { derived, get, writable } from 'svelte/store'
 import type { Readable } from 'svelte/store'
+import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { db } from './db'
 import type { Mode, Playlist, Song } from './types'
 import { twoDigits } from './utils/format'
@@ -113,3 +114,62 @@ export const togglePlayOrPause = () => {
 }
 
 totalSongsNumber.subscribe(() => paginateSelectedPlaylistSongs())
+
+const isFirst = writable(true)
+
+const createAudio = (src: string) => {
+  const audio = new Audio(src)
+  audio.volume = get(volume)
+  audio.addEventListener('oncanplaythrough', () => {
+    if (get(isFirst)) {
+      isFirst.set(false)
+      audio.currentTime = Number(localStorage.getItem(CURRENT_TIME_KEY))
+      if (localStorage.getItem(PLAYING_KEY) === 'on') {
+        audio.load()
+        audio.play()
+      }
+    }
+    else {
+      audio.currentTime = 0
+      audio.load()
+      audio.play()
+    }
+  })
+
+  audio.addEventListener('ended', playNext)
+  audio.addEventListener('timeupdate', () => {
+    playedSeconds.set(audio.currentTime)
+  })
+  audio.addEventListener('play', () => {
+    paused.set(false)
+  })
+  audio.addEventListener('pause', () => {
+    paused.set(true)
+  })
+  audio.addEventListener('durationchange', () => {
+    duration.set(audio.duration)
+  })
+
+  return audio
+}
+
+playingSong.subscribe(ps => {
+  if (!ps) return
+  let audio = get(audioDom)
+  if (!audio) {
+    audio = createAudio(convertFileSrc(ps.path))
+    audioDom.set(audio)
+  }
+  else {
+    audio.src = convertFileSrc(ps.path)
+    audio.currentTime = 0
+    audio.load()
+    audio.play()
+  }
+  audio.title = `${ps.title} - ${ps.artist}`
+})
+
+volume.subscribe(vl => {
+  const audio = get(audioDom)
+  if (audio) audio.volume = Number(vl.toFixed(2))
+})

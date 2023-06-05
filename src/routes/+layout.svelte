@@ -3,6 +3,7 @@
   import { appWindow } from '@tauri-apps/api/window'
   import { readDir } from '@tauri-apps/api/fs'
   import { onDestroy, onMount } from 'svelte'
+  import { get } from 'svelte/store'
   import DropZone from '$lib/components/layouts/DropZone.svelte'
   import {
     getSongInfoFromFile,
@@ -13,42 +14,33 @@
   import { db } from '$lib/db'
   import PlayerBottomBar from '$lib/components/controls/PlayerBottomBar.svelte'
   import Sidebar from '$lib/components/layouts/Sidebar.svelte'
-  import { convertFileSrc } from '@tauri-apps/api/tauri'
   import {
-    selectedPlaylistId,
-    SELECTED_PLAYLIST_ID_KEY,
-    PLAYING_SONG_ID_KEY,
-    MODE_KEY,
-    paginateSelectedPlaylistSongs,
-    playlists,
-    paused,
-    playingSongId,
-    playedSeconds,
-    CURRENT_TIME_KEY,
-    playingSong,
-    currentPlayingSongIds,
-    CURRENT_SONGS_KEY,
-    playNext,
-    volume,
-    VOLUME_KEY,
-    audioDom,
-    mode,
-    PLAYING_KEY,
-    togglePlayOrPause,
-    duration,
     COLOR_MODE_KEY,
-    isDark,
+    CURRENT_SONGS_KEY,
+    CURRENT_TIME_KEY,
+    MODE_KEY,
+    PLAYING_KEY,
+    PLAYING_SONG_ID_KEY,
+    SELECTED_PLAYLIST_ID_KEY,
+    currentPlayingSongIds,
     inWindow,
+    isDark,
+    mode,
+    paginateSelectedPlaylistSongs,
+    paused,
+    playedSeconds,
+    playingSong,
+    playingSongId,
+    playlists,
+    selectedPlaylistId,
     selectedPlaylistSongsOffset,
     selectedPlaylistSongsScrollTop,
+    togglePlayOrPause,
   } from '$lib/store'
-  import { get } from 'svelte/store'
-  import type { Subscription } from 'dexie'
   import CurrentPlayingSongs from '$lib/components/CurrentPlayingSongs.svelte'
   import EditTagDialog from '$lib/components/lyrics/EditTagDialog.svelte'
   import AppBar from '$lib/components/layouts/AppBar.svelte'
   import { windowInnerWidth } from '$lib/layout'
-  import pageTransition from '$lib/page-transition'
 
   // Mount global Buffer
   globalThis.Buffer = Buffer
@@ -64,12 +56,16 @@
   let unsubscribePlayingSongId: () => void
   let unsubscribePlayedSeconds: () => void
   let unsubscribePaused: () => void
-  let playlistSubscriber: Subscription
 
   const handleSpaceKeyboard = (e: KeyboardEvent) => {
     if (e.code === 'Space') {
+      e.preventDefault()
       togglePlayOrPause()
     }
+  }
+
+  const handleContextMenu = (e: any) => {
+    if (!import.meta.env.DEV) e.preventDefault()
   }
 
   onMount(async () => {
@@ -126,38 +122,17 @@
     })
 
     window.addEventListener('keyup', handleSpaceKeyboard)
+    window.addEventListener('contextmenu', handleContextMenu)
   })
-
-  const handleContextMenu = (e: any) => {
-    if (!import.meta.env.DEV) {
-      e.preventDefault()
-    }
-  }
-
-  let isFirst = true
-  const handleLoadedMetadata = (e: any) => {
-    if (isFirst) {
-      e.target.currentTime = Number(localStorage.getItem(CURRENT_TIME_KEY))
-      isFirst = false
-      if (localStorage.getItem(PLAYING_KEY) === 'on') {
-        e.target.play()
-      }
-    } else {
-      e.target.currentTime = 0
-      e.target.play()
-    }
-  }
 
   $: {
     localStorage.setItem(PLAYING_KEY, $paused ? 'off' : 'on')
   }
 
   $: {
-    if ($isDark) {
-      document.querySelector('html')?.classList.add('dark')
-    } else {
-      document.querySelector('html')?.classList.remove('dark')
-    }
+    if ($isDark) document.querySelector('html')?.classList.add('dark')
+    else document.querySelector('html')?.classList.remove('dark')
+
     localStorage.setItem(COLOR_MODE_KEY, $isDark ? 'on' : 'off')
   }
 
@@ -190,44 +165,11 @@
     unsubscribePlayingSongId?.()
     unsubscribePlayedSeconds?.()
     unsubscribePaused?.()
-    playlistSubscriber?.unsubscribe()
     localStorage.setItem(CURRENT_TIME_KEY, get(playedSeconds).toString())
     window.removeEventListener('keyup', handleSpaceKeyboard)
+    window.removeEventListener('contextmenu', handleContextMenu)
   })
-
-  const setVolume = () => {
-    localStorage.setItem(VOLUME_KEY, $volume.toString())
-    if ($audioDom) {
-      $audioDom.volume = $volume
-    }
-  }
-
-  $: {
-    $volume
-    setVolume()
-  }
-
-  const handleTimeUpdate = () => {
-    $playedSeconds = $audioDom.currentTime
-  }
 </script>
-
-{#if $playingSong}
-  <audio
-    bind:this="{$audioDom}"
-    bind:duration="{$duration}"
-    src="{convertFileSrc($playingSong.path)}"
-    style="display: none;"
-    title="{$playingSong.title} - {$playingSong.artist}"
-    crossorigin="anonymous"
-    on:ended="{playNext}"
-    on:timeupdate="{handleTimeUpdate}"
-    on:play="{() => ($paused = false)}"
-    on:loadedmetadata="{handleLoadedMetadata}"
-    on:pause="{() => ($paused = true)}"
-  >
-  </audio>
-{/if}
 
 <svelte:head>
   {@html `
@@ -248,7 +190,7 @@
 <svelte:window bind:innerWidth="{$windowInnerWidth}" />
 
 <AppBar />
-<main class="j-main" on:contextmenu="{handleContextMenu}">
+<main class="j-main">
   <Sidebar />
   <div class="j-content">
     <slot />
