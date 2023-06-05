@@ -37,6 +37,14 @@ export const duration = writable(0)
 export const isDark = writable(localStorage.getItem(COLOR_MODE_KEY) === 'on')
 export const inWindow = writable(true)
 
+export const audioCtx: {
+  ctx?: AudioContext
+  source?: MediaElementAudioSourceNode
+} = {
+  ctx: undefined,
+  source: undefined,
+}
+
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
   const minutes = Math.floor($playedSeconds / 60)
   const secondsRemain = $playedSeconds % 60
@@ -117,6 +125,8 @@ totalSongsNumber.subscribe(() => paginateSelectedPlaylistSongs())
 
 const isFirst = writable(true)
 
+let gainNode: GainNode
+
 const createAudio = (src: string) => {
   const audio = new Audio(src)
   audio.volume = get(volume)
@@ -150,6 +160,13 @@ const createAudio = (src: string) => {
     duration.set(audio.duration)
   })
 
+  audioCtx.ctx = new window.AudioContext()
+  audioCtx.source = audioCtx.ctx.createMediaElementSource(audio)
+  gainNode = audioCtx.ctx.createGain()
+
+  audioCtx.source.connect(gainNode)
+  gainNode.connect(audioCtx.ctx.destination)
+
   return audio
 }
 
@@ -171,5 +188,9 @@ playingSong.subscribe(ps => {
 
 volume.subscribe(vl => {
   const audio = get(audioDom)
-  if (audio) audio.volume = Number(vl.toFixed(2))
+  if (audio)
+    audio.volume = vl
+
+  if (gainNode)
+    gainNode.gain.value = vl
 })
