@@ -1,17 +1,18 @@
 <script lang="ts">
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-nocheck
-  import type {
-    ContextMenuItem,
-    ContextHandler,
-  } from '$lib/actions/context-menu'
-  import ContextMenuRight from '$lib/icons/ContextMenuRight.svelte'
   import { tick } from 'svelte'
   import { fade } from 'svelte/transition'
+  import type {
+    ContextHandler,
+    ContextMenuItem,
+  } from '$lib/actions/context-menu'
+  import ContextMenuRight from '$lib/icons/ContextMenuRight.svelte'
 
   export let x: number
   export let y: number
   export let menus: ContextMenuItem[]
-  export let show: boolean = false
+  export let show = false
   export let actionHandler: ContextHandler
 
   let contextMenu: HTMLDivElement
@@ -63,15 +64,17 @@
             class="children context-menu-box"
             style="{childrenAliasX}: 100%;{childrenAliasY}: 0;"
           >
-            {#each menu.children as c}
-              <div
-                class="menu-item"
-                on:click|stopPropagation="{e => actionHandler(e, c)}"
-                on:keypress
-              >
-                {c.title}
-              </div>
-            {/each}
+            {#if Array.isArray(menu.children)}
+              {#each menu.children as c}
+                <div
+                  class="menu-item"
+                  on:click|stopPropagation="{e => actionHandler(e, c)}"
+                  on:keypress
+                >
+                  {c.title}
+                </div>
+              {/each}
+            {/if}
           </div>
         {/if}
       </div>
