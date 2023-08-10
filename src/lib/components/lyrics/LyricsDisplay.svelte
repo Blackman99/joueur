@@ -1,7 +1,4 @@
 <script lang="ts">
-  import LyricsEdit from '$lib/icons/LyricsEdit.svelte'
-  import OpenFullscreen from '$lib/icons/OpenFullscreen.svelte'
-  import { playedSeconds, playingSong } from '$lib/store'
   import { spring } from 'svelte/motion'
   import {
     editLyricsContent,
@@ -10,6 +7,9 @@
     songToUpdateTags,
     updateLyricsDialogOpen,
   } from './store'
+  import LyricsEdit from '$lib/icons/LyricsEdit.svelte'
+  import OpenFullscreen from '$lib/icons/OpenFullscreen.svelte'
+  import { playedSeconds, playingSong } from '$lib/store'
   import debounce from '$lib/utils/debounce'
   import throttle from '$lib/utils/throttle'
   import { isSm } from '$lib/layout'
@@ -30,7 +30,7 @@
     const matches = /^\[(\d{2}):(\d{2}\.\d{2,})\]/.exec(line)
     if (matches) {
       const [, mins, secs] = matches
-      return parseInt(mins) * 60 + parseFloat(secs)
+      return Number.parseInt(mins) * 60 + Number.parseFloat(secs)
     }
     return -1
   }
@@ -51,11 +51,10 @@
 
   const computedScrollPosition = debounce(() => {
     const lineDom = lyricsContainer?.querySelector(
-      `.lyrics-line:nth-child(${activeIndex + 1})`
+      `.lyrics-line:nth-child(${activeIndex + 1})`,
     ) as any
-    if (lineDom) {
+    if (lineDom)
       $scrollTop = lineDom.offsetTop - (totalHeight - lineDom.offsetHeight) / 2
-    }
   }, 50)
 
   const handleOpenLyricsEdit = () => {
@@ -81,6 +80,7 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   class="lyrics-wrapper"
   class:lyrics-wrapper-sm="{$isSm}"
@@ -100,7 +100,7 @@
         {@const active = i === activeIndex}
         <div
           class="lyrics-line"
-          class:active="{active}"
+          class:active
           style="--joueur-lyrics-blur:{Math.abs(i - activeIndex) / 2}px;"
         >
           {line.replace(/^\[\d{2}:\d{2}\.\d{2,}\]/, '')}

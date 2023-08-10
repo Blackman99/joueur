@@ -1,3 +1,14 @@
+## Next
+
+### 💪 Optimized
+
+* Upgrade all non major deps
+
+### 🐛 Fixes
+
+* Svelte4 ally warnings
+* Some styles not correctly display on Win11
+
 ## 0.5.0
 
 ### 💡 Added

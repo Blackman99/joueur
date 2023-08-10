@@ -71,9 +71,10 @@ export async function paginateSelectedPlaylistSongs() {
   }
 }
 
-export const playNext = () => {
+export function playNext() {
   const $playingSong = get(playingSong)
-  if (!$playingSong) return
+  if (!$playingSong)
+    return
   const $currentPlayingSongIds = get(currentPlayingSongIds)
   const $mode = get(mode)
   const currentIndex = $currentPlayingSongIds.findIndex(id => id === $playingSong.id)
@@ -97,10 +98,11 @@ export const playNext = () => {
   }
 }
 
-export const playPrev = () => {
+export function playPrev() {
   const $playingSong = get(playingSong)
   const $currentPlayingSongIds = get(currentPlayingSongIds)
-  if (!$playingSong) return
+  if (!$playingSong)
+    return
   const currentIndex = $currentPlayingSongIds.findIndex(id => id === $playingSong.id)
   if (currentIndex !== -1) {
     if (currentIndex > 0)
@@ -110,7 +112,7 @@ export const playPrev = () => {
   }
 }
 
-export const togglePlayOrPause = () => {
+export function togglePlayOrPause() {
   const $audioDom = get(audioDom)
   if ($audioDom.paused) {
     $audioDom.currentTime = get(playedSeconds)
@@ -127,8 +129,9 @@ const isFirst = writable(true)
 
 let gainNode: GainNode
 
-const createAudio = (src: string) => {
+function createAudio(src: string) {
   const audio = new Audio(src)
+  audio.crossOrigin = 'anonymous'
   audio.volume = get(volume)
   audio.addEventListener('oncanplaythrough', () => {
     if (get(isFirst)) {
@@ -171,7 +174,8 @@ const createAudio = (src: string) => {
 }
 
 playingSong.subscribe(ps => {
-  if (!ps) return
+  if (!ps)
+    return
   let audio = get(audioDom)
   if (!audio) {
     audio = createAudio(convertFileSrc(ps.path))

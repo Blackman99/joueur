@@ -1,4 +1,15 @@
 <script lang="ts">
+  import { onMount, tick } from 'svelte'
+  import {
+    SELECTED_ARTIST_KEY,
+    artists,
+    limit,
+    offset,
+    scrollTop,
+    selectedArtist,
+    selectedArtistSongs,
+    totalArtistNumber,
+  } from './store'
   import ExpandableButton from '$lib/components/shared/ExpandableButton.svelte'
   import Songs from '$lib/components/Songs.svelte'
   import VirtualScroll from '$lib/components/shared/VirtualScroll.svelte'
@@ -6,17 +17,6 @@
   import { isSm } from '$lib/layout'
   import { currentPlayingSongIds } from '$lib/store'
   import type { Artist, Song } from '$lib/types'
-  import { onMount, tick } from 'svelte'
-  import {
-    SELECTED_ARTIST_KEY,
-    selectedArtist,
-    selectedArtistSongs,
-    offset,
-    totalArtistNumber,
-    limit,
-    artists,
-    scrollTop,
-  } from './store'
 
   let songs: Songs
 
@@ -84,10 +84,11 @@
 <div class="artists">
   <div
     class="artist-list"
-    class:expanded="{expanded}"
+    class:expanded
     on:transitionend|self="{resetVScroller}"
   >
     {#if hasArtist}
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
       <VirtualScroll
         bind:this="{artistVirtualScroller}"
         bind:limit="{$limit}"
@@ -101,7 +102,7 @@
           {@const active = artist.id === $selectedArtist?.id}
           <div
             class="artist-item"
-            class:active="{active}"
+            class:active
             on:click="{() => handleArtistClick(artist)}"
             on:keyup="{() => handleArtistClick(artist)}"
           >
@@ -119,7 +120,7 @@
         </div>
       </VirtualScroll>
     {/if}
-    <ExpandableButton bind:expanded="{expanded}" />
+    <ExpandableButton bind:expanded />
   </div>
   <Songs
     bind:this="{songs}"

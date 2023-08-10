@@ -2,24 +2,13 @@
   This component can be used as any song list in app
  -->
 <script lang="ts">
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-nocheck
-  import {
-    playingSongId,
-    currentPlayingSongIds,
-    currentPlaylistSongs,
-    playedSeconds,
-    selectedPlaylistId,
-    playlists,
-  } from '$lib/store'
-  import type { Song } from '$lib/types'
   import { createEventDispatcher } from 'svelte'
+  import contextMenu, { type ContextMenuItem } from '../actions/context-menu'
   import Actions from './Actions.svelte'
   import PlayingIcon from './PlayingIcon.svelte'
-  import contextMenu, { type ContextMenuItem } from '../actions/context-menu'
-  import Checked from '$lib/icons/Checked.svelte'
-  import Uncheck from '$lib/icons/Uncheck.svelte'
   import Menu from './shared/Menu.svelte'
-  import DialogClose from '$lib/icons/DialogClose.svelte'
   import {
     editLyricsContent,
     fullscreen,
@@ -27,6 +16,18 @@
     updateLyricsDialogOpen,
   } from './lyrics/store'
   import VirtualScroll from './shared/VirtualScroll.svelte'
+  import {
+    currentPlayingSongIds,
+    currentPlaylistSongs,
+    playedSeconds,
+    playingSongId,
+    playlists,
+    selectedPlaylistId,
+  } from '$lib/store'
+  import type { Song } from '$lib/types'
+  import Checked from '$lib/icons/Checked.svelte'
+  import Uncheck from '$lib/icons/Uncheck.svelte'
+  import DialogClose from '$lib/icons/DialogClose.svelte'
   import { db } from '$lib/db'
 
   export let transparentBg: boolean = false
@@ -122,7 +123,7 @@
     selectedSongIds = []
   }
 
-  export const resetVirtualScroller = () => {
+  export function resetVirtualScroller() {
     virtualScroller?.recomputeInitialData()
   }
 </script>
@@ -155,12 +156,13 @@
   {#if !songs.length && showActionsOnEmpty}
     <Actions />
   {:else}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <VirtualScroll
       bind:this="{virtualScroller}"
-      bind:offset="{offset}"
-      bind:limit="{limit}"
-      bind:scrollTop="{scrollTop}"
-      total="{total}"
+      bind:offset
+      bind:limit
+      bind:scrollTop
+      {total}
       items="{songs}"
       customClass="{transparentBg ? 'bg-black' : 'j-song-bg'}"
     >
@@ -170,7 +172,7 @@
         {@const isDragging =
           draggingSongId === song.id || draggingSongIds.includes(song.id)}
         <div
-          draggable="{draggable}"
+          {draggable}
           class="song-row"
           class:active="{isPlaying}"
           class:dragging="{isDragging}"
@@ -260,7 +262,7 @@
         <div class="cover cover-skeleton"></div>
         <div class="info">
           <div class="title title-skeleton"></div>
-          <div class="meta mt-2 pr-4">
+          <div class="meta meta-s">
             <div class="meta-skeleton"></div>
             <div class="duration-skeleton"></div>
           </div>
@@ -300,6 +302,9 @@
   }
   .meta {
     --uno: 'text-warm-gray-5 text-[12px] flex justify-between';
+  }
+  .meta-s {
+    --uno: 'mt-2 pr-4';
   }
   .fullscreen .meta {
     --uno: 'display-none sm:flex';

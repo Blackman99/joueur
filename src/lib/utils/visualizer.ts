@@ -1,15 +1,16 @@
 import { audioCtx } from '$lib/store'
 
-const createVisualizer = (canvas: HTMLCanvasElement) => {
+function createVisualizer(canvas: HTMLCanvasElement) {
   const audioSource = audioCtx.source
   const audioContext = audioCtx.ctx
-  if (!audioSource || !audioContext) return
+  if (!audioSource || !audioContext)
+    return
   let x = 0
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
   const analyser = audioContext.createAnalyser()
   audioSource.connect(analyser)
   analyser.connect(audioContext.destination)
-  analyser.fftSize = 128
+  analyser.fftSize = 1024
   const bufferLength = analyser.frequencyBinCount
   const dataArray = new Uint8Array(bufferLength)
   const barWidth = (canvas.width / bufferLength)

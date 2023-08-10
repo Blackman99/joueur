@@ -1,15 +1,15 @@
 <script lang="ts">
+  import { slide } from 'svelte/transition'
+  import { selectedArtist } from '../../../routes/artists/store'
+  import { selectedAlbum } from '../../../routes/albums/store'
+  import clickOutside from '../../actions/outside-click'
+  import Loading from '../shared/Loading.svelte'
   import { goto } from '$app/navigation'
   import { db } from '$lib/db'
   import Search from '$lib/icons/Search.svelte'
   import { currentPlayingSongIds, playingSongId } from '$lib/store'
   import type { Album, Artist, Song } from '$lib/types'
   import debounce from '$lib/utils/debounce'
-  import { slide } from 'svelte/transition'
-  import { selectedArtist } from '../../../routes/artists/store'
-  import { selectedAlbum } from '../../../routes/albums/store'
-  import clickOutside from '../../actions/outside-click'
-  import Loading from '../shared/Loading.svelte'
 
   let focused = false
   let keyword = ''
@@ -26,7 +26,7 @@
     try {
       songsLoading = true
       songs = await db.songs
-        .filter(song => song.title.indexOf(keyword) !== -1)
+        .filter(song => song.title.includes(keyword))
         .limit(10)
         .toArray()
     } catch (error) {
@@ -39,7 +39,7 @@
     try {
       artistsLoading = true
       artists = await db.artists
-        .filter(ar => ar.title.indexOf(keyword) !== -1)
+        .filter(ar => ar.title.includes(keyword))
         .limit(10)
         .toArray()
     } catch (error) {
@@ -52,7 +52,7 @@
     try {
       albumsLoading = true
       albums = await db.albums
-        .filter(al => al.title.indexOf(keyword) !== -1)
+        .filter(al => al.title.includes(keyword))
         .limit(10)
         .toArray()
     } catch (error) {
@@ -79,7 +79,7 @@
   }
 
   const handlePlay = (song: Song) => {
-    if (!$currentPlayingSongIds.some(id => id === song.id)) {
+    if (!$currentPlayingSongIds.includes(song.id)) {
       $currentPlayingSongIds.push(song.id)
       $currentPlayingSongIds = $currentPlayingSongIds
     }
@@ -102,7 +102,7 @@
 
 <div
   class="global-search"
-  class:focused="{focused}"
+  class:focused
   use:clickOutside="{{
     cbOutside: () => (focused = false),
   }}"
@@ -135,10 +135,13 @@
               class="result-item"
               on:click="{() => handlePlay(song)}"
               on:keypress
+              tabindex="0"
+              role="button"
             >
+              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
               {@html `${song.title.replace(
                 new RegExp(keyword),
-                m => `<span class="text-primary">${m}</span>`
+                m => `<span class="text-primary">${m}</span>`,
               )}`}
             </div>
           {/each}
@@ -158,10 +161,13 @@
               class="result-item"
               on:click="{() => handleToArtist(ar)}"
               on:keypress
+              role="button"
+              tabindex="0"
             >
+              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
               {@html `${ar.title.replace(
                 new RegExp(keyword),
-                m => `<span class="text-primary">${m}</span>`
+                m => `<span class="text-primary">${m}</span>`,
               )}`} · <small>{ar.songIds.length} tracks</small>
             </div>
           {/each}
@@ -181,10 +187,13 @@
               class="result-item"
               on:click="{() => handleToAlbum(al)}"
               on:keypress
+              role="button"
+              tabindex="0"
             >
+              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
               {@html `${al.title.replace(
                 new RegExp(keyword),
-                m => `<span class="text-primary">${m}</span>`
+                m => `<span class="text-primary">${m}</span>`,
               )}`} · <small>{al.songIds.length} tracks</small>
             </div>
           {/each}
@@ -213,7 +222,8 @@
   .search-result {
     --uno: 'absolute min-w-[320px] w-[70vw] left-[50%] bg-white dark:bg-black b-1 rounded b-gray-2 dark:b-gray-7 b-solid p-2 text-[14px] flex text-secondary dark:text-gray-3 z-3';
     top: calc(100% + 12px);
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
       rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
     transform: translateX(-50%);
   }

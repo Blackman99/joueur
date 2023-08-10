@@ -2,6 +2,8 @@
   import { fade } from 'svelte/transition'
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+
 <div
   transition:fade="{{ duration: 300, delay: 0 }}"
   class="backdrop"

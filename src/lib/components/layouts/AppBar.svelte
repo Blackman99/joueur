@@ -1,15 +1,15 @@
 <script lang="ts">
+  import { type Platform, platform } from '@tauri-apps/api/os'
+  import { ask } from '@tauri-apps/api/dialog'
+  import { appWindow } from '@tauri-apps/api/window'
+  import IconButton from '../shared/IconButton.svelte'
+  import { fullscreen, quittingFullscreen } from '../lyrics/store'
+  import GlobalSearch from './GlobalSearch.svelte'
   import DialogClose from '$lib/icons/DialogClose.svelte'
   import QuitFullscreen from '$lib/icons/QuitFullscreen.svelte'
   import WindowMaximize from '$lib/icons/WindowMaximize.svelte'
   import WindowMinimize from '$lib/icons/WindowMinimize.svelte'
   import { inWindow, isDark } from '$lib/store'
-  import { platform, type Platform } from '@tauri-apps/api/os'
-  import { ask } from '@tauri-apps/api/dialog'
-  import { appWindow } from '@tauri-apps/api/window'
-  import GlobalSearch from './GlobalSearch.svelte'
-  import IconButton from '../shared/IconButton.svelte'
-  import { fullscreen, quittingFullscreen } from '../lyrics/store'
 
   let platformName: Platform
 
@@ -26,9 +26,7 @@
       title: 'Confirm',
       type: 'info',
     })
-    if (yes) {
-      appWindow.close()
-    }
+    if (yes) appWindow.close()
   }
 
   const quitFullscreen = () => {
@@ -36,6 +34,8 @@
     $fullscreen = false
   }
 </script>
+
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 
 <div
   class="titlebar"

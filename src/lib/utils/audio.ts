@@ -8,16 +8,17 @@ import { db } from '$lib/db'
 
 export const isAudio = (path: string) => AUDIO_EXTENSIONS.includes(path.split('.').pop()?.toLowerCase() || '')
 
-export const getSongInfoFromFile = async (filePath: string) => {
+export async function getSongInfoFromFile(filePath: string) {
   const song = await invoke('get_metadata', { path: filePath })
   return song as Song
 }
 
-export const parseSongsFromFileEntries = async (fileEntries: FileEntry[], songs: Song[] = []) => {
+export async function parseSongsFromFileEntries(fileEntries: FileEntry[], songs: Song[] = []) {
   const parseEntry = async (entry: FileEntry) => {
     if (isAudio(entry.path)) {
       const song = await getSongInfoFromFile(entry.path)
-      if (song) songs.push(song)
+      if (song)
+        songs.push(song)
     }
     else if (entry.children?.length)
     { await parseSongsFromFileEntries(entry.children, songs) }
@@ -27,7 +28,7 @@ export const parseSongsFromFileEntries = async (fileEntries: FileEntry[], songs:
   return songs
 }
 
-export const updateSongLyrics = async (song: Song, lyrics: string) => {
+export async function updateSongLyrics(song: Song, lyrics: string) {
   try {
     await invoke('update_lyrics', { path: song.path, lyrics })
     const lyc = song.lyrics[0]
@@ -47,7 +48,7 @@ export const updateSongLyrics = async (song: Song, lyrics: string) => {
   }
 }
 
-export const updateAlbum = async (album: Album, albumTitle: string) => {
+export async function updateAlbum(album: Album, albumTitle: string) {
   try {
     const songs = await db.songs.where('album').equals(album.title).and(s => s.artist === album.artist).toArray()
     await Promise.all(songs.map(async song => await invoke('update_album', { path: song.path, albumTitle })))
@@ -63,13 +64,13 @@ export const updateAlbum = async (album: Album, albumTitle: string) => {
   }
 }
 
-export const updateAlbumBySong = async (song: Song, albumTitle: string) => {
+export async function updateAlbumBySong(song: Song, albumTitle: string) {
   const album = await db.albums.where('title').equals(song.album).and(al => al.artist === song.artist).first()
   if (album)
     await updateAlbum(album, albumTitle)
 }
 
-export const updateCover = async (song: Song, imagePath: string) => {
+export async function updateCover(song: Song, imagePath: string) {
   const imageBase64 = await invoke('update_cover', {
     songPath: song.path,
     imagePath,
@@ -78,7 +79,7 @@ export const updateCover = async (song: Song, imagePath: string) => {
   await db.songs.update(song.id, song)
 }
 
-export const updateTitle = async (song: Song, newTitle: string) => {
+export async function updateTitle(song: Song, newTitle: string) {
   await invoke('update_title', {
     path: song.path,
     title: newTitle,
@@ -87,7 +88,7 @@ export const updateTitle = async (song: Song, newTitle: string) => {
   await db.songs.update(song.id, song)
 }
 
-export const updateArtist = async (song: Song, newArtistName: string) => {
+export async function updateArtist(song: Song, newArtistName: string) {
   await db.transaction('rw', db.artists, db.songs, async () => {
     const oldArtist = await db.artists.filter(ar => ar.title === song.artist && ar.songIds.includes(song.id)).first()
     if (oldArtist) {

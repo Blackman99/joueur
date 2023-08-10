@@ -1,9 +1,9 @@
 <script lang="ts">
-  import DialogClose from '$lib/icons/DialogClose.svelte'
   import { onMount } from 'svelte'
   import { cubicInOut } from 'svelte/easing'
   import Backdrop from './Backdrop.svelte'
   import IconButton from './IconButton.svelte'
+  import DialogClose from '$lib/icons/DialogClose.svelte'
 
   export let open = false
   export let title: string = ''
@@ -15,7 +15,7 @@
   const dialogTransition = (node: any) => {
     const existingTransform = getComputedStyle(node).transform.replace(
       'none',
-      ''
+      '',
     )
     return {
       duration: 300,
@@ -29,9 +29,7 @@
 
   onMount(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.code === 'Escape') {
-        handleClose()
-      }
+      if (e.code === 'Escape') handleClose()
     }
     window.addEventListener('keyup', handler)
 
@@ -55,7 +53,7 @@
         </IconButton>
       </div>
     </div>
-    <div class="p-4">
+    <div class="body">
       <slot />
     </div>
   </dialog>
@@ -72,12 +70,15 @@
     width: var(--joueur-dialog-width);
   }
   .header {
-    --uno: 'flex items-center justify-between px-4 py-3 b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-7';
+    --uno: 'flex items-start justify-between px-4 py-3 b-b-1 b-b-solid b-b-light-4 dark:b-b-gray-7';
   }
   .title {
-    --uno: 'text-secondary dark:text-gray-1';
+    --uno: 'flex text-secondary dark:text-gray-1 flex-grow flex-shrink-0';
   }
   .close {
     --uno: 'flex items-center';
+  }
+  .body {
+    --uno: 'p-4';
   }
 </style>

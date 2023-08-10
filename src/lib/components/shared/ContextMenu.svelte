@@ -52,6 +52,8 @@
       <div
         class="menu-item"
         class:has-children="{hasChildren}"
+        role="button"
+        tabindex="0"
         on:keypress
         on:click="{e => actionHandler(e, menu)}"
       >
@@ -70,6 +72,8 @@
                   class="menu-item"
                   on:click|stopPropagation="{e => actionHandler(e, c)}"
                   on:keypress
+                  role="button"
+                  tabindex="0"
                 >
                   {c.title}
                 </div>
