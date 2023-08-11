@@ -8,6 +8,8 @@
 
 * Svelte4 ally warnings
 * Some styles not correctly display on Win11
+* Remove svelte-scoped mode in unocss
+* Fix wrong virtual scroll items offset when resized
 
 ## 0.5.0
 
