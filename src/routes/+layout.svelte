@@ -1,4 +1,5 @@
 <script lang="ts">
+  // eslint-disable-next-line unicorn/prefer-node-protocol
   import { Buffer } from 'buffer'
   import { appWindow } from '@tauri-apps/api/window'
   import { readDir } from '@tauri-apps/api/fs'
@@ -43,6 +44,9 @@
   import { windowInnerWidth } from '$lib/layout'
 
   // Mount global Buffer
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  // eslint-disable-next-line n/prefer-global/buffer
   globalThis.Buffer = Buffer
 
   let showDropZone = false
@@ -70,7 +74,7 @@
 
   onMount(async () => {
     const currentSongIds = JSON.parse(
-      localStorage.getItem(CURRENT_SONGS_KEY) || '[]'
+      localStorage.getItem(CURRENT_SONGS_KEY) || '[]',
     ) as number[]
 
     currentPlayingSongIds.set(currentSongIds)
@@ -100,7 +104,7 @@
                 const songs = await parseSongsFromFileEntries(res)
                 await db.addSongs(songs, addedSongNumber => {
                   percentage = ((addedSongNumber * 100) / songs.length).toFixed(
-                    2
+                    2,
                   )
                 })
               }
@@ -139,7 +143,7 @@
   const resetPlaylistSongs = () => {
     localStorage.setItem(
       SELECTED_PLAYLIST_ID_KEY,
-      $selectedPlaylistId.toString()
+      $selectedPlaylistId.toString(),
     )
     $selectedPlaylistSongsOffset = 0
     $selectedPlaylistSongsScrollTop = 0
@@ -172,13 +176,15 @@
 </script>
 
 <svelte:head>
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
   {@html `
 <script>
-  if(window.localStorage.getItem('${COLOR_MODE_KEY}') === 'on') {
+  // eslint-disable-next-line no-template-curly-in-string
+  if (window.localStorage.getItem('${COLOR_MODE_KEY}') === 'on') 
     document.querySelector('html').classList.add('dark')
-  } else {
+   else 
     document.querySelector('html').classList.remove('dark')
-  }
+  
 </script>`}
 </svelte:head>
 

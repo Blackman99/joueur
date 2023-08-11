@@ -102,22 +102,20 @@
     on:transitionend="{handleTransitionEnd}"
   >
     <LyricsDisplay />
-    {#if $playingSong}
+    {#if $playingSong && $playingSong.cover}
       {#key $playingSongId}
-        {#if $playingSong.cover}
-          <img
-            in:coverIn
-            out:coverOut
-            class="cover"
-            src="{$playingSong.cover}"
-            alt="{$playingSong.title}"
-          />
-        {:else}
-          <div class="default-cover">
-            <DefaultCover />
-          </div>
-        {/if}
+        <img
+          in:coverIn
+          out:coverOut
+          class="cover"
+          src="{$playingSong.cover}"
+          alt="{$playingSong.title}"
+        />
       {/key}
+    {:else}
+      <div class="default-cover">
+        <DefaultCover />
+      </div>
     {/if}
   </div>
 </aside>

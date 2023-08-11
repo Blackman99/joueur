@@ -1,5 +1,7 @@
 <script lang="ts">
   import { ask, message } from '@tauri-apps/api/dialog'
+  import { appWindow } from '@tauri-apps/api/window'
+  import { onMount, tick } from 'svelte'
   import Songs from '$lib/components/Songs.svelte'
   import {
     currentPlaylistSongs,
@@ -70,7 +72,7 @@
       .first()
     if (currentPlaylist) {
       const songIndexToRemove = currentPlaylist.songIds.findIndex(
-        id => id === songIdToRemove
+        id => id === songIdToRemove,
       )
       if (songIndexToRemove !== -1) {
         currentPlaylist.songIds = [
@@ -89,7 +91,7 @@
       .first()
     if (currentPlaylist) {
       currentPlaylist.songIds = currentPlaylist.songIds.filter(
-        id => !selectedSongIds.includes(id)
+        id => !selectedSongIds.includes(id),
       )
       await db.playlists.update(currentPlaylist.id, currentPlaylist)
       selectedSongIds = []
@@ -99,7 +101,7 @@
   const handleDeleteFromApplication = async (e: CustomEvent<number>) => {
     const yes = await ask(
       'Deletion from application can not be reverted. Are you sure?',
-      { type: 'warning', title: 'Confirm' }
+      { type: 'warning', title: 'Confirm' },
     )
     if (!yes) return
     const songIdToRemove = e.detail
@@ -138,7 +140,7 @@
           if (!al.songIds.length) await db.albums.delete(al.id)
           else await db.albums.update(al.id, al)
         }
-      }
+      },
     )
       .then(() => {
         message('Delete success', { title: 'Success', type: 'info' })
@@ -146,6 +148,29 @@
       .catch(err => {
         message(err.message, { title: 'Error', type: 'error' })
       })
+  }
+
+  let oldLimit = $selectedPlaylistSongsLimit
+
+  onMount(() => {
+    let stopListen: () => void
+
+    appWindow
+      .onResized(async () => {
+        await tick()
+        $selectedPlaylistSongsLimit = oldLimit
+      })
+      .then(r => {
+        stopListen = r
+      })
+
+    return () => {
+      stopListen?.()
+    }
+  })
+
+  const handleLimitChange = () => {
+    oldLimit = $selectedPlaylistSongsLimit
   }
 
   $: {
@@ -157,9 +182,9 @@
 
 <div class="start">
   <Playlists
-    bind:waitForDroppingPlaylistId="{waitForDroppingPlaylistId}"
-    draggingSongId="{draggingSongId}"
-    draggingSongIds="{draggingSongIds}"
+    bind:waitForDroppingPlaylistId
+    {draggingSongId}
+    {draggingSongIds}
   />
   {#if !$fullscreen}
     <Songs
@@ -172,13 +197,14 @@
       bind:offset="{$selectedPlaylistSongsOffset}"
       bind:limit="{$selectedPlaylistSongsLimit}"
       bind:scrollTop="{$selectedPlaylistSongsScrollTop}"
-      bind:draggingSongId="{draggingSongId}"
-      bind:draggingSongIds="{draggingSongIds}"
-      bind:selectedSongIds="{selectedSongIds}"
+      bind:draggingSongId
+      bind:draggingSongIds
+      bind:selectedSongIds
       on:maybe-drop-in-playlist="{handleMaybeDropInPlaylist}"
       on:delete-from-playlist="{handleRemoveFromList}"
       on:delete-all-selected-songs-from-play-list="{handleRemoveAllSelectedSongsFromList}"
       on:delete-from-application="{handleDeleteFromApplication}"
+      on:limit-change="{handleLimitChange}"
     />
   {/if}
 </div>

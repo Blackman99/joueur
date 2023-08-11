@@ -1,15 +1,17 @@
 <script lang="ts">
-  import { db } from '$lib/db'
-  import type { Song } from '$lib/types'
+  import { fade } from 'svelte/transition'
+  import { onMount } from 'svelte'
   import {
+    albums,
+    limit,
+    offset,
+    scrollTop,
     selectedAlbum,
     selectedAlbumSongs,
-    albums,
-    offset,
-    limit,
     totalAlbumNumber,
-    scrollTop,
   } from './store'
+  import { db } from '$lib/db'
+  import type { Song } from '$lib/types'
   import Backdrop from '$lib/components/shared/Backdrop.svelte'
   import PlayingIcon from '$lib/components/PlayingIcon.svelte'
   import {
@@ -17,8 +19,6 @@
     playedSeconds,
     playingSongId,
   } from '$lib/store'
-  import { fade } from 'svelte/transition'
-  import { onMount } from 'svelte'
   import VirtualScroll from '$lib/components/shared/VirtualScroll.svelte'
   import PopupEditor from '$lib/components/shared/PopupEditor.svelte'
   import { updateAlbum } from '$lib/utils/audio'
@@ -52,16 +52,12 @@
   }
 
   $: {
-    if ($selectedAlbum) {
-      getAlbumSongs()
-    }
+    if ($selectedAlbum) getAlbumSongs()
   }
 
   onMount(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.code === 'Escape') {
-        $selectedAlbum = undefined
-      }
+      if (e.code === 'Escape') $selectedAlbum = undefined
     }
     window.addEventListener('keyup', handler)
     return () => {
@@ -86,6 +82,7 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="albums">
   {#if hasAlbum}
     <VirtualScroll
@@ -143,6 +140,7 @@
   <Backdrop on:click="{() => ($selectedAlbum = undefined)}" />
 {/if}
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if $selectedAlbum}
   <div class="selected-album" transition:fade="{{ duration: 300 }}">
     <div class="selected-album-info">
@@ -185,8 +183,8 @@
           class="selected-album-song-item"
           on:dblclick="{() => handlePlayAlbumSongs(song)}"
         >
-          <div class="flex items-center">
-            <div class="mr-2">
+          <div class="left">
+            <div class="track-title">
               {song.title}
             </div>
             {#if $playingSongId === song.id}
@@ -221,6 +219,12 @@
   .meta > div {
     --uno: 'truncate';
     width: 50%;
+  }
+  .left {
+    --uno: 'flex items-center';
+  }
+  .track-title {
+    --uno: 'mr-2';
   }
   .selected-album {
     --uno: 'fixed w-[80vw] h-[80vh] top-[10vh] left-[10vw] z-101 flex flex-col rounded-lg p-4 bg-white bg-opacity-20 dark:bg-black dark:bg-opacity-70 z-108';

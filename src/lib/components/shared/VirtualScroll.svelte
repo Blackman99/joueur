@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { createEventDispatcher, onMount, tick } from 'svelte'
   import debounce from '$lib/utils/debounce'
-  import { onMount, tick } from 'svelte'
 
   export let gapX: number = 0
   export let gapY: number = 0
@@ -13,6 +13,8 @@
   export let total = 0
   export let scrollTop = 0
 
+  const dispatch = createEventDispatcher()
+
   let itemsOffsetY = 0
   let vScrollContainer: HTMLDivElement
   let itemHeight = 0
@@ -20,6 +22,8 @@
   let skeletonOffset = 0
 
   let st = 0
+
+  let scrollPositionInitialized = false
 
   $: totalHeight = itemHeight * (total / cols)
 
@@ -30,7 +34,10 @@
     if (!firstItem) return
     itemHeight = firstItem.offsetHeight
     cols = Math.floor(vScrollContainer.offsetWidth / firstItem.offsetWidth)
-    limit = Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
+    const newLimit =
+      Math.ceil(vScrollContainer.clientHeight / itemHeight) * cols + cols
+    dispatch('limit-change', newLimit)
+    limit = newLimit
   }, 50)
 
   onMount(() => {
@@ -50,14 +57,12 @@
     setOffset(st)
   }
 
-  export const reset = () => {
+  export function reset() {
     offset = 0
     limit = 10
     vScrollContainer.scrollTop = 0
-    screenTop = 0
+    scrollTop = 0
   }
-
-  let scrollPositionInitialized = false
 
   const setScrollTop = () => {
     if (!scrollPositionInitialized) return
@@ -72,8 +77,6 @@
     setScrollTop()
   }
 </script>
-
-<svelte:window on:resize="{recomputeInitialData}" />
 
 <div
   bind:this="{vScrollContainer}"
@@ -90,7 +93,7 @@
   >
     {#each items as item (item.id)}
       <div class="v-scroll-item">
-        <slot name="item" item="{item}" />
+        <slot name="item" {item} />
       </div>
     {/each}
   </div>

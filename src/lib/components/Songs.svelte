@@ -163,6 +163,7 @@
       bind:limit
       bind:scrollTop
       {total}
+      on:limit-change
       items="{songs}"
       customClass="{transparentBg ? 'bg-black' : 'j-song-bg'}"
     >
