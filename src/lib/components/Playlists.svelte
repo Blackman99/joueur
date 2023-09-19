@@ -1,14 +1,14 @@
 <script lang="ts">
-  import contextMenu from '$lib/actions/context-menu'
-  import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
-  import { selectedPlaylistId } from '$lib/store'
-  import { playlists } from '$lib/store'
-  import CreatePlaylistInput from './CreatePlaylistInput.svelte'
   import { ask, message } from '@tauri-apps/api/dialog'
-  import { db } from '$lib/db'
-  import { isSm } from '$lib/layout'
+  import CreatePlaylistInput from './CreatePlaylistInput.svelte'
   import { fullscreen } from './lyrics/store'
   import ExpandableButton from './shared/ExpandableButton.svelte'
+  import contextMenu from '$lib/actions/context-menu'
+  import PlaylistActive from '$lib/icons/PlaylistActive.svelte'
+  import { playlists, selectedPlaylistId } from '$lib/store'
+
+  import { db } from '$lib/db'
+  import { isSm } from '$lib/layout'
 
   export let draggingSongId: number | null
   export let waitForDroppingPlaylistId: number | null = null
@@ -23,22 +23,16 @@
   const handleDragenter = (e: any) => {
     e.preventDefault()
 
-    const id = parseInt(e.target.dataset.playlistId)
-    if (!isNaN(id)) {
-      if (waitForDroppingPlaylistId !== id) {
-        waitForDroppingPlaylistId = id
-      }
-    }
+    const id = Number.parseInt(e.target.dataset.playlistId)
+    if (!Number.isNaN(id))
+      if (waitForDroppingPlaylistId !== id) waitForDroppingPlaylistId = id
   }
 
   const handleDragleave = (e: any) => {
     e.preventDefault()
-    const id = parseInt(e.target.dataset.playlistId)
-    if (!isNaN(id)) {
-      if (waitForDroppingPlaylistId === id) {
-        waitForDroppingPlaylistId = null
-      }
-    }
+    const id = Number.parseInt(e.target.dataset.playlistId)
+    if (!Number.isNaN(id))
+      if (waitForDroppingPlaylistId === id) waitForDroppingPlaylistId = null
   }
 
   const contextMenuHandler = async (name: string, id: number) => {
@@ -51,9 +45,10 @@
           })
           return
         }
+        // eslint-disable-next-line no-case-declarations
         const yes = await ask(
           'Deleting of playlist cannot be reverted. Are you sure?',
-          { title: 'Confirm', type: 'warning' }
+          { title: 'Confirm', type: 'warning' },
         )
         if (yes) {
           await db.playlists.delete(id)
@@ -62,6 +57,8 @@
     }
   }
 </script>
+
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 
 <div
   class="playlist"
@@ -77,7 +74,7 @@
           {@const active = playlist.id === $selectedPlaylistId}
           <div
             class="playlist-item"
-            class:active="{active}"
+            class:active
             data-playlist-id="{playlist.id}"
             on:click="{() => handlePlaylistClick(playlist.id)}"
             on:keyup="{() => handlePlaylistClick(playlist.id)}"
@@ -93,6 +90,8 @@
                         name: 'delete-playlist',
                       },
                     ],
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
               actionHandler: (e, m) => contextMenuHandler(m.name, playlist.id),
             }}"
           >
@@ -115,7 +114,7 @@
       {/if}
     </div>
   </div>
-  <ExpandableButton bind:expanded="{expanded}" />
+  <ExpandableButton bind:expanded />
 </div>
 
 <style>

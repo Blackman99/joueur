@@ -1,7 +1,11 @@
 <script lang="ts">
   import { liveQuery } from 'dexie'
   import type { Readable } from 'svelte/store'
+  import { cubicInOut } from 'svelte/easing'
+  import { appWindow } from '@tauri-apps/api/window'
   import Menu from '../shared/Menu.svelte'
+  import LyricsDisplay from '../lyrics/LyricsDisplay.svelte'
+  import { fullscreen, quittingFullscreen } from '../lyrics/store'
   import type { Song } from '$lib/types'
   import { db } from '$lib/db'
   import { playingSongId } from '$lib/store'
@@ -9,20 +13,16 @@
   import MenuArtists from '$lib/icons/MenuArtists.svelte'
   import MenuAlbums from '$lib/icons/MenuAlbums.svelte'
   import MenuSettings from '$lib/icons/MenuSettings.svelte'
-  import { cubicInOut } from 'svelte/easing'
-  import LyricsDisplay from '../lyrics/LyricsDisplay.svelte'
   import DefaultCover from '$lib/icons/DefaultCover.svelte'
-  import { fullscreen, quittingFullscreen } from '../lyrics/store'
-  import { appWindow } from '@tauri-apps/api/window'
 
   $: playingSong = liveQuery(() =>
-    db.songs.where('id').equals($playingSongId).first()
+    db.songs.where('id').equals($playingSongId).first(),
   ) as unknown as Readable<Song | undefined>
 
   const coverIn = (node: any) => {
     const existingTransform = getComputedStyle(node).transform.replace(
       'none',
-      ''
+      '',
     )
     return {
       duration: 800,
@@ -45,7 +45,7 @@
   const coverOut = (node: any) => {
     const existingTransform = getComputedStyle(node).transform.replace(
       'none',
-      ''
+      '',
     )
     return {
       duration: 800,
@@ -56,7 +56,7 @@
         }%) rotate(${
           u < 0.5 ? -60 * u : -60 * (1 - u)
         }deg); transform-origin: bottom left; position: absolute; z-index: ${Math.floor(
-          10 * t
+          10 * t,
         )};`,
     }
   }
@@ -93,6 +93,7 @@
       </Menu>
     {/each}
   </div>
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="flex-grow" on:mousedown="{() => appWindow.startDragging()}"></div>
   <div
     class="cover-wrapper"
@@ -101,22 +102,20 @@
     on:transitionend="{handleTransitionEnd}"
   >
     <LyricsDisplay />
-    {#if $playingSong}
+    {#if $playingSong && $playingSong.cover}
       {#key $playingSongId}
-        {#if $playingSong.cover}
-          <img
-            in:coverIn
-            out:coverOut
-            class="cover"
-            src="{$playingSong.cover}"
-            alt="{$playingSong.title}"
-          />
-        {:else}
-          <div class="default-cover">
-            <DefaultCover />
-          </div>
-        {/if}
+        <img
+          in:coverIn
+          out:coverOut
+          class="cover"
+          src="{$playingSong.cover}"
+          alt="{$playingSong.title}"
+        />
       {/key}
+    {:else}
+      <div class="default-cover">
+        <DefaultCover />
+      </div>
     {/if}
   </div>
 </aside>

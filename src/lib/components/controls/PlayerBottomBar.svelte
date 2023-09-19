@@ -1,28 +1,28 @@
 <script lang="ts">
   import { slide } from 'svelte/transition'
+  import { createEventDispatcher } from 'svelte'
+  import { spring } from 'svelte/motion'
   import IconButton from '../shared/IconButton.svelte'
+  import { fullscreen } from '../lyrics/store'
+  import VolumeControl from './VolumeControl.svelte'
+  import ModeSwitcher from './ModeSwitcher.svelte'
+  import AudioVisualizer from './AudioVisualizer.svelte'
   import {
-    playingSong,
-    displayPlayedSeconds,
-    playedSeconds,
-    playNext,
-    playPrev,
-    duration,
-    displayDuration,
     audioDom,
+    displayDuration,
+    displayPlayedSeconds,
+    duration,
     inWindow,
     paused,
+    playNext,
+    playPrev,
+    playedSeconds,
+    playingSong,
     togglePlayOrPause,
   } from '$lib/store'
   import ControlCurrentList from '$lib/icons/ControlCurrentList.svelte'
   import ControlPrev from '$lib/icons/ControlPrev.svelte'
   import ControlNext from '$lib/icons/ControlNext.svelte'
-  import { createEventDispatcher } from 'svelte'
-  import { spring } from 'svelte/motion'
-  import VolumeControl from './VolumeControl.svelte'
-  import ModeSwitcher from './ModeSwitcher.svelte'
-  import AudioVisualizer from './AudioVisualizer.svelte'
-  import { fullscreen } from '../lyrics/store'
   import ControlPlay from '$lib/icons/ControlPlay.svelte'
   import ControlPause from '$lib/icons/ControlPause.svelte'
 
@@ -42,32 +42,25 @@
 
   const handleBarClick = (e: any) => {
     const newPercentage = e.offsetX / barDom.offsetWidth
-    if ($audioDom) {
-      $audioDom.currentTime = $duration * newPercentage
-    }
+    if ($audioDom) $audioDom.currentTime = $duration * newPercentage
   }
 
   const handlePointerMove = (e: any) => {
     if (e.target !== barDom) return
-    if (mouseTabbing) {
-      isHolding = true
-    }
+    if (mouseTabbing) isHolding = true
+
     pointerX.set(e.offsetX)
-    if (isHolding) {
-      handleBarClick(e)
-    }
+    if (isHolding) handleBarClick(e)
   }
 
   const handleMouseup = (e: any) => {
     mouseTabbing = false
-    if (isHolding) {
-      isHolding = false
-    } else {
-      handleBarClick(e)
-    }
+    if (isHolding) isHolding = false
+    else handleBarClick(e)
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if $playingSong}
   <div
     class="player-bottom-bar"

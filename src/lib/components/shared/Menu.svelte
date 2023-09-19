@@ -12,7 +12,7 @@
 {#if to}
   <a
     class="menu-item"
-    class:active="{active}"
+    class:active
     class:only-icon-on-sm="{onlyIconOnSm}"
     href="{to}"
     draggable="false"
@@ -33,9 +33,10 @@
     </div>
   </a>
 {:else}
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="menu-item"
-    class:active="{active}"
+    class:active
     draggable="false"
     class:menu-rounded="{rounded}"
     on:click|stopPropagation

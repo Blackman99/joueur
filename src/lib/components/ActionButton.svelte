@@ -15,7 +15,9 @@
 
 <div
   class="action"
-  class:loading="{loading}"
+  class:loading
+  role="button"
+  tabindex="0"
   on:click="{handleAction}"
   on:keypress="{handleAction}"
 >

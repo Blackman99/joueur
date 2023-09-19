@@ -19,9 +19,10 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   class="icon-button"
-  class:active="{active}"
+  class:active
   class:sm-p="{smallPadding}"
   style="--joueur-icon-button-size: {size};"
   on:click|stopPropagation

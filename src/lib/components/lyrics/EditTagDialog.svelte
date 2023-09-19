@@ -1,4 +1,13 @@
 <script>
+  import { open } from '@tauri-apps/api/dialog'
+  import Dialog from '../shared/Dialog.svelte'
+  import PopupEditor from '../shared/PopupEditor.svelte'
+  import UploadImage from '../../icons/UploadImage.svelte'
+  import {
+    editLyricsContent,
+    songToUpdateTags,
+    updateLyricsDialogOpen,
+  } from './store'
   import {
     updateAlbumBySong,
     updateArtist,
@@ -6,21 +15,6 @@
     updateSongLyrics,
     updateTitle,
   } from '$lib/utils/audio'
-  import { open } from '@tauri-apps/api/dialog'
-  import Dialog from '../shared/Dialog.svelte'
-  import PopupEditor from '../shared/PopupEditor.svelte'
-  import UploadImage from '../../icons/UploadImage.svelte'
-  import {
-    updateLyricsDialogOpen,
-    songToUpdateTags,
-    editLyricsContent,
-  } from './store'
-  import { convertFileSrc } from '@tauri-apps/api/tauri'
-
-  /**
-   * @type {HTMLInputElement}
-   */
-  let uploader
 
   const handleSaveLyrics = async () => {
     await updateSongLyrics($songToUpdateTags, $editLyricsContent)
@@ -87,8 +81,10 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+
 <Dialog title="Update lyrics" bind:open="{$updateLyricsDialogOpen}">
-  <div class="flex items-center mb-2" slot="title">
+  <div class="title" slot="title">
     <div class="cover-wrapper">
       <img
         class="cover"
@@ -101,7 +97,7 @@
         </div>
       </div>
     </div>
-    <div class="flex-grow">
+    <div class="flex-grow-1">
       <PopupEditor
         bind:value="{editingSongTitle}"
         bind:show="{showSongTitleEditor}"
@@ -138,7 +134,8 @@
   <textarea
     class="lyrics-editor"
     bind:value="{$editLyricsContent}"
-    on:keyup|stopPropagation></textarea>
+    on:keyup|stopPropagation
+  ></textarea>
   <div class="footer-actions">
     <div class="save-lyrics-btn" on:click="{handleSaveLyrics}" on:keypress>
       Close
@@ -147,6 +144,9 @@
 </Dialog>
 
 <style>
+  .title {
+    --uno: 'flex items-center mb-2 flex-grow';
+  }
   .lyrics-editor {
     --uno: 'w-full resize-none h-[40vh] b-none outline-none b-1 b-solid b-gray-4 dark:b-gray-7 rounded text-secondary dark:text-gray-2 leading-5 bg-transparent';
   }

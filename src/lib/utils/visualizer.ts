@@ -1,12 +1,16 @@
-const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) => {
+import { audioCtx } from '$lib/store'
+
+function createVisualizer(canvas: HTMLCanvasElement) {
+  const audioSource = audioCtx.source
+  const audioContext = audioCtx.ctx
+  if (!audioSource || !audioContext)
+    return
   let x = 0
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-  const audioCtx = new window.AudioContext()
-  const audioSource = audioCtx.createMediaElementSource(audio)
-  const analyser = audioCtx.createAnalyser()
+  const analyser = audioContext.createAnalyser()
   audioSource.connect(analyser)
-  analyser.connect(audioCtx.destination)
-  analyser.fftSize = 1024
+  analyser.connect(audioContext.destination)
+  analyser.fftSize = 256
   const bufferLength = analyser.frequencyBinCount
   const dataArray = new Uint8Array(bufferLength)
   const barWidth = (canvas.width / bufferLength)
@@ -70,7 +74,6 @@ const createVisualizer = (canvas: HTMLCanvasElement, audio: HTMLAudioElement) =>
     ctx.closePath()
     requestAnimationFrame(drawWave)
   }
-  
 
   return {
     draw,

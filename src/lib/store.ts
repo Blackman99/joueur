@@ -1,6 +1,7 @@
 import { liveQuery } from 'dexie'
 import { derived, get, writable } from 'svelte/store'
 import type { Readable } from 'svelte/store'
+import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { db } from './db'
 import type { Mode, Playlist, Song } from './types'
 import { twoDigits } from './utils/format'
@@ -36,6 +37,14 @@ export const duration = writable(0)
 export const isDark = writable(localStorage.getItem(COLOR_MODE_KEY) === 'on')
 export const inWindow = writable(true)
 
+export const audioCtx: {
+  ctx?: AudioContext
+  source?: MediaElementAudioSourceNode
+} = {
+  ctx: undefined,
+  source: undefined,
+}
+
 export const displayPlayedSeconds = derived(playedSeconds, $playedSeconds => {
   const minutes = Math.floor($playedSeconds / 60)
   const secondsRemain = $playedSeconds % 60
@@ -62,9 +71,10 @@ export async function paginateSelectedPlaylistSongs() {
   }
 }
 
-export const playNext = () => {
+export function playNext() {
   const $playingSong = get(playingSong)
-  if (!$playingSong) return
+  if (!$playingSong)
+    return
   const $currentPlayingSongIds = get(currentPlayingSongIds)
   const $mode = get(mode)
   const currentIndex = $currentPlayingSongIds.findIndex(id => id === $playingSong.id)
@@ -88,10 +98,11 @@ export const playNext = () => {
   }
 }
 
-export const playPrev = () => {
+export function playPrev() {
   const $playingSong = get(playingSong)
   const $currentPlayingSongIds = get(currentPlayingSongIds)
-  if (!$playingSong) return
+  if (!$playingSong)
+    return
   const currentIndex = $currentPlayingSongIds.findIndex(id => id === $playingSong.id)
   if (currentIndex !== -1) {
     if (currentIndex > 0)
@@ -101,7 +112,7 @@ export const playPrev = () => {
   }
 }
 
-export const togglePlayOrPause = () => {
+export function togglePlayOrPause() {
   const $audioDom = get(audioDom)
   if ($audioDom.paused) {
     $audioDom.currentTime = get(playedSeconds)
@@ -113,3 +124,77 @@ export const togglePlayOrPause = () => {
 }
 
 totalSongsNumber.subscribe(() => paginateSelectedPlaylistSongs())
+
+const isFirst = writable(true)
+
+let gainNode: GainNode
+
+function createAudio(src: string) {
+  const audio = new Audio(src)
+  audio.crossOrigin = 'anonymous'
+  audio.volume = get(volume)
+  audio.addEventListener('oncanplaythrough', () => {
+    if (get(isFirst)) {
+      isFirst.set(false)
+      audio.currentTime = Number(localStorage.getItem(CURRENT_TIME_KEY))
+      if (localStorage.getItem(PLAYING_KEY) === 'on') {
+        audio.load()
+        audio.play()
+      }
+    }
+    else {
+      audio.currentTime = 0
+      audio.load()
+      audio.play()
+    }
+  })
+
+  audio.addEventListener('ended', playNext)
+  audio.addEventListener('timeupdate', () => {
+    playedSeconds.set(audio.currentTime)
+  })
+  audio.addEventListener('play', () => {
+    paused.set(false)
+  })
+  audio.addEventListener('pause', () => {
+    paused.set(true)
+  })
+  audio.addEventListener('durationchange', () => {
+    duration.set(audio.duration)
+  })
+
+  audioCtx.ctx = new window.AudioContext()
+  audioCtx.source = audioCtx.ctx.createMediaElementSource(audio)
+  gainNode = audioCtx.ctx.createGain()
+
+  audioCtx.source.connect(gainNode)
+  gainNode.connect(audioCtx.ctx.destination)
+
+  return audio
+}
+
+playingSong.subscribe(ps => {
+  if (!ps)
+    return
+  let audio = get(audioDom)
+  if (!audio) {
+    audio = createAudio(convertFileSrc(ps.path))
+    audioDom.set(audio)
+  }
+  else {
+    audio.src = convertFileSrc(ps.path)
+    audio.currentTime = 0
+    audio.load()
+    audio.play()
+  }
+  audio.title = `${ps.title} - ${ps.artist}`
+})
+
+volume.subscribe(vl => {
+  const audio = get(audioDom)
+  if (audio)
+    audio.volume = vl
+
+  if (gainNode)
+    gainNode.gain.value = vl
+})

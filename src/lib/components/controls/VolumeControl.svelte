@@ -1,8 +1,8 @@
 <script lang="ts">
+  import IconButton from '../shared/IconButton.svelte'
   import SoundFull from '$lib/icons/SoundFull.svelte'
   import SoundLow from '$lib/icons/SoundLow.svelte'
   import { volume } from '$lib/store'
-  import IconButton from '../shared/IconButton.svelte'
 
   let showBar = false
 
@@ -11,13 +11,9 @@
   const handleVolumeWheel = (e: any) => {
     const step = e.deltaY / 1000
     const next = $volume - step
-    if (next > 1) {
-      $volume = 1
-    } else if (next < 0) {
-      $volume = 0
-    } else {
-      $volume = next
-    }
+    if (next > 1) $volume = 1
+    else if (next < 0) $volume = 0
+    else $volume = next
   }
 
   const handleBarClick = (e: any) => {
@@ -30,9 +26,7 @@
     mouseDown = true
   }
   const handleBarMousemove = (e: any) => {
-    if (mouseDown) {
-      handleBarClick(e)
-    }
+    if (mouseDown) handleBarClick(e)
   }
   const handleMouseup = (e: any) => {
     mouseDown = false
@@ -57,6 +51,8 @@
       on:mouseup|stopPropagation="{handleMouseup}"
       on:click|stopPropagation
       on:keypress
+      role="button"
+      tabindex="0"
     >
       <div
         class="volume-bar"
@@ -82,7 +78,8 @@
   }
   .volume-bar {
     --uno: 'flex flex-col items-center bg-white dark:bg-zinc-8 box-border w-[6px] h-[60px] z-2 rounded-[8px] bg-white relative z-4';
-    box-shadow: rgb(50 50 93 / 100%) 0px 13px 27px -5px,
+    box-shadow:
+      rgb(50 50 93 / 100%) 0px 13px 27px -5px,
       rgb(0 0 0 / 30%) 0px 8px 16px -8px;
   }
   .icon {

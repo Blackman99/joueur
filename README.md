@@ -17,6 +17,8 @@ A tiny and playful music player
   </a>
 </p>
 
+Right now the Mac version would have a better experience. The Linux/Windows version need more feedbacks so I can improve it.
+
 ## Download
 
 [Releases](https://github.com/Blackman99/joueur/releases)

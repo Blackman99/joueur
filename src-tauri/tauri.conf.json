@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Joueur",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "tauri": {
     "allowlist": {
@@ -25,7 +25,7 @@
       },
       "fs": {
         "scope": [
-          "/**/*"
+          "**"
         ],
         "all": true
       },
@@ -38,7 +38,7 @@
       "protocol": {
         "asset": true,
         "assetScope": [
-          "/**/*"
+          "**"
         ]
       },
       "notification": {
@@ -79,7 +79,7 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; img-src 'self' data: tauri:; media-src 'self' asset://* https://asset.localhost; style-src 'unsafe-inline' tauri: https://tauri.localhost "
+      "csp": "default-src 'self'; img-src 'self' data: tauri:; media-src 'self' asset://* https://asset.localhost/*; style-src 'unsafe-inline' tauri: https://tauri.localhost "
 
     },
     "updater": {
